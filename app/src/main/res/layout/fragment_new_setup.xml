@@ -2,35 +2,39 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout2"
+    android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartupFragment">
+    tools:context=".ui.NewSetupFragment">
+
+    <!-- TODO: Update blank fragment layout -->
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Landing fragment.. decide if new user or existing user"
+        android:text="No data found on device. Create or import a program."
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/to_dashboard"
+        android:id="@+id/create_program_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to dashboard"
-        app:layout_constraintBottom_toTopOf="@+id/to_new_setup"
+        android:text="Create program"
+        app:layout_constraintBottom_toTopOf="@+id/import_program_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
-        android:id="@+id/to_new_setup"
+        android:id="@+id/import_program_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to new setup"
+        android:layout_marginBottom="76dp"
+        android:text="Import program"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
