@@ -7,7 +7,53 @@
 
     <fragment
         android:id="@+id/startupFragment"
-        android:name="com.example.gymbud.StartupFragment"
+        android:name="com.example.gymbud.ui.StartupFragment"
         android:label="fragment_startup"
-        tools:layout="@layout/fragment_startup" />
+        tools:layout="@layout/fragment_startup" >
+        <action
+            android:id="@+id/action_startupFragment_to_newSetupFragment"
+            app:destination="@id/newSetupFragment" />
+        <action
+            android:id="@+id/action_startupFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newSetupFragment"
+        android:name="com.example.gymbud.ui.NewSetupFragment"
+        android:label="fragment_new_setup"
+        tools:layout="@layout/fragment_new_setup" >
+        <action
+            android:id="@+id/action_newSetupFragment_to_programBuilderFragment"
+            app:destination="@id/programBuilderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/programBuilderFragment"
+        android:name="com.example.gymbud.ui.ProgramBuilderFragment"
+        android:label="fragment_program_builder"
+        tools:layout="@layout/fragment_program_builder" >
+        <action
+            android:id="@+id/action_programBuilderFragment_to_addItemFragment"
+            app:destination="@id/addItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addItemFragment"
+        android:name="com.example.gymbud.ui.ItemFragment"
+        android:label="fragment_item_list"
+        tools:layout="@layout/fragment_item_list" >
+        <action
+            android:id="@+id/action_addItemFragment_to_exerciseDetailFragment"
+            app:destination="@id/exerciseDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/exerciseDetailFragment"
+        android:name="com.example.gymbud.ui.ExerciseDetailFragment"
+        android:label="ExerciseDetailFragment" >
+        <argument
+            android:name="id"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.example.gymbud.ui.DashboardFragment"
+        android:label="DashboardFragment" />
 </navigation>
