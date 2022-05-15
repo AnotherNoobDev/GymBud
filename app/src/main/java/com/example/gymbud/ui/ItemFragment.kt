@@ -8,68 +8,67 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.gymbud.R
 import com.example.gymbud.data.ExerciseRepository
+import com.example.gymbud.databinding.FragmentItemListBinding
+import com.example.gymbud.ui.viewmodel.ExerciseViewModel
+import com.example.gymbud.ui.viewmodel.ExerciseViewModelFactory
 
 /**
  * A fragment representing a list of Items.
  */
 class ItemFragment : Fragment() {
-
-    private var columnCount = 1
-
     /* todo: pass the list of items in to the fragment */
-    /* see columnCount? */
-    private val exerciseRepo = ExerciseRepository()
+    private val viewModel: ExerciseViewModel by activityViewModels() {
+        ExerciseViewModelFactory()
+    }
+
+    private var _binding: FragmentItemListBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_item_list, container, false)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_items)
-
-        // Set the adapter
-        with(recyclerView) {
-            layoutManager = when {
-                columnCount <= 1 -> LinearLayoutManager(context)
-                else -> GridLayoutManager(context, columnCount)
-            }
-            adapter = ItemRecyclerViewAdapter(
-                {
-                    val action = ItemFragmentDirections.actionAddItemFragmentToExerciseDetailFragment(it)
-                    findNavController().navigate(action)
-                },
-                exerciseRepo.exercises
-            )
-
-            setHasFixedSize(true)
-        }
-
-        return view
+        _binding = FragmentItemListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        // TODO: Customize parameter argument names
-        const val ARG_COLUMN_COUNT = "column-count"
+        val adapter = ItemRecyclerViewAdapter{
+            val action = ItemFragmentDirections.actionAddItemFragmentToExerciseDetailFragment(it)
+            findNavController().navigate(action)
+        }
 
-        // TODO: Customize parameter initialization
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            ItemFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
+        viewModel.exercises.observe(this.viewLifecycleOwner) {
+            it.let {
+                adapter.submitList(it)
             }
+        }
+
+        binding.apply {
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            recyclerView.adapter = adapter
+            recyclerView.setHasFixedSize(true)
+
+            addItemFab.setOnClickListener{
+                val action = ItemFragmentDirections.actionAddItemFragmentToExerciseAddFragment()
+                findNavController().navigate(action)
+            }
+        }
+
     }
 }

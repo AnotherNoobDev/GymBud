@@ -4,8 +4,8 @@ data class Exercise(
     override val id: ItemIdentifier,
     override var name: String,
     var description: String,
-    val targetMuscle: MuscleGroup,
-    val resistance: ResistanceType
+    var targetMuscle: MuscleGroup,
+    var resistance: ResistanceType
 ) : Item {
 
 }

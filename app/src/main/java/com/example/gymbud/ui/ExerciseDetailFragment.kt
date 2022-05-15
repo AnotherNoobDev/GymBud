@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.gymbud.R
 import com.example.gymbud.databinding.FragmentExerciseDetailBinding
 import com.example.gymbud.ui.viewmodel.ExerciseViewModel
+import com.example.gymbud.ui.viewmodel.ExerciseViewModelFactory
 import org.w3c.dom.Text
 
 private const val TAG = "ExerciseDetail"
@@ -21,12 +22,8 @@ class ExerciseDetailFragment : Fragment() {
 
     private val navigationArgs: ExerciseDetailFragmentArgs by navArgs()
 
-    private val viewModel: ExerciseViewModel by lazy {
-        val activity = requireNotNull(this.activity) {
-            "You can only access the viewModel after onActivityCreated()"
-        }
-        ViewModelProvider(this, ExerciseViewModel.Factory(activity.application))
-            .get(ExerciseViewModel::class.java)
+    private val viewModel: ExerciseViewModel by activityViewModels() {
+        ExerciseViewModelFactory()
     }
 
     private var _binding: FragmentExerciseDetailBinding? = null

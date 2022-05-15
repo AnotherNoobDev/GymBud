@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">GymBud</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="item_name">Name</string>
+    <string name="item_name_err">Name is required</string>
+    <string name="item_notes">Notes</string>
+
+    <string name="equipment">Equipment</string>
+    <string name="target_muscle">Target muscle</string>
+
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+
 </resources>

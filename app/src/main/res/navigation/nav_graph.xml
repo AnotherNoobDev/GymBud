@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_addItemFragment_to_exerciseDetailFragment"
             app:destination="@id/exerciseDetailFragment" />
+        <action
+            android:id="@+id/action_addItemFragment_to_exerciseAddFragment"
+            app:destination="@id/exerciseAddFragment" />
     </fragment>
     <fragment
         android:id="@+id/exerciseDetailFragment"
@@ -56,4 +59,17 @@
         android:id="@+id/dashboardFragment"
         android:name="com.example.gymbud.ui.DashboardFragment"
         android:label="DashboardFragment" />
+    <fragment
+        android:id="@+id/exerciseAddFragment"
+        android:name="com.example.gymbud.ui.ExerciseAddFragment"
+        android:label="fragment_exercise_add"
+        tools:layout="@layout/fragment_exercise_add" >
+        <argument
+            android:name="id"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <action
+            android:id="@+id/action_exerciseAddFragment_to_addItemFragment"
+            app:destination="@id/addItemFragment" />
+    </fragment>
 </navigation>
