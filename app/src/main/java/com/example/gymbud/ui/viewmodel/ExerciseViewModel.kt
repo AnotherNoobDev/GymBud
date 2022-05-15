@@ -44,6 +44,11 @@ class ExerciseViewModel(): ViewModel() {
 
 
     fun retrieveExercise(id: ItemIdentifier): Exercise? = exerciseRepository.retrieveExercise(id)
+
+    fun removeExercise(id: ItemIdentifier) {
+        exerciseRepository.removeExercise(id)
+        _exercises.value = exerciseRepository.exercises
+    }
 }
 
 

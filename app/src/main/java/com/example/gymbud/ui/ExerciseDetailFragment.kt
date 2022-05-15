@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.gymbud.R
 import com.example.gymbud.databinding.FragmentExerciseDetailBinding
@@ -47,17 +48,16 @@ class ExerciseDetailFragment : Fragment() {
 
         val id = navigationArgs.id
         val exercise = viewModel.retrieveExercise(id)
+        binding.apply {
+            name.text = exercise?.name
+            targetMuscle.text = exercise?.targetMuscle.toString()
+            equipment.text = exercise?.resistance.toString()
+            notes.text = exercise?.description
 
-        val name = view.findViewById<TextView>(R.id.name)
-        name.text = exercise?.name
-
-        val targetMuscle = view.findViewById<TextView>(R.id.target_muscle)
-        targetMuscle.text = exercise?.targetMuscle.toString()
-
-        val equipment = view.findViewById<TextView>(R.id.equipment)
-        equipment.text = exercise?.resistance.toString()
-
-        val notes = view.findViewById<TextView>(R.id.notes)
-        notes.text = exercise?.description
+            editExerciseFab.setOnClickListener {
+                val action = ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToExerciseAddFragment(id)
+                findNavController().navigate(action)
+            }
+        }
     }
 }

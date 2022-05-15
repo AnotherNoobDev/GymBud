@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -44,16 +45,6 @@ class ExerciseAddFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val id = navigationArgs.id
-
-        if (id > 0) {
-            // todo we are editing
-        } else {
-            binding.saveBtn.setOnClickListener {
-                addExercise()
-            }
-        }
-
         binding.apply {
             nameInput.setOnClickListener {
                 nameLabel.error = null
@@ -62,25 +53,69 @@ class ExerciseAddFragment : Fragment() {
             val muscleGroups = MuscleGroup.values()
             val targetMuscleAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_list_item, muscleGroups)
             (targetMuscleLabel.editText as? AutoCompleteTextView)?.setAdapter(targetMuscleAdapter)
-            targetMuscleInput.setText(MuscleGroup.QUADS.toString(), false)
+
 
             val resistanceType = ResistanceType.values()
             val equipmentAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_list_item, resistanceType)
             (equipmentLabel.editText as? AutoCompleteTextView)?.setAdapter(equipmentAdapter)
-            equipmentInput.setText(ResistanceType.WEIGHT.toString(), false)
+
+        }
+
+        val id = navigationArgs.id
+
+        if (id > 0) {
+            onViewCreatedWithExistingExercise()
+        } else {
+            onViewCreatedWithNewExercise()
         }
     }
 
 
-    private fun addExercise() {
-        val name = binding.nameInput.text.toString()
+    private fun onViewCreatedWithExistingExercise() {
+        val exercise = viewModel.retrieveExercise(navigationArgs.id)
 
-        // todo maybe move logic to viewmodel
-        if (name.isBlank()) {
-            binding.nameLabel.error = getString(R.string.item_name_err)
+        binding.apply {
+            nameInput.setText(exercise?.name, TextView.BufferType.SPANNABLE)
+            targetMuscleInput.setText(exercise?.targetMuscle.toString(), false)
+            equipmentInput.setText(exercise?.resistance.toString(), false)
+            notesInput.setText(exercise?.description, TextView.BufferType.SPANNABLE)
+
+            saveBtn.setOnClickListener {
+                updateExercise()
+            }
+
+            deleteBtn.visibility = View.VISIBLE
+            deleteBtn.setOnClickListener {
+                deleteExercise()
+            }
+        }
+    }
+
+
+    private fun onViewCreatedWithNewExercise() {
+        binding.apply {
+            targetMuscleInput.setText(MuscleGroup.QUADS.toString(), false)
+            equipmentInput.setText(ResistanceType.WEIGHT.toString(), false)
+
+            saveBtn.setOnClickListener {
+                addExercise()
+            }
+        }
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+
+    private fun addExercise() {
+        if (!validateInput()) {
             return
         }
 
+        val name = binding.nameInput.text.toString()
         val resistance = ResistanceType.valueOf(binding.equipmentInput.text.toString())
         val targetMuscle = MuscleGroup.valueOf(binding.targetMuscleInput.text.toString())
         val notes = binding.notesInput.text.toString()
@@ -92,6 +127,51 @@ class ExerciseAddFragment : Fragment() {
             targetMuscle,
             notes
         )
+
+        val action = ExerciseAddFragmentDirections.actionExerciseAddFragmentToAddItemFragment()
+        findNavController().navigate(action)
+    }
+
+
+    // todo seems kinda duplicate with addExercise
+    private fun updateExercise() {
+        if (!validateInput()) {
+            return
+        }
+
+        val name = binding.nameInput.text.toString()
+        val resistance = ResistanceType.valueOf(binding.equipmentInput.text.toString())
+        val targetMuscle = MuscleGroup.valueOf(binding.targetMuscleInput.text.toString())
+        val notes = binding.notesInput.text.toString()
+
+        viewModel.updateExercise(
+            navigationArgs.id,
+            name,
+            resistance,
+            targetMuscle,
+            notes
+        )
+
+        val action = ExerciseAddFragmentDirections.actionExerciseAddFragmentToAddItemFragment()
+        findNavController().navigate(action)
+    }
+
+
+    private fun validateInput(): Boolean {
+        // todo maybe move logic to viewmodel
+
+        val name = binding.nameInput.text.toString()
+        if (name.isBlank()) {
+            binding.nameLabel.error = getString(R.string.item_name_err)
+            return false
+        }
+
+        return true
+    }
+
+
+    private fun deleteExercise() {
+        viewModel.removeExercise(navigationArgs.id)
 
         val action = ExerciseAddFragmentDirections.actionExerciseAddFragmentToAddItemFragment()
         findNavController().navigate(action)

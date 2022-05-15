@@ -101,4 +101,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="Notes" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/edit_exercise_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_edit_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

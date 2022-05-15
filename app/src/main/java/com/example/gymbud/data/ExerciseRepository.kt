@@ -90,4 +90,9 @@ class ExerciseRepository {
 
         _exercises.add(Exercise(id, name, description, targetMuscle, resistance))
     }
+
+    fun removeExercise(id: ItemIdentifier) {
+        val exercise = retrieveExercise(id)
+        _exercises.remove(exercise)
+    }
 }

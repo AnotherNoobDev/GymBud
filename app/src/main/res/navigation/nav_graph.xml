@@ -54,6 +54,9 @@
         <argument
             android:name="id"
             app:argType="long" />
+        <action
+            android:id="@+id/action_exerciseDetailFragment_to_exerciseAddFragment"
+            app:destination="@id/exerciseAddFragment" />
     </fragment>
     <fragment
         android:id="@+id/dashboardFragment"
