@@ -10,17 +10,13 @@ import com.example.gymbud.model.Exercise
 import com.example.gymbud.model.ItemIdentifier
 import com.example.gymbud.model.MuscleGroup
 import com.example.gymbud.model.ResistanceType
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class ExerciseViewModel(): ViewModel() {
     private val exerciseRepository = ExerciseRepository()
 
-    private val _exercises = MutableLiveData<List<Exercise>>()
-    val exercises: LiveData<List<Exercise>>
-        get() = _exercises
-
-    init {
-        _exercises.value = exerciseRepository.exercises
-    }
+    val exercises: StateFlow<List<Exercise>> = exerciseRepository.exercises
 
     fun addExercise(
         id: ItemIdentifier,
@@ -30,7 +26,6 @@ class ExerciseViewModel(): ViewModel() {
         description: String
     ) {
         exerciseRepository.addExercise(id, name, resistance, targetMuscle, description)
-        _exercises.value = exerciseRepository.exercises
     }
 
 
@@ -47,7 +42,6 @@ class ExerciseViewModel(): ViewModel() {
 
     fun removeExercise(id: ItemIdentifier) {
         exerciseRepository.removeExercise(id)
-        _exercises.value = exerciseRepository.exercises
     }
 }
 

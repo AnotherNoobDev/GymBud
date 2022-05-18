@@ -63,7 +63,7 @@ class ExerciseAddFragment : Fragment() {
 
         val id = navigationArgs.id
 
-        if (id > 0) {
+        if (id >= 0) {
             onViewCreatedWithExistingExercise()
         } else {
             onViewCreatedWithNewExercise()

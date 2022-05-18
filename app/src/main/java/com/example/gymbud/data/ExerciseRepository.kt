@@ -5,60 +5,17 @@ import com.example.gymbud.model.MuscleGroup
 import com.example.gymbud.model.ResistanceType
 import com.example.gymbud.model.Exercise
 import com.example.gymbud.model.ItemIdentifier
+import kotlinx.coroutines.flow.*
 
 private const val TAG = "ExerciseDetail"
 
 
 class ExerciseRepository {
-    private val _exercises: MutableList<Exercise> = mutableListOf()
-    val exercises: List<Exercise>
-        get() {
-            return _exercises.toList()
-        }
+    private val _exercises: MutableStateFlow<List<Exercise>> = MutableStateFlow(ExerciseDefaultDatasource.exercises.toMutableList())
+    val exercises: StateFlow<List<Exercise>> = _exercises.asStateFlow()
 
-    init {
-        _exercises.add(
-            Exercise(
-                ItemIdentifierGenerator.generateId(),
-                "Biceps curl",
-                "Go slow on the way down. Don't cheat",
-                MuscleGroup.BICEPS,
-                ResistanceType.WEIGHT)
-        )
 
-        _exercises.add(
-            Exercise(
-                ItemIdentifierGenerator.generateId(),
-                "Skull crusher",
-                "Arms around ears. Bring weight behind head on the way down. Don't lock out fully at the top.",
-                MuscleGroup.TRICEPS,
-                ResistanceType.WEIGHT)
-        )
-
-        _exercises.add(
-            Exercise(
-                ItemIdentifierGenerator.generateId(),
-                "Squat",
-                "Squeeze upper-back in position. Take deep breath. Pause at the bottom. Release breath at the top.",
-                MuscleGroup.QUADS,
-                ResistanceType.WEIGHT
-            )
-        )
-
-        _exercises.add(
-            Exercise(
-                ItemIdentifierGenerator.generateId(),
-                "Face pull",
-                "On the floor.\n" +
-                        "Pull hands to floor as if doing a double-biceps pose.\n" +
-                        "Pause, then slowly return to starting pos.",
-                MuscleGroup.REAR_DELT,
-                ResistanceType.BAND
-            )
-        )
-    }
-
-    fun retrieveExercise(id: ItemIdentifier): Exercise? = _exercises.find{ it.id == id }
+    fun retrieveExercise(id: ItemIdentifier): Exercise? = _exercises.value.find{ it.id == id }
 
     fun updateExercise(
         id: ItemIdentifier,
@@ -88,11 +45,16 @@ class ExerciseRepository {
             return
         }
 
-        _exercises.add(Exercise(id, name, description, targetMuscle, resistance))
+        val newExercises = _exercises.value.toMutableList()
+        newExercises.add(Exercise(id, name, description, targetMuscle, resistance))
+        _exercises.value = newExercises
     }
 
     fun removeExercise(id: ItemIdentifier) {
         val exercise = retrieveExercise(id)
-        _exercises.remove(exercise)
+
+        val newExercises = _exercises.value.toMutableList()
+        newExercises.remove(exercise)
+        _exercises.value = newExercises
     }
 }

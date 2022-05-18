@@ -12,5 +12,6 @@ enum class MuscleGroup {
     TRICEPS,
     FRONT_DELT,
     REAR_DELT,
-    SIDE_DELT
+    SIDE_DELT,
+    NECK
 }
