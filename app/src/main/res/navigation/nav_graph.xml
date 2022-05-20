@@ -33,11 +33,11 @@
         tools:layout="@layout/fragment_program_builder" >
         <action
             android:id="@+id/action_programBuilderFragment_to_addItemFragment"
-            app:destination="@id/addItemFragment" />
+            app:destination="@id/itemListFragment" />
     </fragment>
     <fragment
-        android:id="@+id/addItemFragment"
-        android:name="com.example.gymbud.ui.ItemFragment"
+        android:id="@+id/itemListFragment"
+        android:name="com.example.gymbud.ui.ItemListFragment"
         android:label="fragment_item_list"
         tools:layout="@layout/fragment_item_list" >
         <action
@@ -76,6 +76,8 @@
             android:defaultValue="-1L" />
         <action
             android:id="@+id/action_exerciseAddFragment_to_addItemFragment"
-            app:destination="@id/addItemFragment" />
+            app:destination="@id/itemListFragment"
+            app:popUpTo="@id/itemListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

@@ -2,25 +2,16 @@ package com.example.gymbud.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.gymbud.BaseApplication
-import com.example.gymbud.R
-import com.example.gymbud.data.ExerciseRepository
 import com.example.gymbud.databinding.FragmentItemListBinding
-import com.example.gymbud.model.ItemType
-import com.example.gymbud.ui.viewmodel.ExerciseViewModel
-import com.example.gymbud.ui.viewmodel.ExerciseViewModelFactory
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 import com.example.gymbud.ui.viewmodel.ItemViewModelFactory
 import kotlinx.coroutines.flow.collect
@@ -29,8 +20,8 @@ import kotlinx.coroutines.launch
 /**
  * A fragment representing a list of Items.
  */
-class ItemFragment : Fragment() {
-    private val navigationArgs: ItemFragmentArgs by navArgs()
+class ItemListFragment : Fragment() {
+    private val navigationArgs: ItemListFragmentArgs by navArgs()
 
     private val viewModel: ItemViewModel by activityViewModels() {
         ItemViewModelFactory(
@@ -44,10 +35,6 @@ class ItemFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,9 +47,9 @@ class ItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = ItemRecyclerViewAdapter{
+        val adapter = ItemListRecyclerViewAdapter{
             /* todo can be determined if we know what we are displaying */
-            val action = ItemFragmentDirections.actionAddItemFragmentToExerciseDetailFragment(it)
+            val action = ItemListFragmentDirections.actionAddItemFragmentToExerciseDetailFragment(it)
             findNavController().navigate(action)
         }
 
@@ -89,7 +76,7 @@ class ItemFragment : Fragment() {
 
             addItemFab.setOnClickListener{
                 /* todo can be determined if we know what we are displaying */
-                val action = ItemFragmentDirections.actionAddItemFragmentToExerciseAddFragment()
+                val action = ItemListFragmentDirections.actionAddItemFragmentToExerciseAddFragment()
                 findNavController().navigate(action)
             }
         }

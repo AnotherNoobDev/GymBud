@@ -1,10 +1,7 @@
 package com.example.gymbud.ui
 
-import android.content.Context
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
@@ -17,9 +14,9 @@ import com.example.gymbud.model.ItemIdentifier
 private const val TAG = "ItemList"
 
 
-class ItemRecyclerViewAdapter(
+class ItemListRecyclerViewAdapter(
     private val onItemClicked: (ItemIdentifier) -> Unit,
-) : ListAdapter<Item, ItemRecyclerViewAdapter.ViewHolder>(DiffCallback){
+) : ListAdapter<Item, ItemListRecyclerViewAdapter.ViewHolder>(DiffCallback){
 
     inner class ViewHolder(binding: FragmentItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val contentView: TextView = binding.content
