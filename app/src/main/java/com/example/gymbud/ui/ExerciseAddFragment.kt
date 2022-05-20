@@ -11,10 +11,12 @@ import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.gymbud.BaseApplication
 import com.example.gymbud.R
 import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.databinding.FragmentExerciseAddBinding
 import com.example.gymbud.databinding.FragmentExerciseDetailBinding
+import com.example.gymbud.model.ItemType
 import com.example.gymbud.model.MuscleGroup
 import com.example.gymbud.model.ResistanceType
 import com.example.gymbud.ui.viewmodel.ExerciseViewModel
@@ -26,7 +28,9 @@ class ExerciseAddFragment : Fragment() {
     private val navigationArgs: ExerciseAddFragmentArgs by navArgs()
 
     private val viewModel: ExerciseViewModel by activityViewModels() {
-        ExerciseViewModelFactory()
+        ExerciseViewModelFactory(
+            (activity?.application as BaseApplication).exerciseRepository
+        )
     }
 
     private var _binding: FragmentExerciseAddBinding? = null
@@ -128,7 +132,7 @@ class ExerciseAddFragment : Fragment() {
             notes
         )
 
-        val action = ExerciseAddFragmentDirections.actionExerciseAddFragmentToAddItemFragment()
+        val action = ExerciseAddFragmentDirections.actionExerciseAddFragmentToAddItemFragment(ItemType.EXERCISE)
         findNavController().navigate(action)
     }
 
@@ -152,7 +156,7 @@ class ExerciseAddFragment : Fragment() {
             notes
         )
 
-        val action = ExerciseAddFragmentDirections.actionExerciseAddFragmentToAddItemFragment()
+        val action = ExerciseAddFragmentDirections.actionExerciseAddFragmentToAddItemFragment(ItemType.EXERCISE)
         findNavController().navigate(action)
     }
 
@@ -173,7 +177,7 @@ class ExerciseAddFragment : Fragment() {
     private fun deleteExercise() {
         viewModel.removeExercise(navigationArgs.id)
 
-        val action = ExerciseAddFragmentDirections.actionExerciseAddFragmentToAddItemFragment()
+        val action = ExerciseAddFragmentDirections.actionExerciseAddFragmentToAddItemFragment(ItemType.EXERCISE)
         findNavController().navigate(action)
     }
 }

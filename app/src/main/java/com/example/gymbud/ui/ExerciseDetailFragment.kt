@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.gymbud.BaseApplication
 import com.example.gymbud.R
 import com.example.gymbud.databinding.FragmentExerciseDetailBinding
 import com.example.gymbud.ui.viewmodel.ExerciseViewModel
@@ -24,7 +25,9 @@ class ExerciseDetailFragment : Fragment() {
     private val navigationArgs: ExerciseDetailFragmentArgs by navArgs()
 
     private val viewModel: ExerciseViewModel by activityViewModels() {
-        ExerciseViewModelFactory()
+        ExerciseViewModelFactory(
+            (activity?.application as BaseApplication).exerciseRepository
+        )
     }
 
     private var _binding: FragmentExerciseDetailBinding? = null

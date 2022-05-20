@@ -11,7 +11,7 @@ private const val TAG = "ExerciseDetail"
 
 
 class ExerciseRepository {
-    private val _exercises: MutableStateFlow<List<Exercise>> = MutableStateFlow(ExerciseDefaultDatasource.exercises.toMutableList())
+    private val _exercises: MutableStateFlow<List<Exercise>> = MutableStateFlow(ExerciseDefaultDatasource.exercises)
     val exercises: StateFlow<List<Exercise>> = _exercises.asStateFlow()
 
 

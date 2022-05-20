@@ -13,8 +13,9 @@ import com.example.gymbud.model.ResistanceType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class ExerciseViewModel(): ViewModel() {
-    private val exerciseRepository = ExerciseRepository()
+class ExerciseViewModel(
+    private val exerciseRepository: ExerciseRepository
+): ViewModel() {
 
     val exercises: StateFlow<List<Exercise>> = exerciseRepository.exercises
 
@@ -46,11 +47,11 @@ class ExerciseViewModel(): ViewModel() {
 }
 
 
-class ExerciseViewModelFactory() : ViewModelProvider.Factory {
+class ExerciseViewModelFactory(private val exerciseRepository: ExerciseRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ExerciseViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return ExerciseViewModel() as T
+            return ExerciseViewModel(exerciseRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

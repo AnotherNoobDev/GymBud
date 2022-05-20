@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.gymbud.R
 import com.example.gymbud.databinding.FragmentProgramBuilderBinding
+import com.example.gymbud.model.ItemType
 
 class ProgramBuilderFragment : Fragment() {
     private var _binding: FragmentProgramBuilderBinding? = null
@@ -24,14 +26,35 @@ class ProgramBuilderFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentProgramBuilderBinding.inflate(inflater, container, false)
-        val view = binding.root
+        return binding.root
+    }
 
-        val addItemButton = view.findViewById<Button>(R.id.add_item_button)
-        addItemButton.setOnClickListener {
-            val action = ProgramBuilderFragmentDirections.actionProgramBuilderFragmentToAddItemFragment()
-            binding.root.findNavController().navigate(action)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.apply {
+            viewExercisesButton.setOnClickListener {
+                val action = ProgramBuilderFragmentDirections.actionProgramBuilderFragmentToAddItemFragment(ItemType.EXERCISE)
+                findNavController().navigate(action)
+            }
+
+            viewExerciseTemplatesButton.setOnClickListener {
+                val action = ProgramBuilderFragmentDirections.actionProgramBuilderFragmentToAddItemFragment(ItemType.EXERCISE_TEMPLATE)
+                findNavController().navigate(action)
+            }
+
+            viewSetTemplatesButton.setOnClickListener {
+                val action = ProgramBuilderFragmentDirections.actionProgramBuilderFragmentToAddItemFragment(ItemType.SET_TEMPLATE)
+                findNavController().navigate(action)
+            }
+
+            viewWorkoutTemplatesButton.setOnClickListener {
+                val action = ProgramBuilderFragmentDirections.actionProgramBuilderFragmentToAddItemFragment(ItemType.WORKOUT_TEMPLATE)
+                findNavController().navigate(action)
+            }
+
+            viewProgramsButton.setOnClickListener {
+                val action = ProgramBuilderFragmentDirections.actionProgramBuilderFragmentToAddItemFragment(ItemType.PROGRAM)
+                findNavController().navigate(action)
+            }
         }
-
-        return view
     }
 }

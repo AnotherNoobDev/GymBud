@@ -46,6 +46,9 @@
         <action
             android:id="@+id/action_addItemFragment_to_exerciseAddFragment"
             app:destination="@id/exerciseAddFragment" />
+        <argument
+            android:name="itemType"
+            app:argType="com.example.gymbud.model.ItemType" />
     </fragment>
     <fragment
         android:id="@+id/exerciseDetailFragment"

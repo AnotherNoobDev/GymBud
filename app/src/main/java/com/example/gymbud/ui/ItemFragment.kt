@@ -13,11 +13,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.example.gymbud.BaseApplication
 import com.example.gymbud.R
 import com.example.gymbud.data.ExerciseRepository
 import com.example.gymbud.databinding.FragmentItemListBinding
+import com.example.gymbud.model.ItemType
 import com.example.gymbud.ui.viewmodel.ExerciseViewModel
 import com.example.gymbud.ui.viewmodel.ExerciseViewModelFactory
+import com.example.gymbud.ui.viewmodel.ItemViewModel
+import com.example.gymbud.ui.viewmodel.ItemViewModelFactory
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -25,9 +30,12 @@ import kotlinx.coroutines.launch
  * A fragment representing a list of Items.
  */
 class ItemFragment : Fragment() {
-    /* todo needs to be given as input */
-    private val viewModel: ExerciseViewModel by activityViewModels() {
-        ExerciseViewModelFactory()
+    private val navigationArgs: ItemFragmentArgs by navArgs()
+
+    private val viewModel: ItemViewModel by activityViewModels() {
+        ItemViewModelFactory(
+            (activity?.application as BaseApplication).itemRepository
+        )
     }
 
     private var _binding: FragmentItemListBinding? = null
@@ -65,7 +73,7 @@ class ItemFragment : Fragment() {
             // lifecycle is in the STARTED state (or above) and cancels it when it's STOPPED.
             //repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-            viewModel.exercises.collect{
+            viewModel.getItemsByTime(navigationArgs.itemType).collect{
                 it.let {
                     adapter.submitList(it)
                 }
