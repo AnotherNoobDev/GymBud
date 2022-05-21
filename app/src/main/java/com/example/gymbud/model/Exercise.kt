@@ -8,6 +8,10 @@ data class Exercise(
     var targetMuscle: MuscleGroup,
     var resistance: ResistanceType
 ) : Item {
+
+    override fun toString(): String {
+        return name
+    }
 }
 
 
@@ -17,7 +21,7 @@ data class ExerciseTemplate(
     override val id: ItemIdentifier,
     override var name: String,
     val exercise: Exercise,
-    val targetRepRange: IntRange
+    var targetRepRange: IntRange
     //todo: targetRestPeriod
 ): BasicBlock, Item {
 }

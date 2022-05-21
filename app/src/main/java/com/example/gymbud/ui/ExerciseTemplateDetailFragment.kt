@@ -14,21 +14,24 @@ import androidx.navigation.fragment.navArgs
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.R
 import com.example.gymbud.databinding.FragmentExerciseDetailBinding
+import com.example.gymbud.databinding.FragmentExerciseTemplateDetailBinding
+import com.example.gymbud.ui.viewmodel.ExerciseTemplateViewModel
+import com.example.gymbud.ui.viewmodel.ExerciseTemplateViewModelFactory
 import com.example.gymbud.ui.viewmodel.ExerciseViewModel
 import com.example.gymbud.ui.viewmodel.ExerciseViewModelFactory
 import org.w3c.dom.Text
 
-class ExerciseDetailFragment : Fragment() {
+class ExerciseTemplateDetailFragment : Fragment() {
 
-    private val navigationArgs: ExerciseDetailFragmentArgs by navArgs()
+    private val navigationArgs: ExerciseTemplateDetailFragmentArgs by navArgs()
 
-    private val viewModel: ExerciseViewModel by activityViewModels() {
-        ExerciseViewModelFactory(
-            (activity?.application as BaseApplication).exerciseRepository
+    private val viewModel: ExerciseTemplateViewModel by activityViewModels() {
+        ExerciseTemplateViewModelFactory(
+            (activity?.application as BaseApplication).exerciseTemplateRepository
         )
     }
 
-    private var _binding: FragmentExerciseDetailBinding? = null
+    private var _binding: FragmentExerciseTemplateDetailBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +43,7 @@ class ExerciseDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentExerciseDetailBinding.inflate(inflater, container, false)
+        _binding = FragmentExerciseTemplateDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -48,15 +51,15 @@ class ExerciseDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val id = navigationArgs.id
-        val exercise = viewModel.retrieveExercise(id)
+        val exerciseTemplate = viewModel.retrieveExerciseTemplate(id)
         binding.apply {
-            name.text = exercise?.name
-            targetMuscle.text = exercise?.targetMuscle.toString()
-            equipment.text = exercise?.resistance.toString()
-            notes.text = exercise?.description
+            name.text = exerciseTemplate?.name
+            exercise.text = exerciseTemplate?.exercise?.name // todo why does this appear as potentially null?!
+            repRange.text = exerciseTemplate?.targetRepRange.toString() + " reps"
 
-            editExerciseFab.setOnClickListener {
-                val action = ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToExerciseAddFragment(id)
+            editFab.setOnClickListener {
+                val action = ExerciseTemplateDetailFragmentDirections
+                    .actionExerciseTemplateDetailFragmentToExerciseTemplateAddFragment(id)
                 findNavController().navigate(action)
             }
         }

@@ -1,7 +1,10 @@
 package com.example.gymbud.data
 
-import com.example.gymbud.model.ExerciseTemplate
+import android.util.Log
+import com.example.gymbud.model.*
 import kotlinx.coroutines.flow.*
+
+private const val TAG = "ExerciseDetail"
 
 class ExerciseTemplateRepository(
     private val exerciseRepository: ExerciseRepository
@@ -26,5 +29,44 @@ class ExerciseTemplateRepository(
         }
     }
 
-    // todo add, remove, update
+
+    fun retrieveExerciseTemplate(id: ItemIdentifier): ExerciseTemplate? = _exercisesTemplates.value.find{ it.id == id }
+
+
+    fun updateExerciseTemplate(
+        id: ItemIdentifier,
+        name: String,
+        targetRepRange: IntRange
+    ) {
+        val exerciseTemplate = retrieveExerciseTemplate(id)
+        exerciseTemplate?.name = name
+        exerciseTemplate?.targetRepRange = targetRepRange
+    }
+
+
+    fun addExerciseTemplate(
+        id: ItemIdentifier,
+        name: String,
+        exercise: Exercise,
+        targetRepRange: IntRange
+    ) {
+        val exerciseTemplate = retrieveExerciseTemplate(id)
+        if (exerciseTemplate != null) {
+            Log.e(TAG, "ExerciseTemplate with id: " + id + "already exists!")
+            // todo -> get a new id?
+            return
+        }
+
+        val newExercises = _exercisesTemplates.value.toMutableList()
+        newExercises.add(ExerciseTemplate(id, name, exercise, targetRepRange))
+        _exercisesTemplates.value = newExercises
+    }
+
+    fun removeExerciseTemplate(id: ItemIdentifier) {
+        val exerciseTemplate = retrieveExerciseTemplate(id)
+
+        val newExercisesTemplates = _exercisesTemplates.value.toMutableList()
+        newExercisesTemplates.remove(exerciseTemplate)
+        _exercisesTemplates.value = newExercisesTemplates
+    }
 }

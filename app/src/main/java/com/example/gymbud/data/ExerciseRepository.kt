@@ -17,6 +17,8 @@ class ExerciseRepository {
 
     fun retrieveExercise(id: ItemIdentifier): Exercise? = _exercises.value.find{ it.id == id }
 
+    fun retrieveExercise(name: String): Exercise? = _exercises.value.find{ it.name == name }
+
     fun updateExercise(
         id: ItemIdentifier,
         name: String,

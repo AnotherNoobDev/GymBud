@@ -12,6 +12,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.databinding.FragmentItemListBinding
+import com.example.gymbud.model.ItemIdentifier
+import com.example.gymbud.model.ItemType
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 import com.example.gymbud.ui.viewmodel.ItemViewModelFactory
 import kotlinx.coroutines.flow.collect
@@ -47,13 +49,22 @@ class ItemListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = ItemListRecyclerViewAdapter{
-            /* todo can be determined if we know what we are displaying */
-            val action = ItemListFragmentDirections.actionAddItemFragmentToExerciseDetailFragment(it)
-            findNavController().navigate(action)
-        }
+        val onItemClicked: (ItemIdentifier) -> Unit =
+            when (navigationArgs.itemType) {
+                ItemType.EXERCISE -> { id ->
+                    val action = ItemListFragmentDirections.actionAddItemFragmentToExerciseDetailFragment(id)
+                    findNavController().navigate(action)
+                }
+                ItemType.EXERCISE_TEMPLATE -> { id ->
+                    val action = ItemListFragmentDirections.actionItemListFragmentToExerciseTemplateDetailFragment(id)
+                    findNavController().navigate(action)
+                }
+                else -> {_ -> }
+            }
 
-        /* todo needs to be given as input */
+
+        val adapter = ItemListRecyclerViewAdapter(onItemClicked)
+
         viewLifecycleOwner.lifecycleScope.launch {
             // is this needed? https://developer.android.com/kotlin/flow/stateflow-and-sharedflow
             // repeatOnLifecycle launches the block in a new coroutine every time the
@@ -68,17 +79,25 @@ class ItemListFragment : Fragment() {
         }
 
 
-
         binding.apply {
             recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.adapter = adapter
             recyclerView.setHasFixedSize(true)
 
-            addItemFab.setOnClickListener{
-                /* todo can be determined if we know what we are displaying */
-                val action = ItemListFragmentDirections.actionAddItemFragmentToExerciseAddFragment()
-                findNavController().navigate(action)
-            }
+            val onAddItemClicked: (View) -> Unit =
+                when (navigationArgs.itemType) {
+                    ItemType.EXERCISE -> { _ ->
+                        val action = ItemListFragmentDirections.actionAddItemFragmentToExerciseAddFragment()
+                        findNavController().navigate(action)
+                    }
+                    ItemType.EXERCISE_TEMPLATE -> { _ ->
+                        val action = ItemListFragmentDirections.actionItemListFragmentToExerciseTemplateAddFragment()
+                        findNavController().navigate(action)
+                    }
+                    else -> { _ -> }
+                }
+
+            addItemFab.setOnClickListener(onAddItemClicked)
         }
 
     }

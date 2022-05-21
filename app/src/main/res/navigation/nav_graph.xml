@@ -49,6 +49,12 @@
         <argument
             android:name="itemType"
             app:argType="com.example.gymbud.model.ItemType" />
+        <action
+            android:id="@+id/action_itemListFragment_to_exerciseTemplateDetailFragment"
+            app:destination="@id/exerciseTemplateDetailFragment" />
+        <action
+            android:id="@+id/action_itemListFragment_to_exerciseTemplateAddFragment"
+            app:destination="@id/exerciseTemplateAddFragment" />
     </fragment>
     <fragment
         android:id="@+id/exerciseDetailFragment"
@@ -76,6 +82,33 @@
             android:defaultValue="-1L" />
         <action
             android:id="@+id/action_exerciseAddFragment_to_addItemFragment"
+            app:destination="@id/itemListFragment"
+            app:popUpTo="@id/itemListFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/exerciseTemplateDetailFragment"
+        android:name="com.example.gymbud.ui.ExerciseTemplateDetailFragment"
+        android:label="fragment_exercise_template_detail"
+        tools:layout="@layout/fragment_exercise_template_detail" >
+        <argument
+            android:name="id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_exerciseTemplateDetailFragment_to_exerciseTemplateAddFragment"
+            app:destination="@id/exerciseTemplateAddFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/exerciseTemplateAddFragment"
+        android:name="com.example.gymbud.ui.ExerciseTemplateAddFragment"
+        android:label="fragment_exercise_template_add"
+        tools:layout="@layout/fragment_exercise_template_add" >
+        <argument
+            android:name="id"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <action
+            android:id="@+id/action_exerciseTemplateAddFragment_to_itemListFragment"
             app:destination="@id/itemListFragment"
             app:popUpTo="@id/itemListFragment"
             app:popUpToInclusive="true" />
