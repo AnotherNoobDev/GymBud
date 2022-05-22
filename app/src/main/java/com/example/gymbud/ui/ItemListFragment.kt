@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.databinding.FragmentItemListBinding
-import com.example.gymbud.model.ItemIdentifier
 import com.example.gymbud.model.ItemType
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 import com.example.gymbud.ui.viewmodel.ItemViewModelFactory
@@ -49,21 +48,10 @@ class ItemListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val onItemClicked: (ItemIdentifier) -> Unit =
-            when (navigationArgs.itemType) {
-                ItemType.EXERCISE -> { id ->
-                    val action = ItemListFragmentDirections.actionAddItemFragmentToExerciseDetailFragment(id)
-                    findNavController().navigate(action)
-                }
-                ItemType.EXERCISE_TEMPLATE -> { id ->
-                    val action = ItemListFragmentDirections.actionItemListFragmentToExerciseTemplateDetailFragment(id)
-                    findNavController().navigate(action)
-                }
-                else -> {_ -> }
-            }
-
-
-        val adapter = ItemListRecyclerViewAdapter(onItemClicked)
+        val adapter = ItemListRecyclerViewAdapter {
+            val action = ItemListFragmentDirections.actionItemListFragmentToItemDetailFragment(it, navigationArgs.itemType)
+            findNavController().navigate(action)
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             // is this needed? https://developer.android.com/kotlin/flow/stateflow-and-sharedflow
@@ -71,7 +59,7 @@ class ItemListFragment : Fragment() {
             // lifecycle is in the STARTED state (or above) and cancels it when it's STOPPED.
             //repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-            viewModel.getItemsByTime(navigationArgs.itemType).collect{
+            viewModel.getItemsByType(navigationArgs.itemType).collect{
                 it.let {
                     adapter.submitList(it)
                 }

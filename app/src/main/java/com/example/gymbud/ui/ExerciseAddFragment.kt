@@ -15,7 +15,6 @@ import com.example.gymbud.BaseApplication
 import com.example.gymbud.R
 import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.databinding.FragmentExerciseAddBinding
-import com.example.gymbud.databinding.FragmentExerciseDetailBinding
 import com.example.gymbud.model.ItemType
 import com.example.gymbud.model.MuscleGroup
 import com.example.gymbud.model.ResistanceType
