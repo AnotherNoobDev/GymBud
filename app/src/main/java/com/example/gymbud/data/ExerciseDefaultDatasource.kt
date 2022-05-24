@@ -49,7 +49,7 @@ object ExerciseDefaultDatasource {
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 BENCH_PRESS,
-                "Add notes here...",
+                "Add notes here...\nAdd notes here...\nAdd notes here...\nAdd notes here...\nAdd notes here...\n",
                 MuscleGroup.CHEST,
                 ResistanceType.WEIGHT
             ),

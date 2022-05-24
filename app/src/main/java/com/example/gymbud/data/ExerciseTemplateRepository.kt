@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.*
 
 private const val TAG = "ExerciseDetail"
 
+// todo can we template all these repositories?
 class ExerciseTemplateRepository(
     private val exerciseRepository: ExerciseRepository
 ) {
@@ -62,11 +63,16 @@ class ExerciseTemplateRepository(
         _exercisesTemplates.value = newExercises
     }
 
-    fun removeExerciseTemplate(id: ItemIdentifier) {
+    fun removeExerciseTemplate(id: ItemIdentifier): Boolean {
         val exerciseTemplate = retrieveExerciseTemplate(id)
 
         val newExercisesTemplates = _exercisesTemplates.value.toMutableList()
-        newExercisesTemplates.remove(exerciseTemplate)
-        _exercisesTemplates.value = newExercisesTemplates
+        val removed = newExercisesTemplates.remove(exerciseTemplate)
+
+        if (removed) {
+            _exercisesTemplates.value = newExercisesTemplates
+        }
+
+        return removed
     }
 }

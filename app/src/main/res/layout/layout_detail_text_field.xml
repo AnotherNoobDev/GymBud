@@ -7,22 +7,22 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/ic_equipment"
+        android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_equipment_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_range_24"/>
 
     <TextView
-        android:id="@+id/equipment"
+        android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:textAppearance="?attr/textAppearanceBody2"
-        app:layout_constraintStart_toEndOf="@+id/ic_equipment"
-        app:layout_constraintTop_toTopOf="@+id/ic_equipment"
-        tools:text="WEIGHT" />
+        app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_constraintTop_toTopOf="@+id/icon"
+        tools:text="Text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

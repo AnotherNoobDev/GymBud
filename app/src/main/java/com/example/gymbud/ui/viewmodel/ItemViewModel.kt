@@ -21,6 +21,18 @@ class ItemViewModel(
     fun getItem(id: ItemIdentifier, type: ItemType? = null): Item? {
         return itemRepository.getItem(id, type)
     }
+
+    fun addItem(tempItem: Item) {
+        itemRepository.addItem(tempItem)
+    }
+
+    fun updateItem(id: ItemIdentifier, tempItem: Item) {
+        itemRepository.updateItem(id, tempItem)
+    }
+
+    fun removeItem(id: ItemIdentifier, type: ItemType? = null) {
+        itemRepository.removeItem(id, type)
+    }
 }
 
 

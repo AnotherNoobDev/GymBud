@@ -72,21 +72,10 @@ class ItemListFragment : Fragment() {
             recyclerView.adapter = adapter
             recyclerView.setHasFixedSize(true)
 
-            val onAddItemClicked: (View) -> Unit =
-                when (navigationArgs.itemType) {
-                    ItemType.EXERCISE -> { _ ->
-                        val action = ItemListFragmentDirections.actionAddItemFragmentToExerciseAddFragment()
-                        findNavController().navigate(action)
-                    }
-                    ItemType.EXERCISE_TEMPLATE -> { _ ->
-                        val action = ItemListFragmentDirections.actionItemListFragmentToExerciseTemplateAddFragment()
-                        findNavController().navigate(action)
-                    }
-                    else -> { _ -> }
-                }
-
-            addItemFab.setOnClickListener(onAddItemClicked)
+            addItemFab.setOnClickListener {
+                val action = ItemListFragmentDirections.actionItemListFragmentToItemEditFragment(type=navigationArgs.itemType)
+                findNavController().navigate(action)
+            }
         }
-
     }
 }

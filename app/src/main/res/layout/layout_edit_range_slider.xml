@@ -6,23 +6,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/ic_exercise"
+    <TextView
+        android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_equipment_24"
+        android:drawableLeft="@drawable/ic_range_24"
+        android:text="Rep range"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/exercise"
+    <com.google.android.material.slider.RangeSlider
+        android:id="@+id/input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:stepSize="1"
         android:textAppearance="?attr/textAppearanceBody2"
-        app:layout_constraintStart_toEndOf="@+id/ic_exercise"
-        app:layout_constraintTop_toTopOf="@+id/ic_exercise"
-        tools:text="Exercise" />
+        android:valueFrom="1"
+        android:valueTo="100"
+        app:layout_constraintStart_toEndOf="@+id/label"
+        app:layout_constraintTop_toTopOf="@id/label"
+        app:values="@array/initial_rep_range_slider_values"
+        tools:text="Rep Range" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

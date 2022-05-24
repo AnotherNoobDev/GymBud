@@ -52,11 +52,16 @@ class ExerciseRepository {
         _exercises.value = newExercises
     }
 
-    fun removeExercise(id: ItemIdentifier) {
+    fun removeExercise(id: ItemIdentifier): Boolean {
         val exercise = retrieveExercise(id)
 
         val newExercises = _exercises.value.toMutableList()
-        newExercises.remove(exercise)
-        _exercises.value = newExercises
+        val removed = newExercises.remove(exercise)
+
+        if (removed) {
+            _exercises.value = newExercises
+        }
+
+        return removed
     }
 }

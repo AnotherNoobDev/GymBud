@@ -7,11 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.databinding.FragmentItemDetailBinding
-import com.example.gymbud.ui.viewbuilder.ViewBuilder
-import com.example.gymbud.ui.viewbuilder.ViewBuilderFactory
+import com.example.gymbud.ui.viewbuilder.ItemView
+import com.example.gymbud.ui.viewbuilder.ItemViewFactory
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 import com.example.gymbud.ui.viewmodel.ItemViewModelFactory
 
@@ -29,8 +31,8 @@ class ItemDetailFragment : Fragment() {
         )
     }
 
-    private var _viewBuilder: ViewBuilder? = null
-    private val viewBuilder get() = _viewBuilder!!
+    private var _itemView: ItemView? = null
+    private val itemView get() = _itemView!!
 
     private var _binding: FragmentItemDetailBinding? = null
     private val binding get() = _binding!!
@@ -42,9 +44,12 @@ class ItemDetailFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentItemDetailBinding.inflate(inflater, container, false)
-        _viewBuilder = ViewBuilderFactory.create(navigationArgs.type)
+        _itemView = ItemViewFactory.create(navigationArgs.type) { itemId, itemType ->
+            val action = ItemDetailFragmentDirections.actionItemDetailFragmentSelf(itemId, itemType)
+            findNavController().navigate(action)
+        }
 
-        viewBuilder.inflate(inflater).forEach {
+        itemView.inflate(inflater).forEach {
             binding.detailLayout.addView(it)
         }
 
@@ -60,15 +65,11 @@ class ItemDetailFragment : Fragment() {
             return
         }
 
-        viewBuilder.populate(item)
+        itemView.populate(viewLifecycleOwner.lifecycleScope, viewModel, item)
 
         binding.editFab.setOnClickListener {
-            // todo make generic ItemAddFragment and connect it here
-            /*
-            val action = ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToExerciseAddFragment()
+            val action = ItemDetailFragmentDirections.actionItemDetailFragmentToItemEditFragment(navigationArgs.id, navigationArgs.type)
             findNavController().navigate(action)
-
-             */
         }
     }
 }
