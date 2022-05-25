@@ -92,20 +92,13 @@ class ExerciseTemplateEditView(
     }
 
 
-    override fun getContent(): Item? {
+    override fun getContent(): ItemContent? {
         if (!validateInput()) {
             return null
         }
 
         // todo this doesn't feel safe (can 2 exercises have the same name? wouldn't that be confusing!?!)
-        var exercise = exercises?.find { it.name == exerciseBinding.input.text.toString()}
-
-        if (exercise == null)
-        {
-            // todo need to delegate this (build a placeholder exercise)
-            // todo think we need 2 hierarchies here Item (this is an entity in the system) and ItemContent (this is a collection of values)
-            exercise = Exercise(ItemIdentifierGenerator.generateTempId(), "", "",  MuscleGroup.BACK, ResistanceType.WEIGHT)
-        }
+        val exercise = exercises?.find { it.name == exerciseBinding.input.text.toString()}
 
         val name = nameBinding.input.text.toString()
 
@@ -114,12 +107,15 @@ class ExerciseTemplateEditView(
             repRangeBinding.input.values[1].toInt(),
         )
 
-        return ExerciseTemplate(
-            ItemIdentifierGenerator.generateTempId(),
-            name,
-            exercise as Exercise,
-            targetRepRange
-        )
+        return if (exercise == null) {
+            ExerciseTemplateEditContent(name, targetRepRange)
+        } else {
+            ExerciseTemplateNewContent(
+                name,
+                exercise as Exercise,
+                targetRepRange
+            )
+        }
     }
 
 

@@ -99,13 +99,12 @@ class ExerciseEditView(
     }
 
 
-    override fun getContent(): Item? {
+    override fun getContent(): ItemContent? {
         if (!validateInput()) {
             return null
         }
 
-        return Exercise(
-            ItemIdentifierGenerator.generateTempId(),
+        return ExerciseContent(
             nameBinding.input.text.toString(),
             notesBinding.input.text.toString(),
             MuscleGroup.valueOf(targetMuscleBinding.input.text.toString()),

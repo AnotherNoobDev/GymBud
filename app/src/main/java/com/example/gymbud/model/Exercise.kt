@@ -14,6 +14,13 @@ data class Exercise(
     }
 }
 
+data class ExerciseContent(
+    override var name: String,
+    var description: String,
+    var targetMuscle: MuscleGroup,
+    var resistance: ResistanceType,
+): ItemContent
+
 
 // A more specific description of the exercise to perform,
 // including things like target rep range
@@ -24,6 +31,19 @@ data class ExerciseTemplate(
     var targetRepRange: IntRange
     //todo: targetRestPeriod
 ): BasicBlock, Item {
+}
+
+open class ExerciseTemplateEditContent(
+    override var name: String,
+    var targetRepRange: IntRange
+): ItemContent {
+}
+
+class ExerciseTemplateNewContent(
+    name: String,
+    var exercise: Exercise,
+    targetRepRange: IntRange
+): ExerciseTemplateEditContent(name, targetRepRange) {
 }
 
 

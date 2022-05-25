@@ -14,3 +14,7 @@ interface Item {
     val id: ItemIdentifier
     var name: String
 }
+
+interface ItemContent {
+    var name: String
+}

@@ -9,8 +9,4 @@ object ItemIdentifierGenerator {
     fun generateId():  ItemIdentifier {
         return id++
     }
-
-    fun generateTempId(): ItemIdentifier {
-        return -1
-    }
 }

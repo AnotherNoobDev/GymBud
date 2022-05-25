@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.gymbud.model.Item
+import com.example.gymbud.model.ItemContent
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 
 interface ItemView {
@@ -22,5 +23,5 @@ interface EditItemView: ItemView {
         viewModel: ItemViewModel
     )
 
-    fun getContent(): Item?
+    fun getContent(): ItemContent?
 }

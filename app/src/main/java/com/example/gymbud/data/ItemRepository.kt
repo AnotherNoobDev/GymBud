@@ -47,65 +47,65 @@ class ItemRepository(
     }
 
 
-    fun addItem(tempItem: Item) {
-        if (tempItem is Exercise) {
-            addExercise(tempItem)
-        } else if (tempItem is ExerciseTemplate) {
-            addExerciseTemplate(tempItem)
+    fun addItem(content: ItemContent) {
+        if (content is ExerciseContent) {
+            addExercise(content)
+        } else if (content is ExerciseTemplateNewContent) {
+            addExerciseTemplate(content)
         }
 
         // todo
     }
 
 
-    private fun addExercise(tempExercise: Exercise) {
+    private fun addExercise(content: ExerciseContent) {
         exerciseRepository.addExercise(
             ItemIdentifierGenerator.generateId(),
-            tempExercise.name,
-            tempExercise.resistance,
-            tempExercise.targetMuscle,
-            tempExercise.description
+            content.name,
+            content.resistance,
+            content.targetMuscle,
+            content.description
         )
     }
 
 
-    private fun addExerciseTemplate(tempExerciseTemplate: ExerciseTemplate) {
+    private fun addExerciseTemplate(content: ExerciseTemplateNewContent) {
         exerciseTemplateRepository.addExerciseTemplate(
             ItemIdentifierGenerator.generateId(),
-            tempExerciseTemplate.name,
-            tempExerciseTemplate.exercise,
-            tempExerciseTemplate.targetRepRange
+            content.name,
+            content.exercise,
+            content.targetRepRange
         )
     }
 
 
-    fun updateItem(id: ItemIdentifier, tempItem: Item) {
-        if (tempItem is Exercise) {
-            updateExercise(id, tempItem)
-        } else if (tempItem is ExerciseTemplate) {
-            updateExerciseTemplate(id, tempItem)
+    fun updateItem(id: ItemIdentifier, content: ItemContent) {
+        if (content is ExerciseContent) {
+            updateExercise(id, content)
+        } else if (content is ExerciseTemplateEditContent) {
+            updateExerciseTemplate(id, content)
         }
 
         // todo
     }
 
 
-    private fun updateExercise(id: ItemIdentifier, tempExercise: Exercise) {
+    private fun updateExercise(id: ItemIdentifier, content: ExerciseContent) {
         exerciseRepository.updateExercise(
             id,
-            tempExercise.name,
-            tempExercise.resistance,
-            tempExercise.targetMuscle,
-            tempExercise.description
+            content.name,
+            content.resistance,
+            content.targetMuscle,
+            content.description
         )
     }
 
 
-    private fun updateExerciseTemplate(id: ItemIdentifier, tempExerciseTemplate: ExerciseTemplate) {
+    private fun updateExerciseTemplate(id: ItemIdentifier, content: ExerciseTemplateEditContent) {
         exerciseTemplateRepository.updateExerciseTemplate(
             id,
-            tempExerciseTemplate.name,
-            tempExerciseTemplate.targetRepRange
+            content.name,
+            content.targetRepRange
         )
     }
 
