@@ -30,7 +30,7 @@ data class ExerciseTemplate(
     val exercise: Exercise,
     var targetRepRange: IntRange
     //todo: targetRestPeriod
-): BasicBlock, Item {
+): Item {
 }
 
 open class ExerciseTemplateEditContent(

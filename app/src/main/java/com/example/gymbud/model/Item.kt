@@ -18,3 +18,26 @@ interface Item {
 interface ItemContent {
     var name: String
 }
+
+
+abstract class ItemContainer {
+    // todo this is not actually enforced (should it be?)
+    abstract fun getSupportedItemTypes(): List<ItemType>
+
+    private var _items: MutableList<Item> = mutableListOf()
+    val items: List<Item>
+        get() = _items.toList()
+
+    fun add(item: Item): ItemContainer {
+        _items.add(item)
+        return this
+    }
+
+    fun get(index: Int): Item {
+        return _items[index]
+    }
+
+    fun removeBlock(index: Int) {
+        _items.removeAt(index)
+    }
+}

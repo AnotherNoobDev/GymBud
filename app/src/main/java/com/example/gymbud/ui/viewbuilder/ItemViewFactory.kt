@@ -14,6 +14,7 @@ class ItemViewFactory {
             return when (type) {
                 ItemType.EXERCISE -> ExerciseDetailView()
                 ItemType.EXERCISE_TEMPLATE -> ExerciseTemplateDetailView(onDetailsCallback)
+                ItemType.SET_TEMPLATE -> SetTemplateDetailView(onDetailsCallback)
                 else ->  ExerciseDetailView() // todo
             }
         }

@@ -11,8 +11,6 @@ import com.example.gymbud.databinding.FragmentItemBinding
 import com.example.gymbud.model.Item
 import com.example.gymbud.model.ItemIdentifier
 
-private const val TAG = "ItemList"
-
 
 class ItemListRecyclerViewAdapter(
     private val onItemClicked: (ItemIdentifier) -> Unit,

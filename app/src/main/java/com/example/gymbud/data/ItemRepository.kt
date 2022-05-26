@@ -26,6 +26,7 @@ class ItemRepository(
         return when (type) {
             ItemType.EXERCISE -> exerciseRepository.retrieveExercise(id)
             ItemType.EXERCISE_TEMPLATE -> exerciseTemplateRepository.retrieveExerciseTemplate(id)
+            ItemType.SET_TEMPLATE -> setTemplateRepository.retrieveSetTemplate(id)
             else -> findItemInAll(id)
         }
     }

@@ -1,7 +1,6 @@
 package com.example.gymbud.data
 
 import com.example.gymbud.model.SetTemplate
-import com.example.gymbud.model.WorkoutBlockType
 import com.example.gymbud.model.WorkoutTemplate
 
 
@@ -39,59 +38,59 @@ object WorkoutTemplateDefaultDatasource {
 
         return listOf(
             WorkoutTemplate(ItemIdentifierGenerator.generateId(), WORKOUT_CHEST_BACK_SHOULDERS_1)
-                .addBlock(chestBack1, WorkoutBlockType.Warmup)
-                .addBlock(chestBack1, WorkoutBlockType.Warmup)
-                .addBlock(chestBack1, WorkoutBlockType.Working)
-                .addBlock(chestBack1, WorkoutBlockType.Working)
-                .addBlock(chestBack1, WorkoutBlockType.Working)
-                .addBlock(chestBack2, WorkoutBlockType.Warmup)
-                .addBlock(chestBack2, WorkoutBlockType.Working)
-                .addBlock(chestBack2, WorkoutBlockType.Working)
-                .addBlock(chestBack2, WorkoutBlockType.Working)
-                .addBlock(shoulders1, WorkoutBlockType.Warmup)
-                .addBlock(shoulders1, WorkoutBlockType.Working)
-                .addBlock(shoulders1, WorkoutBlockType.Working)
-                .addBlock(shoulders1, WorkoutBlockType.Working),
+                .add(chestBack1) // WorkoutBlockType.Warmup
+                .add(chestBack1) // WorkoutBlockType.Warmup
+                .add(chestBack1) // , WorkoutBlockType.Working
+                .add(chestBack1) // , WorkoutBlockType.Working
+                .add(chestBack1) // , WorkoutBlockType.Working
+                .add(chestBack2) // , WorkoutBlockType.Warmup
+                .add(chestBack2) // , WorkoutBlockType.Working
+                .add(chestBack2) //, WorkoutBlockType.Working
+                .add(chestBack2) // , WorkoutBlockType.Working
+                .add(shoulders1) // , WorkoutBlockType.Warmup
+                .add(shoulders1) //  WorkoutBlockType.Working
+                .add(shoulders1) // WorkoutBlockType.Working
+                .add(shoulders1) as WorkoutTemplate, // WorkoutBlockType.Working
             WorkoutTemplate(ItemIdentifierGenerator.generateId(), WORKOUT_LEGS_ARMS_TRAPS_NECK_1)
-                .addBlock(legs1, WorkoutBlockType.Warmup)
-                .addBlock(legs1, WorkoutBlockType.Warmup)
-                .addBlock(legs1, WorkoutBlockType.Working)
-                .addBlock(legs1, WorkoutBlockType.Working)
-                .addBlock(legs1, WorkoutBlockType.Working)
-                .addBlock(legs1, WorkoutBlockType.Working)
-                .addBlock(legsArmsTraps1, WorkoutBlockType.Warmup)
-                .addBlock(legsArmsTraps1, WorkoutBlockType.Warmup)
-                .addBlock(legsArmsTraps1, WorkoutBlockType.Working)
-                .addBlock(legsArmsTraps1, WorkoutBlockType.Working)
-                .addBlock(legsArmsTraps1, WorkoutBlockType.Working)
-                .addBlock(calvesNeck1, WorkoutBlockType.Warmup)
-                .addBlock(calvesNeck1, WorkoutBlockType.Working)
-                .addBlock(calvesNeck1, WorkoutBlockType.Working)
-                .addBlock(calvesNeck1, WorkoutBlockType.Working),
+                .add(legs1)
+                .add(legs1)
+                .add(legs1)
+                .add(legs1)
+                .add(legs1)
+                .add(legs1)
+                .add(legsArmsTraps1)
+                .add(legsArmsTraps1)
+                .add(legsArmsTraps1)
+                .add(legsArmsTraps1)
+                .add(legsArmsTraps1)
+                .add(calvesNeck1)
+                .add(calvesNeck1)
+                .add(calvesNeck1)
+                .add(calvesNeck1) as WorkoutTemplate,
             WorkoutTemplate(ItemIdentifierGenerator.generateId(), WORKOUT_CHEST_BACK_SHOULDERS_2)
-                .addBlock(chestBack3, WorkoutBlockType.Warmup)
-                .addBlock(chestBack3, WorkoutBlockType.Warmup)
-                .addBlock(chestBack3, WorkoutBlockType.Working)
-                .addBlock(chestBack3, WorkoutBlockType.Working)
-                .addBlock(chestBack3, WorkoutBlockType.Working)
-                .addBlock(chestBack4, WorkoutBlockType.Warmup)
-                .addBlock(chestBack4, WorkoutBlockType.Working)
-                .addBlock(chestBack4, WorkoutBlockType.Working)
-                .addBlock(chestBack4, WorkoutBlockType.Working)
-                .addBlock(shoulders2, WorkoutBlockType.Warmup)
-                .addBlock(shoulders2, WorkoutBlockType.Working)
-                .addBlock(shoulders2, WorkoutBlockType.Working)
-                .addBlock(shoulders2, WorkoutBlockType.Working),
+                .add(chestBack3)
+                .add(chestBack3)
+                .add(chestBack3)
+                .add(chestBack3)
+                .add(chestBack3)
+                .add(chestBack4)
+                .add(chestBack4)
+                .add(chestBack4)
+                .add(chestBack4)
+                .add(shoulders2)
+                .add(shoulders2)
+                .add(shoulders2)
+                .add(shoulders2) as WorkoutTemplate,
             WorkoutTemplate(ItemIdentifierGenerator.generateId(), WORKOUT_LEGS_ARMS_TRAPS_NECK_2)
-                .addBlock(legsArmsTraps2, WorkoutBlockType.Warmup)
-                .addBlock(legsArmsTraps2, WorkoutBlockType.Warmup)
-                .addBlock(legsArmsTraps2, WorkoutBlockType.Working)
-                .addBlock(legsArmsTraps2, WorkoutBlockType.Working)
-                .addBlock(legsArmsTraps2, WorkoutBlockType.Working)
-                .addBlock(calvesNeck2, WorkoutBlockType.Warmup)
-                .addBlock(calvesNeck2, WorkoutBlockType.Working)
-                .addBlock(calvesNeck2, WorkoutBlockType.Working)
-                .addBlock(calvesNeck2, WorkoutBlockType.Working)
+                .add(legsArmsTraps2)
+                .add(legsArmsTraps2)
+                .add(legsArmsTraps2)
+                .add(legsArmsTraps2)
+                .add(legsArmsTraps2)
+                .add(calvesNeck2)
+                .add(calvesNeck2)
+                .add(calvesNeck2)
+                .add(calvesNeck2) as WorkoutTemplate
         )
     }
 
