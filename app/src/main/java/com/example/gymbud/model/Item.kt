@@ -5,6 +5,7 @@ typealias ItemIdentifier = Long
 enum class ItemType {
     EXERCISE,
     EXERCISE_TEMPLATE,
+    REST_PERIOD,
     SET_TEMPLATE,
     WORKOUT_TEMPLATE,
     PROGRAM
@@ -37,7 +38,20 @@ abstract class ItemContainer {
         return _items[index]
     }
 
-    fun removeBlock(index: Int) {
-        _items.removeAt(index)
+    fun remove(index: Int): Boolean {
+        return try {
+            _items.removeAt(index)
+            true
+        } catch (e: IndexOutOfBoundsException) {
+            false
+        }
+    }
+
+    fun clear() {
+        _items.clear()
+    }
+
+    fun replaceAllWith(newItems: List<Item>) {
+        _items = newItems.toMutableList()
     }
 }

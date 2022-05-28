@@ -13,3 +13,9 @@ open class SetTemplate(
         return supportedItemTypes
     }
 }
+
+
+data class SetTemplateContent(
+    override var name: String,
+    var items: List<Item>
+): ItemContent

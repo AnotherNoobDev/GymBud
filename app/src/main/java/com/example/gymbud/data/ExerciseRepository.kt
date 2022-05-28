@@ -7,7 +7,7 @@ import com.example.gymbud.model.Exercise
 import com.example.gymbud.model.ItemIdentifier
 import kotlinx.coroutines.flow.*
 
-private const val TAG = "ExerciseDetail"
+private const val TAG = "ExerciseRepository"
 
 
 class ExerciseRepository {

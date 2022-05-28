@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 class ItemRepository(
     private val exerciseRepository: ExerciseRepository,
     private val exerciseTemplateRepository: ExerciseTemplateRepository,
+    private val restPeriodRepository: RestPeriodRepository,
     private val setTemplateRepository: SetTemplateRepository,
     private val workoutTemplateRepository: WorkoutTemplateRepository,
     private val programRepository: ProgramRepository
@@ -15,6 +16,7 @@ class ItemRepository(
         return when (type) {
             ItemType.EXERCISE -> exerciseRepository.exercises
             ItemType.EXERCISE_TEMPLATE -> exerciseTemplateRepository.exerciseTemplates
+            ItemType.REST_PERIOD -> restPeriodRepository.restPeriods
             ItemType.SET_TEMPLATE-> setTemplateRepository.setTemplates
             ItemType.WORKOUT_TEMPLATE-> workoutTemplateRepository.workoutTemplates
             ItemType.PROGRAM -> programRepository.programs
@@ -29,6 +31,8 @@ class ItemRepository(
             ItemType.SET_TEMPLATE -> setTemplateRepository.retrieveSetTemplate(id)
             else -> findItemInAll(id)
         }
+
+        // todo
     }
 
 
@@ -41,8 +45,10 @@ class ItemRepository(
         item = exerciseTemplateRepository.retrieveExerciseTemplate(id)
         if (item != null) return item
 
-        /* todo */
+        item = setTemplateRepository.retrieveSetTemplate(id)
+        if (item != null) return item
 
+        // todo
 
         return item
     }
@@ -53,6 +59,8 @@ class ItemRepository(
             addExercise(content)
         } else if (content is ExerciseTemplateNewContent) {
             addExerciseTemplate(content)
+        } else if (content is SetTemplateContent) {
+            addSetTemplate(content)
         }
 
         // todo
@@ -79,12 +87,22 @@ class ItemRepository(
         )
     }
 
+    private fun addSetTemplate(content: SetTemplateContent) {
+        setTemplateRepository.addSetTemplate(
+            ItemIdentifierGenerator.generateId(),
+            content.name,
+            content.items
+        )
+    }
+
 
     fun updateItem(id: ItemIdentifier, content: ItemContent) {
         if (content is ExerciseContent) {
             updateExercise(id, content)
         } else if (content is ExerciseTemplateEditContent) {
             updateExerciseTemplate(id, content)
+        } else if (content is SetTemplateContent) {
+            updateSetTemplate(id, content)
         }
 
         // todo
@@ -110,11 +128,20 @@ class ItemRepository(
         )
     }
 
+    private fun updateSetTemplate(id: ItemIdentifier, content: SetTemplateContent) {
+        setTemplateRepository.updateSetTemplate(
+            id,
+            content.name,
+            content.items
+        )
+    }
+
 
     fun removeItem(id: ItemIdentifier, type: ItemType? = null) {
         when (type) {
             ItemType.EXERCISE -> exerciseRepository.removeExercise(id)
             ItemType.EXERCISE_TEMPLATE -> exerciseTemplateRepository.removeExerciseTemplate(id)
+            ItemType.SET_TEMPLATE -> setTemplateRepository.removeSetTemplate(id)
             else -> removeItemInAll(id)
         }
 
@@ -124,7 +151,8 @@ class ItemRepository(
 
     private fun removeItemInAll(id: ItemIdentifier) {
         exerciseRepository.removeExercise(id) ||
-                exerciseTemplateRepository.removeExerciseTemplate(id)
+                exerciseTemplateRepository.removeExerciseTemplate(id) ||
+                setTemplateRepository.removeSetTemplate(id)
 
         // todo
     }

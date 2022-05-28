@@ -8,10 +8,8 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.gymbud.databinding.FragmentItemListBinding
 import com.example.gymbud.databinding.LayoutDetailDividerBinding
 import com.example.gymbud.databinding.LayoutDetailNameBinding
-import com.example.gymbud.model.Item
-import com.example.gymbud.model.ItemIdentifier
-import com.example.gymbud.model.ItemType
-import com.example.gymbud.model.SetTemplate
+import com.example.gymbud.model.*
+import com.example.gymbud.ui.Functionality
 
 import com.example.gymbud.ui.SetTemplateRecyclerViewAdapter
 import com.example.gymbud.ui.viewmodel.ItemViewModel
@@ -28,12 +26,24 @@ class SetTemplateDetailView(
     private var _exerciseListBinding: FragmentItemListBinding? = null
     private val exerciseListBinding get() = _exerciseListBinding!!
 
+    private var setTemplate: SetTemplate? = null
+
+    private val exerciseListAdapter: SetTemplateRecyclerViewAdapter = SetTemplateRecyclerViewAdapter(Functionality.Detail)
+
+    init {
+        exerciseListAdapter.setOnItemClickedCallback {
+            if (it is ExerciseTemplate) {
+                onDetailsCallback(it.id, ItemType.EXERCISE_TEMPLATE)
+            }
+        }
+    }
 
     override fun inflate(inflater: LayoutInflater): List<View> {
         _nameBinding = LayoutDetailNameBinding.inflate(inflater)
         _exerciseListBinding = FragmentItemListBinding.inflate(inflater)
 
         exerciseListBinding.addItemFab.isVisible  = false;
+        exerciseListBinding.recyclerView.adapter = exerciseListAdapter
 
         val divider1 = LayoutDetailDividerBinding.inflate(inflater).root
 
@@ -55,15 +65,11 @@ class SetTemplateDetailView(
             return
         }
 
+        setTemplate = item
+
         nameBinding.name.text = item.name
 
-        val adapter = SetTemplateRecyclerViewAdapter {
-            onDetailsCallback(it, ItemType.EXERCISE_TEMPLATE)
-        }
-
-        adapter.submitList(item.items)
-
-        exerciseListBinding.recyclerView.adapter = adapter
+        exerciseListAdapter.submitList(item.items)
     }
 }
 

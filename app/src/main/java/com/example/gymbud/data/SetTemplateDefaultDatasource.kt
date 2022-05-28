@@ -10,7 +10,7 @@ const val CHEST_BACK_SET_3 = "Chest and Back 3"
 const val CHEST_BACK_SET_4 = "Chest and Back 4"
 
 const val SHOULDERS_SET_1 = "Shoulders 1"
-const val SHOULDERS_SET_2 = "Shoulders 1"
+const val SHOULDERS_SET_2 = "Shoulders 2"
 
 const val LEGS_SET_1 = "Squats"
 
@@ -18,7 +18,7 @@ const val LEGS_ARMS_TRAPS_SET_1 = "Legs, arms and traps 1"
 const val LEGS_ARMS_TRAPS_SET_2 = "Legs, arms and traps 2"
 
 const val CALVES_NECK_SET_1 = "Calves and Neck 1"
-const val CALVES_NECK_SET_2 = "Calves and Neck 1"
+const val CALVES_NECK_SET_2 = "Calves and Neck 2"
 
 
 

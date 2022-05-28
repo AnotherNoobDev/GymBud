@@ -21,5 +21,11 @@ object RestPeriodDefaultDatasource {
         IntRange(60,120)
     )
 
+    val restPeriods = listOf(
+        rest30,
+        rest60,
+        rest60to120
+    )
+
     // todo add remaining rest periods
 }

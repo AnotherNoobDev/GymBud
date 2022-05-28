@@ -8,8 +8,11 @@
     <string name="equipment">Equipment</string>
     <string name="target_muscle">Target muscle</string>
     <string name="exercise">Exercise</string>
+    <string name="rest_period">Rest period</string>
 
     <string name="save">Save</string>
     <string name="delete">Delete</string>
+    <string name="bnt_add">Add</string>
+    <string name="btn_cancel">Cancel</string>
 
 </resources>

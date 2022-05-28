@@ -28,6 +28,7 @@ class EditItemViewFactory {
             return when (type) {
                 ItemType.EXERCISE -> ExerciseEditView(context)
                 ItemType.EXERCISE_TEMPLATE -> ExerciseTemplateEditView(context)
+                ItemType.SET_TEMPLATE -> SetTemplateEditView(context)
                 else ->  ExerciseEditView(context) // todo
             }
         }

@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.gymbud.BaseApplication
+import com.example.gymbud.R
 import com.example.gymbud.databinding.FragmentItemEditBinding
 import com.example.gymbud.ui.viewbuilder.EditItemView
 import com.example.gymbud.ui.viewbuilder.EditItemViewFactory
@@ -41,6 +42,12 @@ class ItemEditFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentItemEditBinding.inflate(inflater, container, false)
+
+        binding.apply {
+            confirmBtn.text = requireContext().getString(R.string.save)
+            cancelBtn.text = requireContext().getString(R.string.delete)
+        }
+
         _itemView = EditItemViewFactory.create(navigationArgs.type, requireContext())
 
         itemView.inflate(inflater).forEach {
@@ -73,12 +80,12 @@ class ItemEditFragment : Fragment() {
         itemView.populate(viewLifecycleOwner.lifecycleScope, viewModel, item)
 
         binding.apply {
-            saveBtn.setOnClickListener {
+            confirmBtn.setOnClickListener {
                 updateItem()
             }
 
-            deleteBtn.visibility = View.VISIBLE
-            deleteBtn.setOnClickListener {
+            cancelBtn.visibility = View.VISIBLE
+            cancelBtn.setOnClickListener {
                 removeItem()
             }
         }
@@ -89,9 +96,11 @@ class ItemEditFragment : Fragment() {
         itemView.populateForNewItem(viewLifecycleOwner.lifecycleScope, viewModel)
 
         binding.apply {
-            saveBtn.setOnClickListener {
+            confirmBtn.setOnClickListener {
                 addItem()
             }
+
+            cancelBtn.visibility = View.GONE
         }
     }
 
