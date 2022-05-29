@@ -3,7 +3,6 @@ package com.example.gymbud.ui.viewbuilder
 import android.content.Context
 import com.example.gymbud.model.ItemIdentifier
 import com.example.gymbud.model.ItemType
-import com.example.gymbud.ui.viewmodel.ItemViewModel
 
 class ItemViewFactory {
     companion object {
@@ -15,6 +14,7 @@ class ItemViewFactory {
                 ItemType.EXERCISE -> ExerciseDetailView()
                 ItemType.EXERCISE_TEMPLATE -> ExerciseTemplateDetailView(onDetailsCallback)
                 ItemType.SET_TEMPLATE -> SetTemplateDetailView(onDetailsCallback)
+                ItemType.WORKOUT_TEMPLATE -> WorkoutTemplateDetailView(onDetailsCallback)
                 else ->  ExerciseDetailView() // todo
             }
         }
@@ -29,6 +29,7 @@ class EditItemViewFactory {
                 ItemType.EXERCISE -> ExerciseEditView(context)
                 ItemType.EXERCISE_TEMPLATE -> ExerciseTemplateEditView(context)
                 ItemType.SET_TEMPLATE -> SetTemplateEditView(context)
+                ItemType.WORKOUT_TEMPLATE -> WorkoutTemplateEditView(context)
                 else ->  ExerciseEditView(context) // todo
             }
         }

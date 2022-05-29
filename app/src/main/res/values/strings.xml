@@ -8,7 +8,9 @@
     <string name="equipment">Equipment</string>
     <string name="target_muscle">Target muscle</string>
     <string name="exercise">Exercise</string>
+    <string name="set">Set</string>
     <string name="rest_period">Rest period</string>
+    <string name="rest_period_input_label">Rest</string>
 
     <string name="save">Save</string>
     <string name="delete">Delete</string>

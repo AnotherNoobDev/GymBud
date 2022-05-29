@@ -6,7 +6,8 @@ open class SetTemplate(
 ): Item, ItemContainer() {
     private val supportedItemTypes = listOf(
         ItemType.EXERCISE_TEMPLATE,
-        ItemType.SET_TEMPLATE
+        ItemType.SET_TEMPLATE,
+        ItemType.REST_PERIOD
     )
 
     override fun getSupportedItemTypes(): List<ItemType> {

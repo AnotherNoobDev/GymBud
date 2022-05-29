@@ -21,6 +21,46 @@ interface ItemContent {
 }
 
 
+enum class TagCategory {
+    Intensity
+}
+
+class TaggedItem(
+    val item: Item
+): Item {
+    override val id: ItemIdentifier = item.id
+    override var name: String = item.name
+
+    private val _tags = mutableMapOf<TagCategory, MutableSet<String>>()
+    val tags: Map<TagCategory, Set<String>>  get() = _tags.toMap()
+
+    fun tag(cat: TagCategory, t: String): TaggedItem {
+
+        if (_tags[cat] == null) {
+            _tags[cat] = mutableSetOf()
+        }
+
+        _tags[cat]!!.add(t)
+
+        return this
+    }
+
+    companion object {
+        fun makeTagged(item: Item, cat: TagCategory? = null, vararg tags: String): TaggedItem {
+            val tagged = TaggedItem(item)
+
+            if (cat != null) {
+                for (t in tags) {
+                    tagged.tag(cat, t)
+                }
+            }
+
+            return tagged
+        }
+    }
+}
+
+
 abstract class ItemContainer {
     // todo this is not actually enforced (should it be?)
     abstract fun getSupportedItemTypes(): List<ItemType>

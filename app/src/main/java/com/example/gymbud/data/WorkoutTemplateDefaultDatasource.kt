@@ -1,7 +1,6 @@
 package com.example.gymbud.data
 
-import com.example.gymbud.model.SetTemplate
-import com.example.gymbud.model.WorkoutTemplate
+import com.example.gymbud.model.*
 
 
 const val WORKOUT_CHEST_BACK_SHOULDERS_1 = "Workout Chest, Back and Shoulders 1"
@@ -36,61 +35,98 @@ object WorkoutTemplateDefaultDatasource {
         val legsArmsTraps2 = SetTemplateDefaultDatasource.getSetTemplateForHypertrophyByName(LEGS_ARMS_TRAPS_SET_2)!!
         val calvesNeck2 = SetTemplateDefaultDatasource.getSetTemplateForHypertrophyByName(CALVES_NECK_SET_2)!!
 
+        val rest60to120 = RestPeriodDefaultDatasource.rest60to120
+        val rest180to300 = RestPeriodDefaultDatasource.rest180to300
+
         return listOf(
             WorkoutTemplate(ItemIdentifierGenerator.generateId(), WORKOUT_CHEST_BACK_SHOULDERS_1)
-                .add(chestBack1) // WorkoutBlockType.Warmup
-                .add(chestBack1) // WorkoutBlockType.Warmup
-                .add(chestBack1) // , WorkoutBlockType.Working
-                .add(chestBack1) // , WorkoutBlockType.Working
-                .add(chestBack1) // , WorkoutBlockType.Working
-                .add(chestBack2) // , WorkoutBlockType.Warmup
-                .add(chestBack2) // , WorkoutBlockType.Working
-                .add(chestBack2) //, WorkoutBlockType.Working
-                .add(chestBack2) // , WorkoutBlockType.Working
-                .add(shoulders1) // , WorkoutBlockType.Warmup
-                .add(shoulders1) //  WorkoutBlockType.Working
-                .add(shoulders1) // WorkoutBlockType.Working
-                .add(shoulders1) as WorkoutTemplate, // WorkoutBlockType.Working
+                .add(TaggedItem.makeTagged(chestBack1, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(chestBack1, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(chestBack1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(chestBack1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(chestBack1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest180to300)
+                .add(TaggedItem.makeTagged(chestBack2, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(chestBack2, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(chestBack2, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(chestBack2, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest180to300)
+                .add(TaggedItem.makeTagged(shoulders1, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(shoulders1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(shoulders1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(shoulders1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                    as WorkoutTemplate,
             WorkoutTemplate(ItemIdentifierGenerator.generateId(), WORKOUT_LEGS_ARMS_TRAPS_NECK_1)
-                .add(legs1)
-                .add(legs1)
-                .add(legs1)
-                .add(legs1)
-                .add(legs1)
-                .add(legs1)
-                .add(legsArmsTraps1)
-                .add(legsArmsTraps1)
-                .add(legsArmsTraps1)
-                .add(legsArmsTraps1)
-                .add(legsArmsTraps1)
-                .add(calvesNeck1)
-                .add(calvesNeck1)
-                .add(calvesNeck1)
-                .add(calvesNeck1) as WorkoutTemplate,
+                .add(TaggedItem.makeTagged(legs1, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(legs1, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(legs1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(legs1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(legs1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(legs1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest180to300)
+                .add(TaggedItem.makeTagged(legsArmsTraps1, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(legsArmsTraps1, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(legsArmsTraps1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(legsArmsTraps1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(legsArmsTraps1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest180to300)
+                .add(TaggedItem.makeTagged(calvesNeck1, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(calvesNeck1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(calvesNeck1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(calvesNeck1, TagCategory.Intensity, SetIntensity.Working.toString()))
+                    as WorkoutTemplate,
             WorkoutTemplate(ItemIdentifierGenerator.generateId(), WORKOUT_CHEST_BACK_SHOULDERS_2)
-                .add(chestBack3)
-                .add(chestBack3)
-                .add(chestBack3)
-                .add(chestBack3)
-                .add(chestBack3)
-                .add(chestBack4)
-                .add(chestBack4)
-                .add(chestBack4)
-                .add(chestBack4)
-                .add(shoulders2)
-                .add(shoulders2)
-                .add(shoulders2)
-                .add(shoulders2) as WorkoutTemplate,
+                .add(TaggedItem.makeTagged(chestBack3, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(chestBack3, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(chestBack3, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(chestBack3, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(chestBack3, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest180to300)
+                .add(TaggedItem.makeTagged(chestBack4, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(chestBack4, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(chestBack4, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(chestBack4, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest180to300)
+                .add(TaggedItem.makeTagged(shoulders2, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(shoulders2, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(shoulders2, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(shoulders2, TagCategory.Intensity, SetIntensity.Working.toString()))
+                    as WorkoutTemplate,
             WorkoutTemplate(ItemIdentifierGenerator.generateId(), WORKOUT_LEGS_ARMS_TRAPS_NECK_2)
-                .add(legsArmsTraps2)
-                .add(legsArmsTraps2)
-                .add(legsArmsTraps2)
-                .add(legsArmsTraps2)
-                .add(legsArmsTraps2)
-                .add(calvesNeck2)
-                .add(calvesNeck2)
-                .add(calvesNeck2)
-                .add(calvesNeck2) as WorkoutTemplate
+                .add(TaggedItem.makeTagged(legsArmsTraps2, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(legsArmsTraps2, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(legsArmsTraps2, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(legsArmsTraps2, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(legsArmsTraps2, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest180to300)
+                .add(TaggedItem.makeTagged(calvesNeck2, TagCategory.Intensity, SetIntensity.Warmup.toString()))
+                .add(TaggedItem.makeTagged(calvesNeck2, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(calvesNeck2, TagCategory.Intensity, SetIntensity.Working.toString()))
+                .add(rest60to120)
+                .add(TaggedItem.makeTagged(calvesNeck2, TagCategory.Intensity, SetIntensity.Working.toString()))
+                    as WorkoutTemplate
         )
     }
 

@@ -15,6 +15,7 @@ object ItemIdentifierGenerator {
     const val REST60_TO_120_ID: ItemIdentifier = -60120
     const val REST60_TO_180_ID: ItemIdentifier = -60180
     const val REST120_TO_180_ID: ItemIdentifier = -120180
+    const val REST180_TO_300_ID: ItemIdentifier = -180300
 
     fun generateId():  ItemIdentifier {
         return id++

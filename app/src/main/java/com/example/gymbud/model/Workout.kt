@@ -1,13 +1,17 @@
 package com.example.gymbud.model
 
+enum class SetIntensity {
+    Warmup,
+    Working
+}
+
 class WorkoutTemplate(
     override val id: ItemIdentifier,
     override var name: String
 ): Item, ItemContainer() {
-    // list of SetTemplate * how many times to execute ( warmup + working sets) + RestBlocks
-    // more flexibility if we just keep it as a list (for executing 3 times, add set template 3 times)
     private val supportedItemTypes = listOf(
-        ItemType.SET_TEMPLATE
+        ItemType.SET_TEMPLATE,
+        ItemType.REST_PERIOD
     )
 
     override fun getSupportedItemTypes(): List<ItemType> {
@@ -15,4 +19,8 @@ class WorkoutTemplate(
     }
 }
 
-// todo should we tag sets with Warmup, Working?
+
+data class WorkoutTemplateContent(
+    override var name: String,
+    var items: List<Item>
+): ItemContent

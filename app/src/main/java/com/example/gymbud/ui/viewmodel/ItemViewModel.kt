@@ -8,7 +8,6 @@ import com.example.gymbud.model.ItemContent
 import com.example.gymbud.model.ItemIdentifier
 import com.example.gymbud.model.ItemType
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 
 class ItemViewModel(

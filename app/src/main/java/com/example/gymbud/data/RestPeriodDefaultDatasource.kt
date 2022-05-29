@@ -21,10 +21,17 @@ object RestPeriodDefaultDatasource {
         IntRange(60,120)
     )
 
+    val rest180to300 = RestPeriod(
+        ItemIdentifierGenerator.REST180_TO_300_ID,
+        "Rest 3-5 min",
+        IntRange(180, 300)
+    )
+
     val restPeriods = listOf(
         rest30,
         rest60,
-        rest60to120
+        rest60to120,
+        rest180to300
     )
 
     // todo add remaining rest periods

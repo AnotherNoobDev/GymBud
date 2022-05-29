@@ -1,34 +1,20 @@
-package com.example.gymbud.ui
+package com.example.gymbud.ui.viewbuilder
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import android.widget.TextView
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.allViews
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.gymbud.databinding.FragmentItemBinding
 import com.example.gymbud.model.Item
-import com.example.gymbud.model.ItemIdentifier
 import androidx.recyclerview.widget.ListAdapter
 import com.example.gymbud.R
 import com.example.gymbud.databinding.LayoutDetailTextFieldBinding
 import com.example.gymbud.databinding.LayoutEditListItemButtonBinding
 import com.example.gymbud.model.ExerciseTemplate
 import com.example.gymbud.model.RestPeriod
-import com.example.gymbud.ui.viewbuilder.ExerciseTemplateDetailView
-import com.example.gymbud.ui.viewbuilder.ItemViewFactory
 import com.google.android.material.button.MaterialButton
 
-enum class Functionality {
-    Detail,
-    Edit
-}
 
 class SetTemplateRecyclerViewAdapter(
     private val functionality: Functionality
@@ -39,7 +25,7 @@ class SetTemplateRecyclerViewAdapter(
         onItemClicked = callback
     }
 
-    open abstract inner class ViewHolder(protected val rootView: RelativeLayout, inflater: LayoutInflater) : RecyclerView.ViewHolder(rootView) {
+    abstract inner class ViewHolder(protected val rootView: RelativeLayout, inflater: LayoutInflater) : RecyclerView.ViewHolder(rootView) {
         protected val exerciseTemplateView = ExerciseTemplateDetailView()
         protected val restPeriodLabelBinding = LayoutDetailTextFieldBinding.inflate(inflater)
 
@@ -85,7 +71,7 @@ class SetTemplateRecyclerViewAdapter(
         init {
             exerciseTemplateView.targetRepRangeBinding.icon.isVisible = false
 
-            restPeriodLabelBinding.text.text = "Rest"
+            restPeriodLabelBinding.text.setText(R.string.rest_period_input_label)
 
             restPeriodValueBinding.icon.isVisible = false
         }
@@ -95,7 +81,7 @@ class SetTemplateRecyclerViewAdapter(
             rootView.addView(exerciseTemplateView.targetRepRangeBinding.root)
 
             exerciseTemplateView.exerciseBinding.root.apply {
-                var params = layoutParams as RelativeLayout.LayoutParams
+                val params = layoutParams as RelativeLayout.LayoutParams
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
                 layoutParams = params
 
@@ -107,7 +93,7 @@ class SetTemplateRecyclerViewAdapter(
             }
 
             exerciseTemplateView.targetRepRangeBinding.root.apply {
-                var params = layoutParams as RelativeLayout.LayoutParams
+                val params = layoutParams as RelativeLayout.LayoutParams
                 params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
                 layoutParams = params
             }
@@ -120,13 +106,13 @@ class SetTemplateRecyclerViewAdapter(
             rootView.addView(restPeriodValueBinding.root)
 
             restPeriodLabelBinding.root.apply {
-                var params = layoutParams as RelativeLayout.LayoutParams
+                val params = layoutParams as RelativeLayout.LayoutParams
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
                 layoutParams = params
             }
 
             restPeriodValueBinding.root.apply {
-                var params = layoutParams as RelativeLayout.LayoutParams
+                val params = layoutParams as RelativeLayout.LayoutParams
                 params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
                 layoutParams = params
             }
@@ -151,7 +137,7 @@ class SetTemplateRecyclerViewAdapter(
             rootView.addView(exerciseTemplateView.exerciseBinding.root)
 
             exerciseTemplateView.exerciseBinding.root.apply {
-                var params = layoutParams as RelativeLayout.LayoutParams
+                val params = layoutParams as RelativeLayout.LayoutParams
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
                 layoutParams = params
             }
@@ -165,7 +151,7 @@ class SetTemplateRecyclerViewAdapter(
             rootView.addView(restPeriodLabelBinding.root)
 
             restPeriodLabelBinding.root.apply {
-                var params = layoutParams as RelativeLayout.LayoutParams
+                val params = layoutParams as RelativeLayout.LayoutParams
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
                 layoutParams = params
             }
@@ -179,7 +165,7 @@ class SetTemplateRecyclerViewAdapter(
             rootView.addView(removeItemButton.root)
 
             removeItemButton.root.apply {
-                var params = layoutParams as RelativeLayout.LayoutParams
+                val params = layoutParams as RelativeLayout.LayoutParams
                 params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
                 layoutParams = params
             }

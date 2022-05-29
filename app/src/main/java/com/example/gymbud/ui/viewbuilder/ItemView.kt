@@ -7,6 +7,11 @@ import com.example.gymbud.model.Item
 import com.example.gymbud.model.ItemContent
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 
+enum class Functionality {
+    Detail,
+    Edit
+}
+
 interface ItemView {
     fun inflate(inflater: LayoutInflater): List<View>
     fun populate(

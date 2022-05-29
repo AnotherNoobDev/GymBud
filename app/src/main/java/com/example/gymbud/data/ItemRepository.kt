@@ -2,7 +2,6 @@ package com.example.gymbud.data
 
 import com.example.gymbud.model.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 class ItemRepository(
     private val exerciseRepository: ExerciseRepository,
@@ -29,6 +28,7 @@ class ItemRepository(
             ItemType.EXERCISE -> exerciseRepository.retrieveExercise(id)
             ItemType.EXERCISE_TEMPLATE -> exerciseTemplateRepository.retrieveExerciseTemplate(id)
             ItemType.SET_TEMPLATE -> setTemplateRepository.retrieveSetTemplate(id)
+            ItemType.WORKOUT_TEMPLATE -> workoutTemplateRepository.retrieveWorkoutTemplate(id)
             else -> findItemInAll(id)
         }
 
@@ -48,6 +48,9 @@ class ItemRepository(
         item = setTemplateRepository.retrieveSetTemplate(id)
         if (item != null) return item
 
+        item = workoutTemplateRepository.retrieveWorkoutTemplate(id)
+        if (item != null) return item
+
         // todo
 
         return item
@@ -55,12 +58,19 @@ class ItemRepository(
 
 
     fun addItem(content: ItemContent) {
-        if (content is ExerciseContent) {
-            addExercise(content)
-        } else if (content is ExerciseTemplateNewContent) {
-            addExerciseTemplate(content)
-        } else if (content is SetTemplateContent) {
-            addSetTemplate(content)
+        when (content) {
+            is ExerciseContent -> {
+                addExercise(content)
+            }
+            is ExerciseTemplateNewContent -> {
+                addExerciseTemplate(content)
+            }
+            is SetTemplateContent -> {
+                addSetTemplate(content)
+            }
+            is WorkoutTemplateContent -> {
+                addWorkoutTemplate(content)
+            }
         }
 
         // todo
@@ -95,14 +105,29 @@ class ItemRepository(
         )
     }
 
+    private fun addWorkoutTemplate(content: WorkoutTemplateContent) {
+        workoutTemplateRepository.addWorkoutTemplate(
+            ItemIdentifierGenerator.generateId(),
+            content.name,
+            content.items
+        )
+    }
+
 
     fun updateItem(id: ItemIdentifier, content: ItemContent) {
-        if (content is ExerciseContent) {
-            updateExercise(id, content)
-        } else if (content is ExerciseTemplateEditContent) {
-            updateExerciseTemplate(id, content)
-        } else if (content is SetTemplateContent) {
-            updateSetTemplate(id, content)
+        when (content) {
+            is ExerciseContent -> {
+                updateExercise(id, content)
+            }
+            is ExerciseTemplateEditContent -> {
+                updateExerciseTemplate(id, content)
+            }
+            is SetTemplateContent -> {
+                updateSetTemplate(id, content)
+            }
+            is WorkoutTemplateContent -> {
+                updateWorkoutTemplate(id, content)
+            }
         }
 
         // todo
@@ -136,12 +161,21 @@ class ItemRepository(
         )
     }
 
+    private fun updateWorkoutTemplate(id: ItemIdentifier, content: WorkoutTemplateContent) {
+        workoutTemplateRepository.updateWorkoutTemplate(
+            id,
+            content.name,
+            content.items
+        )
+    }
+
 
     fun removeItem(id: ItemIdentifier, type: ItemType? = null) {
         when (type) {
             ItemType.EXERCISE -> exerciseRepository.removeExercise(id)
             ItemType.EXERCISE_TEMPLATE -> exerciseTemplateRepository.removeExerciseTemplate(id)
             ItemType.SET_TEMPLATE -> setTemplateRepository.removeSetTemplate(id)
+            ItemType.WORKOUT_TEMPLATE -> workoutTemplateRepository.removeWorkoutTemplate(id)
             else -> removeItemInAll(id)
         }
 
@@ -152,7 +186,8 @@ class ItemRepository(
     private fun removeItemInAll(id: ItemIdentifier) {
         exerciseRepository.removeExercise(id) ||
                 exerciseTemplateRepository.removeExerciseTemplate(id) ||
-                setTemplateRepository.removeSetTemplate(id)
+                setTemplateRepository.removeSetTemplate(id) ||
+                workoutTemplateRepository.removeWorkoutTemplate(id)
 
         // todo
     }

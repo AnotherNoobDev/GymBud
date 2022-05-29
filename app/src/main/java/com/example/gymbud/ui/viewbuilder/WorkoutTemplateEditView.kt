@@ -17,19 +17,19 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
-private const val TAG = "SetTemplateEV"
+private const val TAG = "WorkoutTemplateEV"
 
-class SetTemplateEditView(
+class WorkoutTemplateEditView(
     private val context: Context
 ): EditItemView {
 
     private var _nameBinding: LayoutEditTextFieldBinding? = null
     private val nameBinding get() = _nameBinding!!
 
-    private var _exerciseListBinding: FragmentItemListBinding? = null
-    private val exerciseListBinding get() = _exerciseListBinding!!
+    private var _setTemplateListBinding: FragmentItemListBinding? = null
+    private val setTemplateListBinding get() = _setTemplateListBinding!!
 
-    private var addExerciseTemplateButton = MaterialButton(context)
+    private var addSetTemplateButton = MaterialButton(context)
     private var addRestPeriodButton = MaterialButton(context)
 
     private var _addItemBinding: FragmentItemEditBinding? = null
@@ -38,31 +38,34 @@ class SetTemplateEditView(
     private var _itemSelectionBinding: LayoutEditDropdownFieldBinding? = null
     private val itemSelectionBinding get() = _itemSelectionBinding!!
 
-    private var addingItemOfType = ItemType.EXERCISE_TEMPLATE
+    private var _intensityBinding: LayoutEditDropdownFieldBinding? = null
+    private val intensityBinding get() = _intensityBinding!!
 
-    // the exercises(+rest periods) in the set
-    private var setTemplateEditableItems: MutableList<Item> = mutableListOf()
-    private val exerciseListAdapter = SetTemplateRecyclerViewAdapter(Functionality.Edit)
+    private var addingItemOfType = ItemType.SET_TEMPLATE
 
-    // available exercise templates to chose from
-    private var exerciseTemplates: List<Item>? = null
-    private var exerciseTemplatesSelectionAdapter: ArrayAdapter<String> = ArrayAdapter(context, R.layout.dropdown_list_item, listOf())
+    // the set templates (+rest periods) in the workout
+    private var workoutTemplateEditableItems: MutableList<Item> = mutableListOf()
+    private val setListAdapter =  WorkoutTemplateRecyclerViewAdapter(Functionality.Edit)
+
+    // available set templates to chose from
+    private var setTemplates: List<Item>? = null
+    private var setTemplatesSelectionAdapter: ArrayAdapter<String> = ArrayAdapter(context, R.layout.dropdown_list_item, listOf())
 
     // available rest periods to chose from
     private var restPeriods: List<Item>? = null
     private var restPeriodsSelectionAdapter: ArrayAdapter<String> = ArrayAdapter(context, R.layout.dropdown_list_item, listOf())
 
     init {
-        exerciseListAdapter.setOnItemClickedCallback { item ->
-            if(setTemplateEditableItems.remove(item)) {
-                exerciseListAdapter.submitList(setTemplateEditableItems.toList())
+        setListAdapter.setOnItemClickedCallback { item ->
+            if(workoutTemplateEditableItems.remove(item)) {
+                setListAdapter.submitList(workoutTemplateEditableItems.toList())
             }
         }
 
-        addExerciseTemplateButton.setIconResource(R.drawable.ic_add_24)
-        addExerciseTemplateButton.text = context.getString(R.string.exercise)
-        addExerciseTemplateButton.setOnClickListener{
-            onAddNewExercise()
+        addSetTemplateButton.setIconResource(R.drawable.ic_add_24)
+        addSetTemplateButton.text = context.getString(R.string.set)
+        addSetTemplateButton.setOnClickListener{
+            onAddNewSetTemplate()
         }
 
         addRestPeriodButton.setIconResource(R.drawable.ic_add_24)
@@ -79,7 +82,7 @@ class SetTemplateEditView(
             inflateExerciseList(inflater),
             LayoutDetailDividerBinding.inflate(inflater).root,
             inflateAddItem(inflater),
-            addExerciseTemplateButton,
+            addSetTemplateButton,
             addRestPeriodButton,
         )
     }
@@ -96,16 +99,17 @@ class SetTemplateEditView(
     }
 
     private fun inflateExerciseList(inflater: LayoutInflater): View {
-        _exerciseListBinding = FragmentItemListBinding.inflate(inflater)
+        _setTemplateListBinding = FragmentItemListBinding.inflate(inflater)
 
-        exerciseListBinding.addItemFab.isVisible  = false
-        exerciseListBinding.recyclerView.adapter = exerciseListAdapter
+        setTemplateListBinding.addItemFab.isVisible  = false
+        setTemplateListBinding.recyclerView.adapter = setListAdapter
 
-        return exerciseListBinding.root
+        return setTemplateListBinding.root
     }
 
     private fun inflateAddItem(inflater: LayoutInflater): View {
         _itemSelectionBinding = LayoutEditDropdownFieldBinding.inflate(inflater)
+        _intensityBinding = LayoutEditDropdownFieldBinding.inflate(inflater)
 
         itemSelectionBinding.input.setOnClickListener {
             itemSelectionBinding.label.error = null
@@ -121,6 +125,8 @@ class SetTemplateEditView(
             constraintSet.applyTo(layout)
 
             editFieldsLayout.addView(itemSelectionBinding.root)
+            editFieldsLayout.addView(intensityBinding.root)
+
 
             confirmBtn.text = context.getString(R.string.bnt_add)
 
@@ -133,19 +139,24 @@ class SetTemplateEditView(
                     return@setOnClickListener
                 }
 
-                val item = when (addingItemOfType) {
-                    ItemType.EXERCISE_TEMPLATE -> exerciseTemplates?.find { it.name == name } // todo name must be unique?!
+                var item = when (addingItemOfType) {
+                    ItemType.SET_TEMPLATE -> setTemplates?.find { it.name == name } // todo name must be unique?!
                     ItemType.REST_PERIOD -> restPeriods?.find {it.name == name }
                     else -> null
                 }
 
                 if (item == null) {
-                    Log.e(TAG, "Failed to retrieve item to be added to set")
+                    Log.e(TAG, "Failed to retrieve item to be added to workout")
                     return@setOnClickListener
                 }
 
-                setTemplateEditableItems.add(item)
-                exerciseListAdapter.submitList(setTemplateEditableItems.toList())
+                if (addingItemOfType == ItemType.SET_TEMPLATE) {
+                    item = TaggedItem.makeTagged(item, TagCategory.Intensity, intensityBinding.input.text.toString())
+                }
+
+
+                workoutTemplateEditableItems.add(item)
+                setListAdapter.submitList(workoutTemplateEditableItems.toList())
             }
 
             cancelBtn.text = context.getString(R.string.btn_cancel)
@@ -160,16 +171,23 @@ class SetTemplateEditView(
     }
 
 
-    private fun onAddNewExercise() {
-        addingItemOfType = ItemType.EXERCISE_TEMPLATE
+    private fun onAddNewSetTemplate() {
+        addingItemOfType = ItemType.SET_TEMPLATE
 
         setAddItemSectionVisibility(true)
 
         itemSelectionBinding.label.setStartIconDrawable(R.drawable.ic_equipment_24)
-        itemSelectionBinding.label.hint = "Exercise"
+        itemSelectionBinding.label.hint = "Set"
 
-        itemSelectionBinding.input.setAdapter(exerciseTemplatesSelectionAdapter)
-        itemSelectionBinding.input.setText(exerciseTemplates?.get(0)?.name ?: "", false) // todo all these ? look kinda funky xd
+        itemSelectionBinding.input.setAdapter(setTemplatesSelectionAdapter)
+        itemSelectionBinding.input.setText(setTemplates?.get(0)?.name ?: "", false) // todo all these ? look kinda funky xd
+
+        intensityBinding.label.setStartIconDrawable(R.drawable.ic_intensity_24)
+        intensityBinding.label.hint = "Intensity"
+
+        val intensityAdapter = ArrayAdapter(context, R.layout.dropdown_list_item, SetIntensity.values().map { it.toString()})
+        intensityBinding.input.setAdapter(intensityAdapter)
+        intensityBinding.input.setText(SetIntensity.Working.toString(), false)
     }
 
 
@@ -187,15 +205,19 @@ class SetTemplateEditView(
 
     private fun setAddItemSectionVisibility(visible: Boolean) {
         addItemBinding.root.isVisible = visible
-        addExerciseTemplateButton.isVisible = !visible
+        addSetTemplateButton.isVisible = !visible
         addRestPeriodButton.isVisible = !visible
 
+        when (addingItemOfType) {
+            ItemType.SET_TEMPLATE -> intensityBinding.root.visibility = View.VISIBLE
+            else -> intensityBinding.root.visibility = View.GONE
+        }
     }
 
 
     override fun populateForNewItem(lifecycle: LifecycleCoroutineScope, viewModel: ItemViewModel) {
-        setTemplateEditableItems = mutableListOf()
-        exerciseListAdapter.submitList(setTemplateEditableItems.toList())
+        workoutTemplateEditableItems = mutableListOf()
+        setListAdapter.submitList(workoutTemplateEditableItems.toList())
 
         populateItemsThatCanBeAdded(lifecycle, viewModel)
     }
@@ -205,15 +227,15 @@ class SetTemplateEditView(
         viewModel: ItemViewModel,
         item: Item
     ) {
-        if (item !is SetTemplate) {
-            Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not a set template!")
+        if (item !is WorkoutTemplate) {
+            Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not a workout template!")
             return
         }
 
         nameBinding.input.setText(item.name)
 
-        setTemplateEditableItems = item.items.toMutableList()
-        exerciseListAdapter.submitList(setTemplateEditableItems.toList())
+        workoutTemplateEditableItems = item.items.toMutableList()
+        setListAdapter.submitList(workoutTemplateEditableItems.toList())
 
         populateItemsThatCanBeAdded(lifecycle, viewModel)
     }
@@ -223,15 +245,15 @@ class SetTemplateEditView(
         viewModel: ItemViewModel
     ) {
         lifecycle.launch {
-            viewModel.getItemsByType(ItemType.EXERCISE_TEMPLATE).collect {
-                exerciseTemplates = it
+            viewModel.getItemsByType(ItemType.SET_TEMPLATE).collect {
+                setTemplates = it
 
-                val exerciseTemplatesByName = it.map { ex ->
-                    ex.name
+                val setTemplatesByName = it.map { set ->
+                    set.name
                 }
 
-                exerciseTemplatesSelectionAdapter =
-                    ArrayAdapter(context, R.layout.dropdown_list_item, exerciseTemplatesByName)
+                setTemplatesSelectionAdapter =
+                    ArrayAdapter(context, R.layout.dropdown_list_item, setTemplatesByName)
             }
         }
 
@@ -256,11 +278,11 @@ class SetTemplateEditView(
         }
 
         val name = nameBinding.input.text.toString()
-        val setItems = setTemplateEditableItems.toList()
+        val workoutItems = workoutTemplateEditableItems.toList()
 
-        return SetTemplateContent(
+        return WorkoutTemplateContent(
             name,
-            setItems
+            workoutItems
         )
     }
 
@@ -270,8 +292,8 @@ class SetTemplateEditView(
             return false
         }
 
-        if (setTemplateEditableItems.size == 0) {
-            nameBinding.label.error = "Set needs at least one item"
+        if (workoutTemplateEditableItems.size == 0) {
+            nameBinding.label.error = "Workout needs at least one item"
             return false
         }
 
