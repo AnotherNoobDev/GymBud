@@ -1,5 +1,7 @@
 package com.example.gymbud.model
 
+import com.example.gymbud.data.ItemIdentifierGenerator
+
 data class RestPeriod(
     override val id: ItemIdentifier,
     override var name: String,
@@ -13,4 +15,13 @@ data class RestPeriod(
             "$targetRestPeriodSec sec"
         }
     }
+
+    companion object {
+        val RestDay = RestPeriod(
+            ItemIdentifierGenerator.REST_DAY_ID,
+            "Rest Day",
+            IntRange(86400, 86400)
+        )
+    }
 }
+

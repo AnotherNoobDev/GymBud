@@ -5,20 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import com.example.gymbud.R
 import com.example.gymbud.databinding.FragmentProgramBuilderBinding
 import com.example.gymbud.model.ItemType
 
 class ProgramBuilderFragment : Fragment() {
     private var _binding: FragmentProgramBuilderBinding? = null
     private val binding get() = _binding!!
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +45,7 @@ class ProgramBuilderFragment : Fragment() {
             }
 
             viewProgramsButton.setOnClickListener {
-                val action = ProgramBuilderFragmentDirections.actionProgramBuilderFragmentToAddItemFragment(ItemType.PROGRAM)
+                val action = ProgramBuilderFragmentDirections.actionProgramBuilderFragmentToAddItemFragment(ItemType.PROGRAM_TEMPLATE)
                 findNavController().navigate(action)
             }
         }

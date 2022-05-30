@@ -15,6 +15,7 @@ class ItemViewFactory {
                 ItemType.EXERCISE_TEMPLATE -> ExerciseTemplateDetailView(onDetailsCallback)
                 ItemType.SET_TEMPLATE -> SetTemplateDetailView(onDetailsCallback)
                 ItemType.WORKOUT_TEMPLATE -> WorkoutTemplateDetailView(onDetailsCallback)
+                ItemType.PROGRAM_TEMPLATE -> ProgramTemplateDetailView(onDetailsCallback)
                 else ->  ExerciseDetailView() // todo
             }
         }
@@ -30,6 +31,7 @@ class EditItemViewFactory {
                 ItemType.EXERCISE_TEMPLATE -> ExerciseTemplateEditView(context)
                 ItemType.SET_TEMPLATE -> SetTemplateEditView(context)
                 ItemType.WORKOUT_TEMPLATE -> WorkoutTemplateEditView(context)
+                ItemType.PROGRAM_TEMPLATE -> ProgramTemplateEditView(context)
                 else ->  ExerciseEditView(context) // todo
             }
         }

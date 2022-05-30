@@ -8,7 +8,7 @@ enum class ItemType {
     REST_PERIOD,
     SET_TEMPLATE,
     WORKOUT_TEMPLATE,
-    PROGRAM
+    PROGRAM_TEMPLATE
 }
 
 interface Item {

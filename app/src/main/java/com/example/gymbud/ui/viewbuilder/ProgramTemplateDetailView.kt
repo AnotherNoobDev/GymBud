@@ -9,48 +9,44 @@ import com.example.gymbud.databinding.FragmentItemListBinding
 import com.example.gymbud.databinding.LayoutDetailDividerBinding
 import com.example.gymbud.databinding.LayoutDetailNameBinding
 import com.example.gymbud.model.*
-
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 
-
-private const val TAG = "WorkoutTemplateDV"
+private const val TAG = "ProgramTemplateDV"
 
 // todo lots of duplication with SetTemplateDetailView atm (basically copy-pasta, only big diff is adapter (setListAdapter))
 //  -> can we do better? will other things change in the "final" version to justify keeping them separate? (should still try to remove duplication)
-class WorkoutTemplateDetailView(
+class ProgramTemplateDetailView(
     private val onDetailsCallback: (ItemIdentifier, ItemType) -> Unit
 ): ItemView {
     private var _nameBinding: LayoutDetailNameBinding? = null
     private val nameBinding get() = _nameBinding!!
 
-    private var _setListBinding: FragmentItemListBinding? = null
-    private val setListBinding get() = _setListBinding!!
+    private var _workoutListBinding: FragmentItemListBinding? = null
+    private val workoutListBinding get() = _workoutListBinding!!
 
-    private val setListAdapter = WorkoutTemplateRecyclerViewAdapter(Functionality.Detail)
+    private val workoutListAdapter = ProgramTemplateRecyclerViewAdapter(Functionality.Detail)
 
     init {
-        setListAdapter.setOnItemClickedCallback {
-            if (it is SetTemplate) {
-                onDetailsCallback(it.id, ItemType.SET_TEMPLATE)
-            } else if (it is TaggedItem && it.item is SetTemplate) {
-                onDetailsCallback(it.id, ItemType.SET_TEMPLATE)
+        workoutListAdapter.setOnItemClickedCallback {
+            if (it is WorkoutTemplate) {
+                onDetailsCallback(it.id, ItemType.WORKOUT_TEMPLATE)
             }
         }
     }
 
     override fun inflate(inflater: LayoutInflater): List<View> {
         _nameBinding = LayoutDetailNameBinding.inflate(inflater)
-        _setListBinding = FragmentItemListBinding.inflate(inflater)
+        _workoutListBinding = FragmentItemListBinding.inflate(inflater)
 
-        setListBinding.addItemFab.isVisible  = false
-        setListBinding.recyclerView.adapter = setListAdapter
+        workoutListBinding.addItemFab.isVisible  = false
+        workoutListBinding.recyclerView.adapter = workoutListAdapter
 
         val divider1 = LayoutDetailDividerBinding.inflate(inflater).root
 
         return listOf(
             nameBinding.root,
             divider1,
-            setListBinding.root
+            workoutListBinding.root
         )
     }
 
@@ -60,14 +56,13 @@ class WorkoutTemplateDetailView(
         viewModel: ItemViewModel,
         item: Item
     ) {
-        if (item !is WorkoutTemplate) {
-            Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not a workout template!")
+        if (item !is ProgramTemplate) {
+            Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not a program template!")
             return
         }
 
         nameBinding.name.text = item.name
 
-        setListAdapter.submitList(item.items)
+        workoutListAdapter.submitList(item.items)
     }
 }
-

@@ -9,7 +9,7 @@ class BaseApplication: Application() {
     val restPeriodRepository: RestPeriodRepository = RestPeriodRepository()
     val setTemplateRepository: SetTemplateRepository = SetTemplateRepository(exerciseTemplateRepository)
     val workoutTemplateRepository: WorkoutTemplateRepository = WorkoutTemplateRepository(setTemplateRepository)
-    val programRepository: ProgramRepository = ProgramRepository()
+    val programRepository: ProgramTemplateRepository = ProgramTemplateRepository()
     val itemRepository: ItemRepository =
         ItemRepository(
             exerciseRepository,

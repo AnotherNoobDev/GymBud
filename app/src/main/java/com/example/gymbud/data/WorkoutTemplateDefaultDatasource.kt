@@ -3,11 +3,11 @@ package com.example.gymbud.data
 import com.example.gymbud.model.*
 
 
-const val WORKOUT_CHEST_BACK_SHOULDERS_1 = "Workout Chest, Back and Shoulders 1"
-const val WORKOUT_CHEST_BACK_SHOULDERS_2 = "Workout Chest, Back and Shoulders 2"
+const val WORKOUT_CHEST_BACK_SHOULDERS_1 = "Chest, Back and Shoulders Workout 1"
+const val WORKOUT_CHEST_BACK_SHOULDERS_2 = "Chest, Back and Shoulders Workout 2"
 
-const val WORKOUT_LEGS_ARMS_TRAPS_NECK_1 = "Workout Legs, Arms, Traps and Neck 1"
-const val WORKOUT_LEGS_ARMS_TRAPS_NECK_2 = "Workout Legs, Arms, Traps and Neck 2"
+const val WORKOUT_LEGS_ARMS_TRAPS_NECK_1 = "Legs, Arms, Traps and Neck Workout 1"
+const val WORKOUT_LEGS_ARMS_TRAPS_NECK_2 = "Legs, Arms, Traps and Neck Workout 2"
 
 
 

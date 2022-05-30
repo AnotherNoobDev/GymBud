@@ -9,7 +9,7 @@ class ItemRepository(
     private val restPeriodRepository: RestPeriodRepository,
     private val setTemplateRepository: SetTemplateRepository,
     private val workoutTemplateRepository: WorkoutTemplateRepository,
-    private val programRepository: ProgramRepository
+    private val programTemplateRepository: ProgramTemplateRepository
 ) {
     fun getItemsByType(type: ItemType): Flow<List<Item>> {
         return when (type) {
@@ -18,7 +18,7 @@ class ItemRepository(
             ItemType.REST_PERIOD -> restPeriodRepository.restPeriods
             ItemType.SET_TEMPLATE-> setTemplateRepository.setTemplates
             ItemType.WORKOUT_TEMPLATE-> workoutTemplateRepository.workoutTemplates
-            ItemType.PROGRAM -> programRepository.programs
+            ItemType.PROGRAM_TEMPLATE -> programTemplateRepository.programTemplates
         }
     }
 
@@ -29,10 +29,10 @@ class ItemRepository(
             ItemType.EXERCISE_TEMPLATE -> exerciseTemplateRepository.retrieveExerciseTemplate(id)
             ItemType.SET_TEMPLATE -> setTemplateRepository.retrieveSetTemplate(id)
             ItemType.WORKOUT_TEMPLATE -> workoutTemplateRepository.retrieveWorkoutTemplate(id)
+            ItemType.PROGRAM_TEMPLATE -> programTemplateRepository.retrieveProgramTemplate(id)
+            ItemType.REST_PERIOD -> restPeriodRepository.retrieveRestPeriod(id)
             else -> findItemInAll(id)
         }
-
-        // todo
     }
 
 
@@ -51,7 +51,11 @@ class ItemRepository(
         item = workoutTemplateRepository.retrieveWorkoutTemplate(id)
         if (item != null) return item
 
-        // todo
+        item = programTemplateRepository.retrieveProgramTemplate(id)
+        if (item != null) return item
+
+        item = restPeriodRepository.retrieveRestPeriod(id)
+        if (item != null) return item
 
         return item
     }
@@ -70,6 +74,9 @@ class ItemRepository(
             }
             is WorkoutTemplateContent -> {
                 addWorkoutTemplate(content)
+            }
+            is ProgramTemplateContent -> {
+                addProgramTemplate(content)
             }
         }
 
@@ -113,6 +120,14 @@ class ItemRepository(
         )
     }
 
+    private fun addProgramTemplate(content: ProgramTemplateContent) {
+        programTemplateRepository.addProgramTemplate(
+            ItemIdentifierGenerator.generateId(),
+            content.name,
+            content.items
+        )
+    }
+
 
     fun updateItem(id: ItemIdentifier, content: ItemContent) {
         when (content) {
@@ -127,6 +142,9 @@ class ItemRepository(
             }
             is WorkoutTemplateContent -> {
                 updateWorkoutTemplate(id, content)
+            }
+            is ProgramTemplateContent -> {
+                updateProgramTemplate(id, content)
             }
         }
 
@@ -169,6 +187,14 @@ class ItemRepository(
         )
     }
 
+    private fun updateProgramTemplate(id: ItemIdentifier, content: ProgramTemplateContent) {
+        programTemplateRepository.updateProgramTemplate(
+            id,
+            content.name,
+            content.items
+        )
+    }
+
 
     fun removeItem(id: ItemIdentifier, type: ItemType? = null) {
         when (type) {
@@ -176,6 +202,7 @@ class ItemRepository(
             ItemType.EXERCISE_TEMPLATE -> exerciseTemplateRepository.removeExerciseTemplate(id)
             ItemType.SET_TEMPLATE -> setTemplateRepository.removeSetTemplate(id)
             ItemType.WORKOUT_TEMPLATE -> workoutTemplateRepository.removeWorkoutTemplate(id)
+            ItemType.PROGRAM_TEMPLATE -> programTemplateRepository.removeProgramTemplate(id)
             else -> removeItemInAll(id)
         }
 
@@ -187,7 +214,8 @@ class ItemRepository(
         exerciseRepository.removeExercise(id) ||
                 exerciseTemplateRepository.removeExerciseTemplate(id) ||
                 setTemplateRepository.removeSetTemplate(id) ||
-                workoutTemplateRepository.removeWorkoutTemplate(id)
+                workoutTemplateRepository.removeWorkoutTemplate(id) ||
+                programTemplateRepository.removeProgramTemplate(id)
 
         // todo
     }
