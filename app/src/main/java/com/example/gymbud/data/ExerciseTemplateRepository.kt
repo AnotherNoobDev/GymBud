@@ -39,8 +39,10 @@ class ExerciseTemplateRepository(
         name: String,
         targetRepRange: IntRange
     ) {
+        val validName = getValidName(id, name, _exercisesTemplates.value)
+
         val exerciseTemplate = retrieveExerciseTemplate(id)
-        exerciseTemplate?.name = name
+        exerciseTemplate?.name = validName
         exerciseTemplate?.targetRepRange = targetRepRange
     }
 
@@ -58,8 +60,10 @@ class ExerciseTemplateRepository(
             return
         }
 
+        val validName = getValidName(id, name, _exercisesTemplates.value)
+
         val newExercises = _exercisesTemplates.value.toMutableList()
-        newExercises.add(ExerciseTemplate(id, name, exercise, targetRepRange))
+        newExercises.add(ExerciseTemplate(id, validName, exercise, targetRepRange))
         _exercisesTemplates.value = newExercises
     }
 

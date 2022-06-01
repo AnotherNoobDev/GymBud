@@ -140,7 +140,7 @@ class WorkoutTemplateEditView(
                 }
 
                 var item = when (addingItemOfType) {
-                    ItemType.SET_TEMPLATE -> setTemplates?.find { it.name == name } // todo name must be unique?!
+                    ItemType.SET_TEMPLATE -> setTemplates?.find { it.name == name }
                     ItemType.REST_PERIOD -> restPeriods?.find {it.name == name }
                     else -> null
                 }

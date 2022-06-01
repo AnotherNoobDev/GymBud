@@ -21,6 +21,16 @@ interface ItemContent {
 }
 
 
+fun getValidName(id: ItemIdentifier, name: String, items: List<Item>): String {
+    return if (items.find { it.name.trim().lowercase() == name.trim().lowercase() } == null) {
+        name
+    } else {
+        return "$name #$id"
+    }
+}
+
+
+
 enum class TagCategory {
     Intensity
 }

@@ -134,7 +134,7 @@ class SetTemplateEditView(
                 }
 
                 val item = when (addingItemOfType) {
-                    ItemType.EXERCISE_TEMPLATE -> exerciseTemplates?.find { it.name == name } // todo name must be unique?!
+                    ItemType.EXERCISE_TEMPLATE -> exerciseTemplates?.find { it.name == name }
                     ItemType.REST_PERIOD -> restPeriods?.find {it.name == name }
                     else -> null
                 }

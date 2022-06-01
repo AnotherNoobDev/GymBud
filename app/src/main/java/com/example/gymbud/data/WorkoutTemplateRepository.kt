@@ -3,6 +3,7 @@ package com.example.gymbud.data
 import com.example.gymbud.model.Item
 import com.example.gymbud.model.ItemIdentifier
 import com.example.gymbud.model.WorkoutTemplate
+import com.example.gymbud.model.getValidName
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,8 +24,10 @@ class WorkoutTemplateRepository(
         name: String,
         items: List<Item>
     ) {
+        val validName = getValidName(id, name, _workoutTemplates.value)
+
         val workout = retrieveWorkoutTemplate(id)
-        workout?.name = name
+        workout?.name = validName
         workout?.replaceAllWith(items)
     }
 
@@ -34,7 +37,9 @@ class WorkoutTemplateRepository(
         name: String,
         items: List<Item>
     ) {
-        val newWorkout = WorkoutTemplate(id, name)
+        val validName = getValidName(id, name, _workoutTemplates.value)
+
+        val newWorkout = WorkoutTemplate(id, validName)
         newWorkout.replaceAllWith(items)
 
         val newWorkoutTemplates = _workoutTemplates.value.toMutableSet()

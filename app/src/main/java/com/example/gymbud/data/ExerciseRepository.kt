@@ -1,10 +1,7 @@
 package com.example.gymbud.data
 
 import android.util.Log
-import com.example.gymbud.model.MuscleGroup
-import com.example.gymbud.model.ResistanceType
-import com.example.gymbud.model.Exercise
-import com.example.gymbud.model.ItemIdentifier
+import com.example.gymbud.model.*
 import kotlinx.coroutines.flow.*
 
 private const val TAG = "ExerciseRepository"
@@ -26,8 +23,10 @@ class ExerciseRepository {
         targetMuscle: MuscleGroup,
         description: String
     ) {
+        val validName = getValidName(id, name, _exercises.value)
+
         val exercise = retrieveExercise(id)
-        exercise?.name = name
+        exercise?.name = validName
         exercise?.resistance = resistance
         exercise?.targetMuscle = targetMuscle
         exercise?.description = description
@@ -43,12 +42,13 @@ class ExerciseRepository {
         val exercise = retrieveExercise(id)
         if (exercise != null) {
             Log.e(TAG, "Exercise with id: " + id + "already exists!")
-            // todo -> get a new id?
-            return
+            assert(false)
         }
 
+        val validName = getValidName(id, name, _exercises.value)
+
         val newExercises = _exercises.value.toMutableList()
-        newExercises.add(Exercise(id, name, description, targetMuscle, resistance))
+        newExercises.add(Exercise(id, validName, description, targetMuscle, resistance))
         _exercises.value = newExercises
     }
 

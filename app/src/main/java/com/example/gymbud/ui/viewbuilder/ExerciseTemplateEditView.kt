@@ -97,7 +97,6 @@ class ExerciseTemplateEditView(
             return null
         }
 
-        // todo this doesn't feel safe (can 2 exercises have the same name? wouldn't that be confusing!?!)
         val exercise = exercises?.find { it.name == exerciseBinding.input.text.toString()}
 
         val name = nameBinding.input.text.toString()

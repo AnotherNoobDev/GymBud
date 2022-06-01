@@ -129,7 +129,7 @@ class ProgramTemplateEditView(
                     return@setOnClickListener
                 }
 
-                val item = workoutTemplates?.find { it.name == name } // todo name must be unique?!
+                val item = workoutTemplates?.find { it.name == name }
 
                 if (item == null) {
                     Log.e(TAG, "Failed to retrieve item to be added to set")
