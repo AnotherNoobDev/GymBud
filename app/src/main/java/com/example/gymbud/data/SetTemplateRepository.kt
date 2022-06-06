@@ -30,35 +30,50 @@ class SetTemplateRepository(
     fun retrieveSetTemplate(id: ItemIdentifier): Flow<SetTemplate?> {
         return setTemplateDao.get(id).map { setTemplate ->
             if (setTemplate != null) {
-                val setItems = setTemplateWithItemDao.getAllOnce(setTemplate.id)
-
-                // get set items from db in bulk
-                val setExerciseTemplates = exerciseTemplateRepository.retrieveExerciseTemplatesOnce(
-                    setItems.filter { it.isWithExerciseTemplate() }.map { it.setExerciseTemplateId!! }
-                )
-
-                val setRestPeriods = restPeriodRepository.retrieveRestPeriodsOnce(
-                    setItems.filter { it.isWithRestPeriod() }.map{ it.setRestPeriodId!! }
-                )
-
-                // put in order
-                setItems.forEachIndexed { setItemIndex, setItem ->
-                    setItem.setItemPosition = setItemIndex // ensure no gaps
-
-                    if (setItem.isWithExerciseTemplate()) {
-                        setExerciseTemplates.find { exerciseTemplate -> exerciseTemplate.id == setItem.setExerciseTemplateId  }
-                            ?.let { setTemplate.add(it) }
-                    } else if (setItem.isWithRestPeriod()) {
-                        setRestPeriods.find { restPeriod -> restPeriod.id == setItem.setRestPeriodId  }
-                            ?.let { setTemplate.add(it) }
-                    } else {
-                        assert(false)
-                    }
-                }
+                populateSetTemplateItems(setTemplate)
             }
 
             return@map setTemplate
         }
+    }
+
+
+    private suspend fun populateSetTemplateItems(setTemplate: SetTemplate) {
+        val setItems = setTemplateWithItemDao.getAllOnce(setTemplate.id)
+
+        // get set items from db in bulk
+        val setExerciseTemplates = exerciseTemplateRepository.retrieveExerciseTemplatesOnce(
+            setItems.filter { it.isWithExerciseTemplate() }.map { it.exerciseTemplateId!! }
+        )
+
+        val setRestPeriods = restPeriodRepository.retrieveRestPeriodsOnce(
+            setItems.filter { it.isWithRestPeriod() }.map{ it.restPeriodId!! }
+        )
+
+        // put in order
+        setItems.forEachIndexed { setItemIndex, setItem ->
+            setItem.setItemPosition = setItemIndex // ensure no gaps
+
+            if (setItem.isWithExerciseTemplate()) {
+                setExerciseTemplates.find { exerciseTemplate -> exerciseTemplate.id == setItem.exerciseTemplateId  }
+                    ?.let { setTemplate.add(it) }
+            } else if (setItem.isWithRestPeriod()) {
+                setRestPeriods.find { restPeriod -> restPeriod.id == setItem.restPeriodId  }
+                    ?.let { setTemplate.add(it) }
+            } else {
+                assert(false)
+            }
+        }
+    }
+
+
+    suspend fun retrieveSetTemplatesOnce(ids: List<ItemIdentifier>): List<SetTemplate> {
+        val templates = setTemplateDao.getOnce(ids)
+        templates.forEach {
+            populateSetTemplateItems(it)
+        }
+
+        return templates
     }
 
 
@@ -79,8 +94,8 @@ class SetTemplateRepository(
             items.forEachIndexed { itemIndex, item ->
                 try {
                     when (getItemType(item)) {
-                        ItemType.EXERCISE_TEMPLATE -> setTemplateWithItemDao.insert(SetTemplateWithItem(id, itemIndex, setExerciseTemplateId = item.id))
-                        ItemType.REST_PERIOD -> setTemplateWithItemDao.insert(SetTemplateWithItem(id, itemIndex, setRestPeriodId = item.id))
+                        ItemType.EXERCISE_TEMPLATE -> setTemplateWithItemDao.insert(SetTemplateWithItem(id, itemIndex, exerciseTemplateId = item.id))
+                        ItemType.REST_PERIOD -> setTemplateWithItemDao.insert(SetTemplateWithItem(id, itemIndex, restPeriodId = item.id))
                         else -> assert(false)
                     }
                 } catch (e: SQLiteConstraintException) {
@@ -88,7 +103,6 @@ class SetTemplateRepository(
                     throw e
                 }
             }
-
         }
     }
 
@@ -108,8 +122,8 @@ class SetTemplateRepository(
             // then add new links
             val setItemsToAdd = items.mapIndexedNotNull { index, item ->
                 when (getItemType(item)) {
-                    ItemType.EXERCISE_TEMPLATE -> SetTemplateWithItem(id, index, setExerciseTemplateId = item.id)
-                    ItemType.REST_PERIOD -> SetTemplateWithItem(id, index, setRestPeriodId = item.id)
+                    ItemType.EXERCISE_TEMPLATE -> SetTemplateWithItem(id, index, exerciseTemplateId = item.id)
+                    ItemType.REST_PERIOD -> SetTemplateWithItem(id, index, restPeriodId = item.id)
                     else -> null
                 }
             }

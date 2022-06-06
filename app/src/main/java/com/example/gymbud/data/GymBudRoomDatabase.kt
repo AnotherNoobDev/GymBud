@@ -5,8 +5,10 @@ import androidx.room.*
 import com.example.gymbud.model.*
 
 class Converters {
+    /// Exercise <--> ItemIdentifier
+
     @TypeConverter
-    fun fromId(value: ItemIdentifier?): Exercise? {
+    fun exercisefromId(value: ItemIdentifier?): Exercise? {
         return value?.let { Exercise(value) }
     }
 
@@ -15,10 +17,15 @@ class Converters {
         return exercise?.id
     }
 
+
+    /// IntRange <--> String (first..last)
+
+    private val delimiterBetweenFirstAndLast = ".."
+
     @TypeConverter
-    fun fromString(value: String?): IntRange? {
+    fun intRangeFromString(value: String?): IntRange? {
         return value?.let {
-            val tokenized = value.split("..")
+            val tokenized = value.split(delimiterBetweenFirstAndLast)
 
             return@let if(tokenized.size != 2) {
                 null
@@ -28,10 +35,41 @@ class Converters {
         }
     }
 
-
     @TypeConverter
     fun intRangeToString(range: IntRange?): String? {
-        return range?.let { "${range.first}..${range.last}" }
+        return range?.let { "${range.first}${delimiterBetweenFirstAndLast}${range.last}" }
+    }
+
+
+    /// Tags <--> String (tagCategory1:tagValue1,tagValue2,tagValue3|tagCategory2:tagValue1,tagValue2)
+
+    private val delimiterBetweenCategories = "|"
+    private val delimiterBetweenCategoryAndValues = ":"
+    private val delimiterBetweenValues = ","
+
+    @TypeConverter
+    fun tagsFromString(value: String?): Tags? {
+        return value?.let {
+            val tags: MutableMap<TagCategory, Set<String>> = mutableMapOf()
+
+            if (value.isEmpty()) return@let tags.toMap()
+
+            value.split(delimiterBetweenCategories).forEach{ categoryWithValues ->
+                val (category, values) = categoryWithValues.split(delimiterBetweenCategoryAndValues)
+                tags[TagCategory.valueOf(category)] = values.split(delimiterBetweenValues).toSet()
+            }
+
+            return@let tags.toMap()
+        }
+    }
+
+    @TypeConverter
+    fun tagsToString(tags: Tags?): String? {
+        return tags?.let {
+            tags.entries.joinToString(separator = delimiterBetweenCategories) {
+                "${it.key}${delimiterBetweenCategoryAndValues}${it.value.joinToString(separator=delimiterBetweenValues)}"
+            }
+        }
     }
 }
 
@@ -43,7 +81,9 @@ class Converters {
         ExerciseTemplate::class,
         RestPeriod::class,
         SetTemplate::class,
-        SetTemplateWithItem::class
+        SetTemplateWithItem::class,
+        WorkoutTemplate::class,
+        WorkoutTemplateWithItem::class
     ],
     version = 1,
     exportSchema = false
@@ -55,6 +95,9 @@ abstract class GymBudRoomDatabase: RoomDatabase() {
     abstract fun restPeriodDao(): RestPeriodDao
     abstract fun setTemplateDao(): SetTemplateDao
     abstract fun setTemplateWithItemDao(): SetTemplateWithItemDao
+    abstract fun workoutTemplateDao(): WorkoutTemplateDao
+    abstract fun workoutTemplateWithItemDao(): WorkoutTemplateWithItemDao
+
 
     companion object {
         // note: The value of a volatile variable will never be cached,

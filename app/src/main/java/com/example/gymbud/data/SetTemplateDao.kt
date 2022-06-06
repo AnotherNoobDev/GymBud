@@ -27,6 +27,9 @@ interface SetTemplateDao {
     @Query("SELECT * from set_template WHERE id = :id")
     fun get(id: ItemIdentifier): Flow<SetTemplate?>
 
+    @Query("SELECT * from set_template WHERE id IN (:ids)")
+    suspend fun getOnce(ids: List<ItemIdentifier>): List<SetTemplate>
+
     @Query("SELECT * from set_template ORDER BY name ASC")
     fun getAll(): Flow<List<SetTemplate>>
 

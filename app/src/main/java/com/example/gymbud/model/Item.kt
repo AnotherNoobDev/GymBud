@@ -34,6 +34,7 @@ fun getValidName(id: ItemIdentifier, name: String, items: List<Item>): String {
 
 fun getItemType(item:  Item): ItemType {
     return when(item) {
+        is TaggedItem -> getItemType(item.item)
         is Exercise -> ItemType.EXERCISE
         is ExerciseTemplate -> ItemType.EXERCISE_TEMPLATE
         is RestPeriod -> ItemType.REST_PERIOD
@@ -50,14 +51,19 @@ enum class TagCategory {
     Intensity
 }
 
+
+typealias Tags = Map<TagCategory, Set<String>>
+
+
 class TaggedItem(
-    val item: Item
+    val item: Item,
+    withTags: Tags = mapOf()
 ): Item {
     override val id: ItemIdentifier = item.id
     override var name: String = item.name
 
-    private val _tags = mutableMapOf<TagCategory, MutableSet<String>>()
-    val tags: Map<TagCategory, Set<String>>  get() = _tags.toMap()
+    private val _tags: MutableMap<TagCategory, MutableSet<String>> = withTags.mapValues { it.value.toMutableSet() }.toMutableMap()
+    val tags: Tags get() = _tags.toMap()
 
     fun tag(cat: TagCategory, t: String): TaggedItem {
 

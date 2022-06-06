@@ -24,10 +24,12 @@ class ItemRepository(
 
 
     suspend fun populateWithDefaults() {
+        // order here matters!!
         exerciseRepository.populateWithDefaults()
         exerciseTemplateRepository.populateWithDefaults()
         restPeriodRepository.populateWithDefaults()
         setTemplateRepository.populateWithDefaults()
+        workoutTemplateRepository.populateWithDefaults()
     }
 
 
@@ -54,7 +56,7 @@ class ItemRepository(
             ItemType.EXERCISE -> exerciseRepository.retrieveExercise(id)
             ItemType.EXERCISE_TEMPLATE -> exerciseTemplateRepository.retrieveExerciseTemplate(id)
             ItemType.SET_TEMPLATE -> setTemplateRepository.retrieveSetTemplate(id)
-            //ItemType.WORKOUT_TEMPLATE -> workoutTemplateRepository.retrieveWorkoutTemplate(id)
+            ItemType.WORKOUT_TEMPLATE -> workoutTemplateRepository.retrieveWorkoutTemplate(id)
             //ItemType.PROGRAM_TEMPLATE -> programTemplateRepository.retrieveProgramTemplate(id)
             ItemType.REST_PERIOD -> restPeriodRepository.retrieveRestPeriod(id)
             //else -> findItemInAll(id)
@@ -144,7 +146,7 @@ class ItemRepository(
         )
     }
 
-    private fun addWorkoutTemplate(content: WorkoutTemplateContent) {
+    private suspend fun addWorkoutTemplate(content: WorkoutTemplateContent) {
         workoutTemplateRepository.addWorkoutTemplate(
             ItemIdentifierGenerator.generateId(),
             content.name,
@@ -209,7 +211,7 @@ class ItemRepository(
         )
     }
 
-    private fun updateWorkoutTemplate(id: ItemIdentifier, content: WorkoutTemplateContent) {
+    private suspend fun updateWorkoutTemplate(id: ItemIdentifier, content: WorkoutTemplateContent) {
         workoutTemplateRepository.updateWorkoutTemplate(
             id,
             content.name,

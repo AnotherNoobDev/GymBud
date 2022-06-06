@@ -60,7 +60,7 @@ class WorkoutTemplateRecyclerViewAdapter(
             }
         }
 
-        protected abstract fun populateForSetTemplate(setTemplate: SetTemplate, tags: Map<TagCategory, Set<String>>)
+        protected abstract fun populateForSetTemplate(setTemplate: SetTemplate, tags: Tags)
 
         protected abstract fun populateForRestPeriod(restPeriod: RestPeriod)
 
@@ -87,7 +87,7 @@ class WorkoutTemplateRecyclerViewAdapter(
             restPeriodValueBinding.icon.isVisible = false
         }
 
-        override fun populateForSetTemplate(setTemplate: SetTemplate, tags: Map<TagCategory, Set<String>>) {
+        override fun populateForSetTemplate(setTemplate: SetTemplate, tags: Tags) {
             rootView.addView(setTemplateNameBinding.root)
             rootView.addView(setTemplateIntensityBinding.root)
 
@@ -148,7 +148,7 @@ class WorkoutTemplateRecyclerViewAdapter(
             removeItemButton.button.iconPadding = 0
         }
 
-        override fun populateForSetTemplate(setTemplate: SetTemplate, tags: Map<TagCategory, Set<String>>) {
+        override fun populateForSetTemplate(setTemplate: SetTemplate, tags: Tags) {
             rootView.addView(setTemplateNameBinding.root)
 
             val intensity = tags[TagCategory.Intensity]?.first() ?: ""

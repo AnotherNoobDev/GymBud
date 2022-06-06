@@ -35,31 +35,31 @@ data class SetTemplateContent(
     tableName = "set_template_item",
     indices = [
         Index(value = ["set_template_id"]),
-        Index(value = ["set_exercise_template_id"]),
-        Index(value = ["set_rest_period_id"]),
+        Index(value = ["exercise_template_id"]),
+        Index(value = ["rest_period_id"]),
         Index(value = ["set_item_pos"])
     ],
     foreignKeys = [
         ForeignKey(entity = SetTemplate::class, parentColumns = arrayOf("id"), childColumns = arrayOf("set_template_id"), onDelete = ForeignKey.CASCADE),
-        ForeignKey(entity = ExerciseTemplate::class, parentColumns = arrayOf("id"), childColumns = arrayOf("set_exercise_template_id"), onDelete = ForeignKey.CASCADE),
-        ForeignKey(entity = RestPeriod::class, parentColumns = arrayOf("id"), childColumns = arrayOf("set_rest_period_id"), onDelete = ForeignKey.CASCADE),
+        ForeignKey(entity = ExerciseTemplate::class, parentColumns = arrayOf("id"), childColumns = arrayOf("exercise_template_id"), onDelete = ForeignKey.CASCADE),
+        ForeignKey(entity = RestPeriod::class, parentColumns = arrayOf("id"), childColumns = arrayOf("rest_period_id"), onDelete = ForeignKey.CASCADE),
     ]
 )
 data class SetTemplateWithItem(
     @ColumnInfo(name = "set_template_id") val setTemplateId: ItemIdentifier,
     @ColumnInfo(name = "set_item_pos") var setItemPosition: Int,
-    @ColumnInfo(name = "set_exercise_template_id")  val setExerciseTemplateId: ItemIdentifier? = null,
-    @ColumnInfo(name = "set_rest_period_id")  val setRestPeriodId: ItemIdentifier? = null,
+    @ColumnInfo(name = "exercise_template_id")  val exerciseTemplateId: ItemIdentifier? = null,
+    @ColumnInfo(name = "rest_period_id")  val restPeriodId: ItemIdentifier? = null,
 ) {
     @PrimaryKey(autoGenerate = true) var id: Int = 0
 
 
     fun isWithExerciseTemplate(): Boolean {
-        return setExerciseTemplateId != null
+        return exerciseTemplateId != null
     }
 
 
     fun isWithRestPeriod(): Boolean {
-        return setRestPeriodId != null
+        return restPeriodId != null
     }
 }
