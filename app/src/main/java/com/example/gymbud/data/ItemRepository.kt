@@ -2,8 +2,12 @@ package com.example.gymbud.data
 
 import com.example.gymbud.model.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+
 
 class ItemRepository(
+    private val database: GymBudRoomDatabase,
     private val exerciseRepository: ExerciseRepository,
     private val exerciseTemplateRepository: ExerciseTemplateRepository,
     private val restPeriodRepository: RestPeriodRepository,
@@ -11,6 +15,27 @@ class ItemRepository(
     private val workoutTemplateRepository: WorkoutTemplateRepository,
     private val programTemplateRepository: ProgramTemplateRepository
 ) {
+    fun hasData(): Flow<Boolean> {
+        // if there are no exercises, there can't be anything else
+        return database.exerciseDao().count().map {
+            it > 0
+        }
+    }
+
+
+    suspend fun populateWithDefaults() {
+        exerciseRepository.populateWithDefaults()
+        exerciseTemplateRepository.populateWithDefaults()
+        restPeriodRepository.populateWithDefaults()
+        setTemplateRepository.populateWithDefaults()
+    }
+
+
+    fun purge() {
+        database.clearAllTables()
+    }
+
+
     fun getItemsByType(type: ItemType): Flow<List<Item>> {
         return when (type) {
             ItemType.EXERCISE -> exerciseRepository.exercises
@@ -19,24 +44,29 @@ class ItemRepository(
             ItemType.SET_TEMPLATE-> setTemplateRepository.setTemplates
             ItemType.WORKOUT_TEMPLATE-> workoutTemplateRepository.workoutTemplates
             ItemType.PROGRAM_TEMPLATE -> programTemplateRepository.programTemplates
+            ItemType.UNKNOWN -> return flowOf()
         }
     }
 
 
-    fun getItem(id: ItemIdentifier, type: ItemType? = null): Item? {
+    fun getItem(id: ItemIdentifier, type: ItemType? = null): Flow<Item?> {
         return when (type) {
             ItemType.EXERCISE -> exerciseRepository.retrieveExercise(id)
             ItemType.EXERCISE_TEMPLATE -> exerciseTemplateRepository.retrieveExerciseTemplate(id)
             ItemType.SET_TEMPLATE -> setTemplateRepository.retrieveSetTemplate(id)
-            ItemType.WORKOUT_TEMPLATE -> workoutTemplateRepository.retrieveWorkoutTemplate(id)
-            ItemType.PROGRAM_TEMPLATE -> programTemplateRepository.retrieveProgramTemplate(id)
+            //ItemType.WORKOUT_TEMPLATE -> workoutTemplateRepository.retrieveWorkoutTemplate(id)
+            //ItemType.PROGRAM_TEMPLATE -> programTemplateRepository.retrieveProgramTemplate(id)
             ItemType.REST_PERIOD -> restPeriodRepository.retrieveRestPeriod(id)
-            else -> findItemInAll(id)
+            //else -> findItemInAll(id)
+            else -> exerciseRepository.retrieveExercise(id)
+
+            // todo
         }
     }
 
-
-    private fun findItemInAll(id: ItemIdentifier): Item? {
+    // todo
+    /*
+    private fun findItemInAll(id: ItemIdentifier): Flow<Item>  {
         var item: Item?
 
         item = exerciseRepository.retrieveExercise(id)
@@ -60,8 +90,10 @@ class ItemRepository(
         return item
     }
 
+     */
 
-    fun addItem(content: ItemContent) {
+
+    suspend fun addItem(content: ItemContent) {
         when (content) {
             is ExerciseContent -> {
                 addExercise(content)
@@ -80,11 +112,11 @@ class ItemRepository(
             }
         }
 
-        // todo
+        // todo rest period?
     }
 
 
-    private fun addExercise(content: ExerciseContent) {
+    private suspend fun addExercise(content: ExerciseContent) {
         exerciseRepository.addExercise(
             ItemIdentifierGenerator.generateId(),
             content.name,
@@ -95,7 +127,7 @@ class ItemRepository(
     }
 
 
-    private fun addExerciseTemplate(content: ExerciseTemplateNewContent) {
+    private suspend fun addExerciseTemplate(content: ExerciseTemplateNewContent) {
         exerciseTemplateRepository.addExerciseTemplate(
             ItemIdentifierGenerator.generateId(),
             content.name,
@@ -104,7 +136,7 @@ class ItemRepository(
         )
     }
 
-    private fun addSetTemplate(content: SetTemplateContent) {
+    private suspend fun addSetTemplate(content: SetTemplateContent) {
         setTemplateRepository.addSetTemplate(
             ItemIdentifierGenerator.generateId(),
             content.name,
@@ -129,7 +161,7 @@ class ItemRepository(
     }
 
 
-    fun updateItem(id: ItemIdentifier, content: ItemContent) {
+    suspend fun updateItem(id: ItemIdentifier, content: ItemContent) {
         when (content) {
             is ExerciseContent -> {
                 updateExercise(id, content)
@@ -147,12 +179,10 @@ class ItemRepository(
                 updateProgramTemplate(id, content)
             }
         }
-
-        // todo
     }
 
 
-    private fun updateExercise(id: ItemIdentifier, content: ExerciseContent) {
+    private suspend fun updateExercise(id: ItemIdentifier, content: ExerciseContent) {
         exerciseRepository.updateExercise(
             id,
             content.name,
@@ -163,7 +193,7 @@ class ItemRepository(
     }
 
 
-    private fun updateExerciseTemplate(id: ItemIdentifier, content: ExerciseTemplateEditContent) {
+    private suspend fun updateExerciseTemplate(id: ItemIdentifier, content: ExerciseTemplateEditContent) {
         exerciseTemplateRepository.updateExerciseTemplate(
             id,
             content.name,
@@ -171,7 +201,7 @@ class ItemRepository(
         )
     }
 
-    private fun updateSetTemplate(id: ItemIdentifier, content: SetTemplateContent) {
+    private suspend fun updateSetTemplate(id: ItemIdentifier, content: SetTemplateContent) {
         setTemplateRepository.updateSetTemplate(
             id,
             content.name,
@@ -196,7 +226,7 @@ class ItemRepository(
     }
 
 
-    fun removeItem(id: ItemIdentifier, type: ItemType? = null) {
+    suspend fun removeItem(id: ItemIdentifier, type: ItemType? = null) {
         when (type) {
             ItemType.EXERCISE -> exerciseRepository.removeExercise(id)
             ItemType.EXERCISE_TEMPLATE -> exerciseTemplateRepository.removeExerciseTemplate(id)
@@ -205,18 +235,16 @@ class ItemRepository(
             ItemType.PROGRAM_TEMPLATE -> programTemplateRepository.removeProgramTemplate(id)
             else -> removeItemInAll(id)
         }
-
-        // todo
     }
 
 
-    private fun removeItemInAll(id: ItemIdentifier) {
+    // todo might want to replace with single query over all DB
+    private suspend fun removeItemInAll(id: ItemIdentifier) {
         exerciseRepository.removeExercise(id) ||
                 exerciseTemplateRepository.removeExerciseTemplate(id) ||
                 setTemplateRepository.removeSetTemplate(id) ||
                 workoutTemplateRepository.removeWorkoutTemplate(id) ||
                 programTemplateRepository.removeProgramTemplate(id)
 
-        // todo
     }
 }

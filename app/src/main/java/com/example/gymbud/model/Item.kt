@@ -1,5 +1,7 @@
 package com.example.gymbud.model
 
+import androidx.room.Ignore
+
 typealias ItemIdentifier = Long
 
 enum class ItemType {
@@ -8,7 +10,8 @@ enum class ItemType {
     REST_PERIOD,
     SET_TEMPLATE,
     WORKOUT_TEMPLATE,
-    PROGRAM_TEMPLATE
+    PROGRAM_TEMPLATE,
+    UNKNOWN
 }
 
 interface Item {
@@ -22,10 +25,22 @@ interface ItemContent {
 
 
 fun getValidName(id: ItemIdentifier, name: String, items: List<Item>): String {
-    return if (items.find { it.name.trim().lowercase() == name.trim().lowercase() } == null) {
+    return if (items.find { it.id != id && it.name.trim().lowercase() == name.trim().lowercase() } == null) {
         name
     } else {
         return "$name #$id"
+    }
+}
+
+fun getItemType(item:  Item): ItemType {
+    return when(item) {
+        is Exercise -> ItemType.EXERCISE
+        is ExerciseTemplate -> ItemType.EXERCISE_TEMPLATE
+        is RestPeriod -> ItemType.REST_PERIOD
+        is SetTemplate -> ItemType.SET_TEMPLATE
+        is WorkoutTemplate -> ItemType.WORKOUT_TEMPLATE
+        is ProgramTemplate -> ItemType.PROGRAM_TEMPLATE
+        else -> ItemType.UNKNOWN
     }
 }
 
@@ -75,7 +90,7 @@ abstract class ItemContainer {
     // todo this is not actually enforced (should it be?)
     abstract fun getSupportedItemTypes(): List<ItemType>
 
-    private var _items: MutableList<Item> = mutableListOf()
+    @Ignore private var _items: MutableList<Item> = mutableListOf()
     val items: List<Item>
         get() = _items.toList()
 

@@ -1,19 +1,29 @@
 package com.example.gymbud.data
 
-import com.example.gymbud.model.Exercise
 import com.example.gymbud.model.ItemIdentifier
 import com.example.gymbud.model.RestPeriod
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.Flow
 
-private const val TAG = "RestPeriodRepository"
 
-class RestPeriodRepository {
-    private val _restPeriods: MutableStateFlow<List<RestPeriod>> = MutableStateFlow(RestPeriodDefaultDatasource.restPeriods)
-    val restPeriods: StateFlow<List<RestPeriod>> = _restPeriods.asStateFlow()
+private const val TAG = "RestPeriodRepo"
 
-    fun retrieveRestPeriod(id: ItemIdentifier): RestPeriod? = _restPeriods.value.find { it.id == id }
 
-    // todo
+class RestPeriodRepository(
+    private val restPeriodDao: RestPeriodDao
+) {
+    val restPeriods: Flow<List<RestPeriod>> = restPeriodDao.getAll()
+
+
+    suspend fun populateWithDefaults() {
+        RestPeriodDefaultDatasource.restPeriods.forEach {
+            restPeriodDao.insert(it)
+        }
+    }
+
+    fun retrieveRestPeriod(id: ItemIdentifier): Flow<RestPeriod?> = restPeriodDao.get(id)
+
+
+    suspend fun retrieveRestPeriodsOnce(ids: List<ItemIdentifier>): List<RestPeriod> {
+        return restPeriodDao.getOnce(ids)
+    }
 }

@@ -12,10 +12,12 @@
         tools:layout="@layout/fragment_startup" >
         <action
             android:id="@+id/action_startupFragment_to_newSetupFragment"
-            app:destination="@id/newSetupFragment" />
+            app:destination="@id/newSetupFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_startupFragment_to_dashboardFragment"
-            app:destination="@id/dashboardFragment" />
+            app:destination="@id/dashboardFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/newSetupFragment"
@@ -25,6 +27,10 @@
         <action
             android:id="@+id/action_newSetupFragment_to_programBuilderFragment"
             app:destination="@id/programBuilderFragment" />
+        <action
+            android:id="@+id/action_newSetupFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/programBuilderFragment"
@@ -53,7 +59,14 @@
     <fragment
         android:id="@+id/dashboardFragment"
         android:name="com.example.gymbud.ui.DashboardFragment"
-        android:label="DashboardFragment" />
+        android:label="DashboardFragment" >
+        <action
+            android:id="@+id/action_dashboardFragment_to_programBuilderFragment"
+            app:destination="@id/programBuilderFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_startupFragment"
+            app:destination="@id/startupFragment" />
+    </fragment>
     <fragment
         android:id="@+id/itemDetailFragment"
         android:name="com.example.gymbud.ui.ItemDetailFragment"

@@ -36,13 +36,11 @@ const val HYPERTROPHY_NAME_TAG = "Hypertrophy"
 
 
 object ExerciseDefaultDatasource {
-    val exercises: List<Exercise>
-    val exerciseTemplatesForHypertrophy: List<ExerciseTemplate>
-
-    init {
-        exercises = generateDefaultExercises()
-        exerciseTemplatesForHypertrophy = generateDefaultExerciseTemplatesForHypertrophy(exercises)
+    val exercises: List<Exercise> by lazy { generateDefaultExercises() }
+    val exerciseTemplatesForHypertrophy: List<ExerciseTemplate> by lazy {
+        generateDefaultExerciseTemplatesForHypertrophy(exercises)
     }
+
 
     private fun generateDefaultExercises(): List<Exercise> {
         return listOf(

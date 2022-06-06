@@ -13,7 +13,7 @@ import com.example.gymbud.ui.viewmodel.ItemViewModel
 private const val TAG = "ExerciseDV"
 
 
-class ExerciseDetailView(): ItemView {
+class ExerciseDetailView: ItemView {
     private var _nameBinding: LayoutDetailNameBinding? = null
     private val nameBinding get() = _nameBinding!!
 
@@ -65,6 +65,6 @@ class ExerciseDetailView(): ItemView {
         nameBinding.name.text = item.name
         targetMuscleBinding.text.text = item.targetMuscle.toString()
         equipmentBinding.text.text = item.resistance.toString()
-        notesBinding.text.text = item.description
+        notesBinding.text.text = item.notes
     }
 }

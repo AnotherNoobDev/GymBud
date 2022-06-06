@@ -4,7 +4,7 @@ import com.example.gymbud.model.ItemIdentifier
 
 // todo this is very simplistic atm :)
 object ItemIdentifierGenerator {
-    private var id: ItemIdentifier = 0
+    private var id: ItemIdentifier = 0 // todo needs to be persisted
 
     const val REST30_ID: ItemIdentifier = -30
     const val REST60_ID: ItemIdentifier = -60
@@ -18,6 +18,7 @@ object ItemIdentifierGenerator {
     const val REST180_TO_300_ID: ItemIdentifier = -180300
 
     const val REST_DAY_ID: ItemIdentifier = -1
+
 
     fun generateId():  ItemIdentifier {
         return id++

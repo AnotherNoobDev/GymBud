@@ -5,34 +5,52 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.navigation.findNavController
-import com.example.gymbud.R
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.gymbud.BaseApplication
 import com.example.gymbud.databinding.FragmentNewSetupBinding
+import com.example.gymbud.ui.viewmodel.ItemViewModel
+import com.example.gymbud.ui.viewmodel.ItemViewModelFactory
+import kotlinx.coroutines.launch
 
 
 class NewSetupFragment : Fragment() {
     private var _binding: FragmentNewSetupBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val viewModel: ItemViewModel by activityViewModels() {
+        ItemViewModelFactory(
+            (activity?.application as BaseApplication).itemRepository
+        )
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentNewSetupBinding.inflate(inflater, container, false)
-        val view = binding.root
 
-        val createProgramButton = view.findViewById<Button>(R.id.create_program_button)
-        createProgramButton.setOnClickListener {
-            val action = NewSetupFragmentDirections.actionNewSetupFragmentToProgramBuilderFragment()
-            binding.root.findNavController().navigate(action)
+        binding.apply {
+            createButton.setOnClickListener {
+                val action = NewSetupFragmentDirections.actionNewSetupFragmentToProgramBuilderFragment()
+                findNavController().navigate(action)
+            }
+
+            importButton.setOnClickListener {
+                // todo add Import functionality
+            }
+
+            useDefaultsButton.setOnClickListener {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.populateWithDefaults()
+                    val action = NewSetupFragmentDirections.actionNewSetupFragmentToDashboardFragment()
+                    findNavController().navigate(action)
+                }
+            }
         }
 
-        return view
+        return binding.root
     }
 }

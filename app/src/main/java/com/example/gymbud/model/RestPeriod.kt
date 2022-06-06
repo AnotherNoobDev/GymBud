@@ -1,11 +1,15 @@
 package com.example.gymbud.model
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.example.gymbud.data.ItemIdentifierGenerator
 
+@Entity(tableName = "rest_period")
 data class RestPeriod(
-    override val id: ItemIdentifier,
+    @PrimaryKey(autoGenerate = false) override val id: ItemIdentifier,
     override var name: String,
-    var targetRestPeriodSec: IntRange
+    @ColumnInfo(name = "target_in_seconds") var targetRestPeriodSec: IntRange
 ): Item {
 
     fun getTargetRestPeriodAsString(): String {

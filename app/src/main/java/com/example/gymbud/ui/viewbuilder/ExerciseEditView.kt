@@ -9,12 +9,10 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.gymbud.R
-import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.databinding.LayoutEditDropdownFieldBinding
 import com.example.gymbud.databinding.LayoutEditTextFieldBinding
 import com.example.gymbud.model.*
 import com.example.gymbud.ui.viewmodel.ItemViewModel
-import org.w3c.dom.Text
 
 
 private const val TAG = "ExerciseEV"
@@ -89,7 +87,7 @@ class ExerciseEditView(
         nameBinding.input.setText(item.name,  TextView.BufferType.SPANNABLE)
         targetMuscleBinding.input.setText(item.targetMuscle.toString(), false)
         equipmentBinding.input.setText(item.resistance.toString(), false)
-        notesBinding.input.setText(item.description, TextView.BufferType.SPANNABLE)
+        notesBinding.input.setText(item.notes, TextView.BufferType.SPANNABLE)
     }
 
 

@@ -14,24 +14,36 @@ class ItemViewModel(
     private val itemRepository: ItemRepository
 ): ViewModel() {
 
+    fun hasData(): Flow<Boolean> {
+        return itemRepository.hasData()
+    }
+
+    suspend fun populateWithDefaults() {
+        itemRepository.populateWithDefaults()
+    }
+
     fun getItemsByType(type: ItemType): Flow<List<Item>> {
         return itemRepository.getItemsByType(type)
     }
 
-    fun getItem(id: ItemIdentifier, type: ItemType? = null): Item? {
+    fun getItem(id: ItemIdentifier, type: ItemType? = null): Flow<Item?> {
         return itemRepository.getItem(id, type)
     }
 
-    fun addItem(itemContent: ItemContent) {
+    suspend fun addItem(itemContent: ItemContent) {
         itemRepository.addItem(itemContent)
     }
 
-    fun updateItem(id: ItemIdentifier, itemContent: ItemContent) {
+    suspend fun updateItem(id: ItemIdentifier, itemContent: ItemContent) {
         itemRepository.updateItem(id, itemContent)
     }
 
-    fun removeItem(id: ItemIdentifier, type: ItemType? = null) {
+    suspend fun removeItem(id: ItemIdentifier, type: ItemType? = null) {
         itemRepository.removeItem(id, type)
+    }
+
+    fun removeAll() {
+        itemRepository.purge()
     }
 }
 

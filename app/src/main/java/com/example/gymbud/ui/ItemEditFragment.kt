@@ -17,9 +17,9 @@ import com.example.gymbud.ui.viewbuilder.EditItemView
 import com.example.gymbud.ui.viewbuilder.EditItemViewFactory
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 import com.example.gymbud.ui.viewmodel.ItemViewModelFactory
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-
-private const val TAG = "ItemEditFragment"
 
 class ItemEditFragment : Fragment() {
 
@@ -40,7 +40,7 @@ class ItemEditFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentItemEditBinding.inflate(inflater, container, false)
 
         binding.apply {
@@ -71,13 +71,14 @@ class ItemEditFragment : Fragment() {
 
 
     private fun onViewCreatedWithExistingItem() {
-        val item = viewModel.getItem(navigationArgs.id, navigationArgs.type)
-        if (item == null) {
-            Log.e(TAG, "Failed to retrieve item from viewmodel")
-            return
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getItem(navigationArgs.id, navigationArgs.type).collect { item ->
+                if (item != null) {
+                    itemView.populate(viewLifecycleOwner.lifecycleScope, viewModel, item)
+                }
+            }
         }
 
-        itemView.populate(viewLifecycleOwner.lifecycleScope, viewModel, item)
 
         binding.apply {
             confirmBtn.setOnClickListener {
@@ -107,27 +108,33 @@ class ItemEditFragment : Fragment() {
 
     private fun addItem() {
         val tempItem = itemView.getContent() ?: return
-        viewModel.addItem(tempItem)
 
-        val action = ItemEditFragmentDirections.actionItemEditFragmentToItemListFragment(navigationArgs.type)
-        findNavController().navigate(action)
+        // todo this way or  viewModelScope inside ItemViewModel?
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.addItem(tempItem)
+            val action = ItemEditFragmentDirections.actionItemEditFragmentToItemListFragment(navigationArgs.type)
+            findNavController().navigate(action)
+        }
     }
 
 
     // todo seems kinda duplicate with addExercise
     private fun updateItem() {
         val tempItem = itemView.getContent() ?: return
-        viewModel.updateItem(navigationArgs.id, tempItem)
 
-        val action = ItemEditFragmentDirections.actionItemEditFragmentToItemListFragment(navigationArgs.type)
-        findNavController().navigate(action)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.updateItem(navigationArgs.id, tempItem)
+            val action = ItemEditFragmentDirections.actionItemEditFragmentToItemListFragment(navigationArgs.type)
+            findNavController().navigate(action)
+        }
     }
 
 
     private fun removeItem() {
-       viewModel.removeItem(navigationArgs.id, navigationArgs.type)
-
-        val action = ItemEditFragmentDirections.actionItemEditFragmentToItemListFragment(navigationArgs.type)
-        findNavController().navigate(action)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.removeItem(navigationArgs.id, navigationArgs.type)
+            val action = ItemEditFragmentDirections.actionItemEditFragmentToItemListFragment(navigationArgs.type)
+            findNavController().navigate(action)
+        }
     }
 }

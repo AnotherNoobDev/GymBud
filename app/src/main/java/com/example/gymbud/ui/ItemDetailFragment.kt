@@ -1,7 +1,6 @@
 package com.example.gymbud.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,9 +15,9 @@ import com.example.gymbud.ui.viewbuilder.ItemView
 import com.example.gymbud.ui.viewbuilder.ItemViewFactory
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 import com.example.gymbud.ui.viewmodel.ItemViewModelFactory
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-
-private const val TAG = "ItemDetailFragment"
 
 
 class ItemDetailFragment : Fragment() {
@@ -41,7 +40,7 @@ class ItemDetailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentItemDetailBinding.inflate(inflater, container, false)
         _itemView = ItemViewFactory.create(navigationArgs.type) { itemId, itemType ->
@@ -59,13 +58,13 @@ class ItemDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val item = viewModel.getItem(navigationArgs.id, navigationArgs.type)
-        if (item == null) {
-            Log.e(TAG, "Failed to retrieve item from viewmodel")
-            return
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getItem(navigationArgs.id, navigationArgs.type).collect { item ->
+                if (item != null) {
+                    itemView.populate(viewLifecycleOwner.lifecycleScope, viewModel, item)
+                }
+            }
         }
-
-        itemView.populate(viewLifecycleOwner.lifecycleScope, viewModel, item)
 
         binding.editFab.setOnClickListener {
             val action = ItemDetailFragmentDirections.actionItemDetailFragmentToItemEditFragment(navigationArgs.id, navigationArgs.type)
