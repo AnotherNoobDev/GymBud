@@ -34,45 +34,60 @@ class WorkoutTemplateRepository(
     fun retrieveWorkoutTemplate(id: ItemIdentifier): Flow<WorkoutTemplate?> {
         return workoutTemplateDao.get(id).map { workoutTemplate ->
             if (workoutTemplate != null) {
-                val workoutItems = workoutTemplateWithItemDao.getAllOnce(workoutTemplate.id)
-
-                // get workout items from db in bulk
-                val workoutSetTemplates = setTemplateRepository.retrieveSetTemplatesOnce(
-                    workoutItems.filter { it.isWithSetTemplate() }.map { it.setTemplateId!! }
-                )
-
-                val workoutRestPeriods = restPeriodRepository.retrieveRestPeriodsOnce(
-                    workoutItems.filter { it.isWithRestPeriod() }.map{ it.restPeriodId!! }
-                )
-
-                // put in order
-                workoutItems.forEachIndexed { workoutItemIndex, workoutItem ->
-                    workoutItem.workoutItemPosition = workoutItemIndex // ensure no gaps
-
-                    val itemToBeAdded: Item? = if (workoutItem.isWithSetTemplate()) {
-                        workoutSetTemplates.find { setTemplate -> setTemplate.id == workoutItem.setTemplateId  }
-                    } else if (workoutItem.isWithRestPeriod()) {
-                        workoutRestPeriods.find { restPeriod -> restPeriod.id == workoutItem.restPeriodId  }
-                    } else {
-                        null
-                    }
-
-                    if (itemToBeAdded == null) {
-                        Log.e(TAG,"The workout item with id: $workoutItemIndex could not be retrieved from the DB.")
-                        assert(false) // should never happen
-                    }
-
-                    // check for tags
-                    if (workoutItem.tags.isNotEmpty()) {
-                        workoutTemplate.add(TaggedItem(itemToBeAdded!!, workoutItem.tags))
-                    } else {
-                        workoutTemplate.add(itemToBeAdded!!)
-                    }
-                }
+                populateWorkoutTemplateItems(workoutTemplate)
             }
 
             return@map workoutTemplate
         }
+    }
+
+
+    private suspend fun populateWorkoutTemplateItems(workoutTemplate: WorkoutTemplate) {
+        val workoutItems = workoutTemplateWithItemDao.getAllOnce(workoutTemplate.id)
+
+        // get workout items from db in bulk
+        val workoutSetTemplates = setTemplateRepository.retrieveSetTemplatesOnce(
+            workoutItems.filter { it.isWithSetTemplate() }.map { it.setTemplateId!! }
+        )
+
+        val workoutRestPeriods = restPeriodRepository.retrieveRestPeriodsOnce(
+            workoutItems.filter { it.isWithRestPeriod() }.map{ it.restPeriodId!! }
+        )
+
+        // put in order
+        workoutItems.forEachIndexed { workoutItemIndex, workoutItem ->
+            workoutItem.workoutItemPosition = workoutItemIndex // ensure no gaps
+
+            val itemToBeAdded: Item? = if (workoutItem.isWithSetTemplate()) {
+                workoutSetTemplates.find { setTemplate -> setTemplate.id == workoutItem.setTemplateId  }
+            } else if (workoutItem.isWithRestPeriod()) {
+                workoutRestPeriods.find { restPeriod -> restPeriod.id == workoutItem.restPeriodId  }
+            } else {
+                null
+            }
+
+            if (itemToBeAdded == null) {
+                Log.e(TAG,"The workout item with id: $workoutItemIndex could not be retrieved from the DB.")
+                assert(false) // should never happen
+            }
+
+            // check for tags
+            if (workoutItem.tags.isNotEmpty()) {
+                workoutTemplate.add(TaggedItem(itemToBeAdded!!, workoutItem.tags))
+            } else {
+                workoutTemplate.add(itemToBeAdded!!)
+            }
+        }
+    }
+
+
+    suspend fun retrieveWorkoutTemplatesOnce(ids: List<ItemIdentifier>): List<WorkoutTemplate> {
+        val templates = workoutTemplateDao.getOnce(ids)
+        templates.forEach {
+            populateWorkoutTemplateItems(it)
+        }
+
+        return templates
     }
 
 

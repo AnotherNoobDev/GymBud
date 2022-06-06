@@ -35,7 +35,10 @@ class BaseApplication: Application() {
     }
 
     val programRepository: ProgramTemplateRepository by lazy {
-        ProgramTemplateRepository()
+        ProgramTemplateRepository(
+            database.programTemplateDao(), database.programTemplateWithItemDao(),
+            workoutTemplateRepository, restPeriodRepository
+        )
     }
 
     val itemRepository: ItemRepository by lazy {

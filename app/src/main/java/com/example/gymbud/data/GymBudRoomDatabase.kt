@@ -79,11 +79,13 @@ class Converters {
     entities = [
         Exercise::class,
         ExerciseTemplate::class,
+        ProgramTemplate::class,
+        ProgramTemplateWithItem::class,
         RestPeriod::class,
         SetTemplate::class,
         SetTemplateWithItem::class,
         WorkoutTemplate::class,
-        WorkoutTemplateWithItem::class
+        WorkoutTemplateWithItem::class,
     ],
     version = 1,
     exportSchema = false
@@ -92,6 +94,8 @@ class Converters {
 abstract class GymBudRoomDatabase: RoomDatabase() {
     abstract fun exerciseDao(): ExerciseDao
     abstract fun exerciseTemplateDao(): ExerciseTemplateDao
+    abstract fun programTemplateDao(): ProgramTemplateDao
+    abstract fun programTemplateWithItemDao(): ProgramTemplateWithItemDao
     abstract fun restPeriodDao(): RestPeriodDao
     abstract fun setTemplateDao(): SetTemplateDao
     abstract fun setTemplateWithItemDao(): SetTemplateWithItemDao

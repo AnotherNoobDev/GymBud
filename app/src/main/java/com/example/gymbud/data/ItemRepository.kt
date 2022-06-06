@@ -30,6 +30,7 @@ class ItemRepository(
         restPeriodRepository.populateWithDefaults()
         setTemplateRepository.populateWithDefaults()
         workoutTemplateRepository.populateWithDefaults()
+        programTemplateRepository.populateWithDefaults()
     }
 
 
@@ -57,12 +58,10 @@ class ItemRepository(
             ItemType.EXERCISE_TEMPLATE -> exerciseTemplateRepository.retrieveExerciseTemplate(id)
             ItemType.SET_TEMPLATE -> setTemplateRepository.retrieveSetTemplate(id)
             ItemType.WORKOUT_TEMPLATE -> workoutTemplateRepository.retrieveWorkoutTemplate(id)
-            //ItemType.PROGRAM_TEMPLATE -> programTemplateRepository.retrieveProgramTemplate(id)
+            ItemType.PROGRAM_TEMPLATE -> programTemplateRepository.retrieveProgramTemplate(id)
             ItemType.REST_PERIOD -> restPeriodRepository.retrieveRestPeriod(id)
-            //else -> findItemInAll(id)
-            else -> exerciseRepository.retrieveExercise(id)
-
-            // todo
+            //else -> findItemInAll(id) // todo
+            else -> flowOf()
         }
     }
 
@@ -154,7 +153,7 @@ class ItemRepository(
         )
     }
 
-    private fun addProgramTemplate(content: ProgramTemplateContent) {
+    private suspend fun addProgramTemplate(content: ProgramTemplateContent) {
         programTemplateRepository.addProgramTemplate(
             ItemIdentifierGenerator.generateId(),
             content.name,
@@ -219,7 +218,7 @@ class ItemRepository(
         )
     }
 
-    private fun updateProgramTemplate(id: ItemIdentifier, content: ProgramTemplateContent) {
+    private suspend fun updateProgramTemplate(id: ItemIdentifier, content: ProgramTemplateContent) {
         programTemplateRepository.updateProgramTemplate(
             id,
             content.name,

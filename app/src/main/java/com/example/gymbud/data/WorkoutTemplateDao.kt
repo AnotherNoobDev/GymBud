@@ -26,6 +26,9 @@ interface WorkoutTemplateDao {
     @Query("SELECT * from workout_template WHERE id = :id")
     fun get(id: ItemIdentifier): Flow<WorkoutTemplate?>
 
+    @Query("SELECT * from workout_template WHERE id IN (:ids)")
+    suspend fun getOnce(ids: List<ItemIdentifier>): List<WorkoutTemplate>
+
     @Query("SELECT * from workout_template ORDER BY name ASC")
     fun getAll(): Flow<List<WorkoutTemplate>>
 
