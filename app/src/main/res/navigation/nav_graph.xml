@@ -101,4 +101,9 @@
             android:name="type"
             app:argType="com.example.gymbud.model.ItemType" />
     </fragment>
+    <fragment
+        android:id="@+id/statsFragment"
+        android:name="com.example.gymbud.ui.StatsFragment"
+        android:label="fragment_stats"
+        tools:layout="@layout/fragment_stats" />
 </navigation>

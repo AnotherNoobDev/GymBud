@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@id/newSetupFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_templates_24"
+        android:title="@string/templates"/>
+    <item
+        android:id="@id/dashboardFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_dashboard_24"
+        android:title="@string/dashboard"/>
+    <item
+        android:id="@id/statsFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_stats_24"
+        android:title="@string/stats"/>
+</menu>
