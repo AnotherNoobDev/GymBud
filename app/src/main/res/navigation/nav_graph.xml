@@ -61,9 +61,6 @@
         android:name="com.example.gymbud.ui.DashboardFragment"
         android:label="DashboardFragment" >
         <action
-            android:id="@+id/action_dashboardFragment_to_programBuilderFragment"
-            app:destination="@id/programBuilderFragment" />
-        <action
             android:id="@+id/action_dashboardFragment_to_startupFragment"
             app:destination="@id/startupFragment" />
     </fragment>
@@ -106,4 +103,9 @@
         android:name="com.example.gymbud.ui.StatsFragment"
         android:label="fragment_stats"
         tools:layout="@layout/fragment_stats" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.gymbud.ui.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>
