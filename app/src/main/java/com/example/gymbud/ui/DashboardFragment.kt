@@ -1,27 +1,22 @@
 package com.example.gymbud.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.databinding.FragmentDashboardBinding
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 import com.example.gymbud.ui.viewmodel.ItemViewModelFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class DashboardFragment : Fragment() {
     private var _binding: FragmentDashboardBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: ItemViewModel by activityViewModels() {
+    private val viewModel: ItemViewModel by activityViewModels {
         ItemViewModelFactory(
             (activity?.application as BaseApplication).itemRepository
         )
@@ -35,6 +30,17 @@ class DashboardFragment : Fragment() {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
 
         binding.apply {
+            activeProgramEditBtn.setOnClickListener {
+                // todo change active program
+                //  what kind of consequences does this have? make user confirm?
+            }
+
+            activeWorkoutEditBtn.setOnClickListener {
+                // todo change today's workout
+                //  what kind of consequences does this have? make user confirm?
+            }
+
+
         }
 
         return binding.root

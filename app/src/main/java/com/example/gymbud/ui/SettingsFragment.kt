@@ -42,7 +42,7 @@ class SettingsFragment : Fragment() {
                     withContext(Dispatchers.IO) {
                         viewModel.removeAll()
 
-                        // todo provide confirmation message after completion
+                        // todo provide confirmation message after completion (snackbar: https://material.io/components/snackbars)
                     }
                 }
             }

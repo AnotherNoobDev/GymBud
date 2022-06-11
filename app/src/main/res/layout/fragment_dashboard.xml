@@ -5,15 +5,127 @@
     android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    android:padding="16dp"
     tools:context=".ui.DashboardFragment">
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/active_program_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="User dashboard: active program, next workout, etc."
+        android:layout_marginTop="10dp"
+        android:text="Active Program"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/active_program_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="4 day-split Hypertrophy Program"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@+id/active_program_label"
+        app:layout_constraintStart_toStartOf="@+id/active_program_label"
+        app:layout_constraintTop_toBottomOf="@+id/active_program_label" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/active_program_edit_btn"
+        android:layout_width="39dp"
+        android:layout_height="45dp"
+        android:clickable="true"
+        android:src="@drawable/ic_edit_24"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@+id/active_program_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/active_program_label"
+        app:layout_constraintTop_toTopOf="@+id/active_program_label" />
+
+    <View
+        android:id="@+id/active_program_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/active_program_value" />
+
+    <TextView
+        android:id="@+id/active_workout_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Today"
+        android:textSize="20sp"
+        android:layout_marginTop="42dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/active_program_divider" />
+
+    <TextView
+        android:id="@+id/active_workout_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Chest, Back, Traps and Neck 1"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@+id/active_workout_label"
+        app:layout_constraintStart_toStartOf="@+id/active_workout_label"
+        app:layout_constraintTop_toBottomOf="@+id/active_workout_label" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/active_workout_edit_btn"
+        android:layout_width="39dp"
+        android:layout_height="45dp"
+        android:clickable="true"
+        android:src="@drawable/ic_edit_24"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@+id/active_workout_label"
+        app:layout_constraintEnd_toEndOf="@+id/active_program_edit_btn"
+        app:layout_constraintStart_toStartOf="@+id/active_program_edit_btn"
+        app:layout_constraintTop_toTopOf="@+id/active_workout_label" />
+
+    <View
+        android:id="@+id/active_workout_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/active_workout_value" />
+
+    <Button
+        android:id="@+id/start_workout_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Workout"
+        android:textSize="20sp"
+        app:icon="@drawable/ic_live_session_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/active_workout_divider"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/motivational_quote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/active_workout_divider"
+        android:text="Strength does not come from physical capacity. It comes from an indomitable will." />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
