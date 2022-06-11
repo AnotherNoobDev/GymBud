@@ -33,7 +33,6 @@ class StartupFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         _binding = FragmentStartupBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -45,7 +44,7 @@ class StartupFragment : Fragment() {
                     val action = StartupFragmentDirections.actionStartupFragmentToDashboardFragment()
                     findNavController().navigate(action)
                 } else {
-                    val action = StartupFragmentDirections.actionStartupFragmentToNewSetupFragment()
+                    val action = StartupFragmentDirections.actionStartupFragmentToTemplatesFragment()
                     binding.root.findNavController().navigate(action)
                 }
             }
