@@ -1,9 +1,11 @@
 package com.example.gymbud.data
 
 import com.example.gymbud.model.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 
 
 class ItemRepository(
@@ -60,38 +62,23 @@ class ItemRepository(
             ItemType.WORKOUT_TEMPLATE -> workoutTemplateRepository.retrieveWorkoutTemplate(id)
             ItemType.PROGRAM_TEMPLATE -> programTemplateRepository.retrieveProgramTemplate(id)
             ItemType.REST_PERIOD -> restPeriodRepository.retrieveRestPeriod(id)
-            //else -> findItemInAll(id) // todo
-            else -> flowOf()
+            else -> findItemInAll(id)
         }
     }
 
-    // todo
-    /*
-    private fun findItemInAll(id: ItemIdentifier): Flow<Item>  {
-        var item: Item?
 
-        item = exerciseRepository.retrieveExercise(id)
-        if (item != null) return item
-
-        item = exerciseTemplateRepository.retrieveExerciseTemplate(id)
-        if (item != null) return item
-
-        item = setTemplateRepository.retrieveSetTemplate(id)
-        if (item != null) return item
-
-        item = workoutTemplateRepository.retrieveWorkoutTemplate(id)
-        if (item != null) return item
-
-        item = programTemplateRepository.retrieveProgramTemplate(id)
-        if (item != null) return item
-
-        item = restPeriodRepository.retrieveRestPeriod(id)
-        if (item != null) return item
-
-        return item
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun findItemInAll(id: ItemIdentifier): Flow<Item?>  {
+        assert(false) // todo doesn't work
+        return merge(
+            exerciseRepository.retrieveExercise(id),
+            exerciseTemplateRepository.retrieveExerciseTemplate(id),
+            setTemplateRepository.retrieveSetTemplate(id),
+            workoutTemplateRepository.retrieveWorkoutTemplate(id),
+            programTemplateRepository.retrieveProgramTemplate(id),
+            restPeriodRepository.retrieveRestPeriod(id)
+        )
     }
-
-     */
 
 
     suspend fun addItem(content: ItemContent) {

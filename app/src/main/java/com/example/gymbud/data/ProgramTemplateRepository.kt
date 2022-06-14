@@ -17,7 +17,14 @@ class ProgramTemplateRepository(
     private val workoutTemplateRepository: WorkoutTemplateRepository,
     private val restPeriodRepository: RestPeriodRepository
 ) {
-    val programTemplates: Flow<List<ProgramTemplate>> = programTemplateDao.getAll()
+    // todo check if this is needed by other repositories with populate calls
+    // and how the rest of the application handles this
+    val programTemplates: Flow<List<ProgramTemplate>> = programTemplateDao.getAll().map { programs ->
+        programs.map {
+            populateProgramTemplateItems(it)
+            it
+        }
+    }
 
 
     suspend fun populateWithDefaults() {
@@ -54,14 +61,18 @@ class ProgramTemplateRepository(
         programItems.forEachIndexed { programItemIndex, programItem ->
             programItem.programItemPosition = programItemIndex // ensure no gaps
 
-            if (programItem.isWithWorkoutTemplate()) {
-                programWorkoutTemplates.find { workoutTemplate -> workoutTemplate.id == programItem.workoutTemplateId  }
-                    ?.let { programTemplate.add(it) }
-            } else if (programItem.isWithRestPeriod()) {
-                programRestPeriods.find { restPeriod -> restPeriod.id == programItem.restPeriodId  }
-                    ?.let { programTemplate.add(it) }
-            } else {
-                assert(false)
+            when {
+                programItem.isWithWorkoutTemplate() -> {
+                    programWorkoutTemplates.find { workoutTemplate -> workoutTemplate.id == programItem.workoutTemplateId  }
+                        ?.let { programTemplate.add(it) }
+                }
+                programItem.isWithRestPeriod() -> {
+                    programRestPeriods.find { restPeriod -> restPeriod.id == programItem.restPeriodId  }
+                        ?.let { programTemplate.add(it) }
+                }
+                else -> {
+                    assert(false)
+                }
             }
         }
     }

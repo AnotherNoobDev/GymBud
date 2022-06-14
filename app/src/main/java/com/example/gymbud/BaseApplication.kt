@@ -4,6 +4,14 @@ import android.app.Application
 import com.example.gymbud.data.*
 
 class BaseApplication: Application() {
+    val appRepository: AppRepository by lazy {
+        AppRepository(this)
+    }
+
+    val quotesRepository: QuotesRepository by lazy {
+        QuotesRepository(this)
+    }
+
     val database: GymBudRoomDatabase by lazy {
         GymBudRoomDatabase.getDatabase(this)
     }

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.gymbud.BaseApplication
+import com.example.gymbud.data.AppRepository
 import com.example.gymbud.databinding.FragmentSettingsBinding
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 import com.example.gymbud.ui.viewmodel.ItemViewModelFactory
@@ -25,6 +26,8 @@ class SettingsFragment : Fragment() {
             (activity?.application as BaseApplication).itemRepository
         )
     }
+
+    private lateinit var appRepository: AppRepository
 
 
     override fun onCreateView(
@@ -45,9 +48,20 @@ class SettingsFragment : Fragment() {
                         // todo provide confirmation message after completion (snackbar: https://material.io/components/snackbars)
                     }
                 }
+
+                viewLifecycleOwner.lifecycleScope.launch {
+                    appRepository.reset()
+                }
             }
         }
 
         return binding.root
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        appRepository = (activity?.application as BaseApplication).appRepository
     }
 }
