@@ -21,11 +21,36 @@ private val Context.dataStore : DataStore<Preferences> by preferencesDataStore(n
 
 
 class AppRepository(private val context: Context) {
+    // the last used ItemIdentifier in the app
+    private val lastItemIdentifierKey = longPreferencesKey("last_item_identifier")
+
     // if a program is selected, active_program_day holds the program day number in that program
     // otherwise, active_program_day holds the id of a workout
     // todo kinda dirty, what if ItemIdentifier wouldn't hold a pos(Int)?
     private val activeProgramIdKey = longPreferencesKey("active_program_id")
     private val activeProgramDayKey = longPreferencesKey("active_program_day")
+
+
+    suspend fun reset() {
+        updateLastUsedItemIdentifier(ItemIdentifierGenerator.NO_ID)
+        ItemIdentifierGenerator.reset() // todo is this ok here.. or where to put it?
+
+        updateActiveProgramAndProgramDay(ItemIdentifierGenerator.NO_ID, ItemIdentifierGenerator.NO_ID)
+    }
+
+
+    val lastItemIdentifier: Flow<ItemIdentifier> = context.dataStore.data
+        .catch {
+            if (it is IOException) {
+                it.printStackTrace()
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[lastItemIdentifierKey] ?: ItemIdentifierGenerator.NO_ID
+        }
 
 
     val activeProgramId: Flow<ItemIdentifier> = context.dataStore.data
@@ -73,8 +98,10 @@ class AppRepository(private val context: Context) {
         }
 
 
-    suspend fun reset() {
-        updateActiveProgramAndProgramDay(ItemIdentifierGenerator.NO_ID, ItemIdentifierGenerator.NO_ID)
+    suspend fun updateLastUsedItemIdentifier(id: ItemIdentifier) {
+        context.dataStore.edit { preferences ->
+            preferences[lastItemIdentifierKey] = id
+        }
     }
 
 

@@ -1,11 +1,12 @@
 package com.example.gymbud.data
 
+import com.example.gymbud.BaseApplication
 import com.example.gymbud.model.ItemIdentifier
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
-// todo this is very simplistic atm :)
+
 object ItemIdentifierGenerator {
-    private var id: ItemIdentifier = 0 // todo needs to be persisted
-
     const val NO_ID: ItemIdentifier = -1
 
     const val REST_DAY_ID: ItemIdentifier = -100
@@ -21,8 +22,56 @@ object ItemIdentifierGenerator {
     const val REST120_TO_180_ID: ItemIdentifier = -100120180
     const val REST180_TO_300_ID: ItemIdentifier = -100180300
 
+    private var seeded = false
+    private var app: BaseApplication? = null
+
+    private var id: ItemIdentifier = NO_ID
+
+    fun setApp(app: BaseApplication) {
+        this.app = app
+    }
+
+
+    fun reset() {
+        seeded = false
+    }
+
 
     fun generateId():  ItemIdentifier {
-        return id++
+        if (!seeded) {
+            seed()
+        }
+
+        // we need to ensure that we never give out an id that wasn't persisted
+        // this means we want to block while we persist
+        runBlocking {
+            app!!.appRepository.updateLastUsedItemIdentifier(id)
+        }
+
+        val nextId = id
+        id += 1
+
+        // then return the id
+        return nextId
+    }
+
+
+    private fun seed() {
+        runBlocking {
+            // we first need to sync up with the persisted id
+            id = app!!.appRepository.lastItemIdentifier.first()
+
+            // then set the id in a correct state
+            if (id == NO_ID) {
+                // todo as a fallback when no id is found in the datastore,
+                // we could look at the database and determine the next id
+                id = 0
+            } else {
+                id += 1
+            }
+
+            // now we are ready to generate an id
+            seeded = true
+        }
     }
 }

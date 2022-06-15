@@ -4,6 +4,11 @@ import android.app.Application
 import com.example.gymbud.data.*
 
 class BaseApplication: Application() {
+
+    init {
+        ItemIdentifierGenerator.setApp(this)
+    }
+
     val appRepository: AppRepository by lazy {
         AppRepository(this)
     }
