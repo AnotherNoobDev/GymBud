@@ -1,5 +1,6 @@
-package com.example.gymbud.data
+package com.example.gymbud.data.datasource.defaults
 
+import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.model.ProgramTemplate
 import com.example.gymbud.model.RestPeriod
 

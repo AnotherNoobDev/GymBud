@@ -1,9 +1,10 @@
-package com.example.gymbud.data
+package com.example.gymbud.data.repository
 
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.gymbud.data.datasource.defaults.QuotesDataSource
 import kotlinx.coroutines.flow.*
 import java.io.IOException
 

@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.*
+import androidx.lifecycle.lifecycleScope
 import com.example.gymbud.BaseApplication
-import com.example.gymbud.data.QuotesRepository
+import com.example.gymbud.data.repository.QuotesRepository
 import com.example.gymbud.databinding.FragmentDashboardBinding
 import com.example.gymbud.model.*
 import com.example.gymbud.ui.viewmodel.ActiveProgramAndProgramDay

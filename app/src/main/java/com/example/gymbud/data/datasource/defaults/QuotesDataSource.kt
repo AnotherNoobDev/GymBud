@@ -1,4 +1,4 @@
-package com.example.gymbud.data
+package com.example.gymbud.data.datasource.defaults
 
 object QuotesDataSource {
     val quotes: List<String> = listOf(

@@ -1,4 +1,4 @@
-package com.example.gymbud.data
+package com.example.gymbud.data.repository
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.model.ItemIdentifier
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

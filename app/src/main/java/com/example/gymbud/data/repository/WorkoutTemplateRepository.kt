@@ -1,12 +1,13 @@
-package com.example.gymbud.data
+package com.example.gymbud.data.repository
 
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
+import com.example.gymbud.data.datasource.database.WorkoutTemplateDao
+import com.example.gymbud.data.datasource.database.WorkoutTemplateWithItemDao
+import com.example.gymbud.data.datasource.defaults.WorkoutTemplateDefaultDatasource
 import com.example.gymbud.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
@@ -58,12 +59,16 @@ class WorkoutTemplateRepository(
         workoutItems.forEachIndexed { workoutItemIndex, workoutItem ->
             workoutItem.workoutItemPosition = workoutItemIndex // ensure no gaps
 
-            val itemToBeAdded: Item? = if (workoutItem.isWithSetTemplate()) {
-                workoutSetTemplates.find { setTemplate -> setTemplate.id == workoutItem.setTemplateId  }
-            } else if (workoutItem.isWithRestPeriod()) {
-                workoutRestPeriods.find { restPeriod -> restPeriod.id == workoutItem.restPeriodId  }
-            } else {
-                null
+            val itemToBeAdded: Item? = when {
+                workoutItem.isWithSetTemplate() -> {
+                    workoutSetTemplates.find { setTemplate -> setTemplate.id == workoutItem.setTemplateId  }
+                }
+                workoutItem.isWithRestPeriod() -> {
+                    workoutRestPeriods.find { restPeriod -> restPeriod.id == workoutItem.restPeriodId  }
+                }
+                else -> {
+                    null
+                }
             }
 
             if (itemToBeAdded == null) {

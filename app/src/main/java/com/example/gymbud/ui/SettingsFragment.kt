@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.gymbud.BaseApplication
-import com.example.gymbud.data.AppRepository
+import com.example.gymbud.data.repository.AppRepository
 import com.example.gymbud.databinding.FragmentSettingsBinding
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 import com.example.gymbud.ui.viewmodel.ItemViewModelFactory

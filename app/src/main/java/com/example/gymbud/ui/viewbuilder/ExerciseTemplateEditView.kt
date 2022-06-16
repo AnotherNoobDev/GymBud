@@ -7,9 +7,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.lifecycleScope
 import com.example.gymbud.R
-import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.databinding.LayoutEditDropdownFieldBinding
 import com.example.gymbud.databinding.LayoutEditRangeSliderBinding
 import com.example.gymbud.databinding.LayoutEditTextFieldBinding

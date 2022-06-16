@@ -1,7 +1,9 @@
 package com.example.gymbud
 
 import android.app.Application
-import com.example.gymbud.data.*
+import com.example.gymbud.data.ItemIdentifierGenerator
+import com.example.gymbud.data.datasource.database.GymBudRoomDatabase
+import com.example.gymbud.data.repository.*
 
 class BaseApplication: Application() {
 

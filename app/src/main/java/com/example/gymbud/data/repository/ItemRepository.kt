@@ -1,11 +1,13 @@
-package com.example.gymbud.data
+package com.example.gymbud.data.repository
 
+import com.example.gymbud.data.ItemIdentifierGenerator
+import com.example.gymbud.data.datasource.database.GymBudRoomDatabase
 import com.example.gymbud.model.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+//import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
+//import kotlinx.coroutines.flow.merge
 
 
 class ItemRepository(
@@ -67,9 +69,12 @@ class ItemRepository(
     }
 
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    //@OptIn(ExperimentalCoroutinesApi::class)
+    @Suppress("UNUSED_PARAMETER")
     private fun findItemInAll(id: ItemIdentifier): Flow<Item?>  {
         assert(false) // todo doesn't work
+        return flowOf()
+        /*
         return merge(
             exerciseRepository.retrieveExercise(id),
             exerciseTemplateRepository.retrieveExerciseTemplate(id),
@@ -78,6 +83,7 @@ class ItemRepository(
             programTemplateRepository.retrieveProgramTemplate(id),
             restPeriodRepository.retrieveRestPeriod(id)
         )
+         */
     }
 
 

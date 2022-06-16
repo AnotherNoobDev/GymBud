@@ -2,14 +2,17 @@ package com.example.gymbud.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.gymbud.data.AppRepository
 import com.example.gymbud.data.ItemIdentifierGenerator
-import com.example.gymbud.data.ItemRepository
+import com.example.gymbud.data.repository.AppRepository
+import com.example.gymbud.data.repository.ItemRepository
 import com.example.gymbud.model.Item
 import com.example.gymbud.model.ItemIdentifier
 import com.example.gymbud.model.ItemType
 import com.example.gymbud.model.ProgramTemplate
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 
 private const val NO_PROGRAM_NAME = "None"

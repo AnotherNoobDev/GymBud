@@ -27,8 +27,8 @@ object ItemIdentifierGenerator {
 
     private var id: ItemIdentifier = NO_ID
 
-    fun setApp(app: BaseApplication) {
-        this.app = app
+    fun setApp(theApp: BaseApplication) {
+        app = theApp
     }
 
 

@@ -2,7 +2,7 @@ package com.example.gymbud.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.gymbud.data.ItemRepository
+import com.example.gymbud.data.repository.ItemRepository
 import com.example.gymbud.model.Item
 import com.example.gymbud.model.ItemContent
 import com.example.gymbud.model.ItemIdentifier

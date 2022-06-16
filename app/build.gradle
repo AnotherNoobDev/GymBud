@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.gymbud"
-        minSdk 19
+        minSdk 21 // todo used to be 19, but upgraded to 21 to use multidex (maybe need to shrink app see https://developer.android.com/studio/build/shrink-code)
         targetSdk 32
         versionCode 1
         versionName "1.0"

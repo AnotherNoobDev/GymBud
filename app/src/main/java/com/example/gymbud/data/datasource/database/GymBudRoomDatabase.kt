@@ -1,4 +1,4 @@
-package com.example.gymbud.data
+package com.example.gymbud.data.datasource.database
 
 import android.content.Context
 import androidx.room.*
@@ -8,7 +8,7 @@ class Converters {
     /// Exercise <--> ItemIdentifier
 
     @TypeConverter
-    fun exercisefromId(value: ItemIdentifier?): Exercise? {
+    fun exerciseFromId(value: ItemIdentifier?): Exercise? {
         return value?.let { Exercise(value) }
     }
 

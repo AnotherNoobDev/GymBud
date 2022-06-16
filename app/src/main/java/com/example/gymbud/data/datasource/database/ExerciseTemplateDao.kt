@@ -1,4 +1,4 @@
-package com.example.gymbud.data
+package com.example.gymbud.data.datasource.database
 
 import androidx.room.Dao
 import androidx.room.Insert
