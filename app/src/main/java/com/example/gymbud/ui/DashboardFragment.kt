@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.gymbud.BaseApplication
+import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.data.repository.QuotesRepository
 import com.example.gymbud.databinding.FragmentDashboardBinding
 import com.example.gymbud.model.*
@@ -35,6 +37,7 @@ class DashboardFragment : Fragment() {
     private lateinit var quotesRepository: QuotesRepository
 
     private var activeProgram: String = ""
+    private var activeProgramId: ItemIdentifier = ItemIdentifierGenerator.NO_ID
     private var activeProgramDay: Item? = null
     private var activeProgramDayPosInProgram: Long = -1
 
@@ -56,6 +59,11 @@ class DashboardFragment : Fragment() {
 
             activeProgramDayEditBtn.setOnClickListener {
                 onEditActiveProgramDay()
+            }
+
+            startWorkoutBtn.setOnClickListener {
+                val action = DashboardFragmentDirections.actionDashboardFragmentToLiveSessionStartFragment(activeProgramId, activeProgramDay!!.id)
+                findNavController().navigate(action)
             }
         }
 
@@ -136,8 +144,11 @@ class DashboardFragment : Fragment() {
 
     private suspend fun updateActiveProgramAndProgramDay(active : ActiveProgramAndProgramDay) {
         updateProgram(active.programName)
+        activeProgramId = active.programId
+
         updateProgramDay(active.programDay)
         activeProgramDayPosInProgram = active.programDayPosInProgram
+
     }
 
 

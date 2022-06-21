@@ -67,4 +67,12 @@ class BaseApplication: Application() {
             programRepository
         )
     }
+
+    val sessionRepository: SessionsRepository by lazy {
+        SessionsRepository(
+            database.exerciseSessionRecordDao(),
+            database.workoutSessionRecordDao(),
+            workoutTemplateRepository
+        )
+    }
 }

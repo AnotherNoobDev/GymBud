@@ -78,12 +78,14 @@ class Converters {
 @Database(
     entities = [
         Exercise::class,
+        ExerciseSessionRecord::class,
         ExerciseTemplate::class,
         ProgramTemplate::class,
         ProgramTemplateWithItem::class,
         RestPeriod::class,
         SetTemplate::class,
         SetTemplateWithItem::class,
+        WorkoutSessionRecord::class,
         WorkoutTemplate::class,
         WorkoutTemplateWithItem::class,
     ],
@@ -93,12 +95,14 @@ class Converters {
 @TypeConverters(Converters::class)
 abstract class GymBudRoomDatabase: RoomDatabase() {
     abstract fun exerciseDao(): ExerciseDao
+    abstract fun exerciseSessionRecordDao(): ExerciseSessionRecordDao
     abstract fun exerciseTemplateDao(): ExerciseTemplateDao
     abstract fun programTemplateDao(): ProgramTemplateDao
     abstract fun programTemplateWithItemDao(): ProgramTemplateWithItemDao
     abstract fun restPeriodDao(): RestPeriodDao
     abstract fun setTemplateDao(): SetTemplateDao
     abstract fun setTemplateWithItemDao(): SetTemplateWithItemDao
+    abstract fun workoutSessionRecordDao(): WorkoutSessionRecordDao
     abstract fun workoutTemplateDao(): WorkoutTemplateDao
     abstract fun workoutTemplateWithItemDao(): WorkoutTemplateWithItemDao
 

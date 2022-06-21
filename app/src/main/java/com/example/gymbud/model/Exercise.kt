@@ -2,6 +2,7 @@ package com.example.gymbud.model
 
 import androidx.room.*
 
+
 // A description of the exercise
 @Entity(tableName = "exercise")
 data class Exercise(
@@ -18,6 +19,7 @@ data class Exercise(
         return name
     }
 }
+
 
 data class ExerciseContent(
     override var name: String,
@@ -39,32 +41,17 @@ data class ExerciseTemplate(
     override var name: String,
     @ColumnInfo(name = "exercise_id") val exercise: Exercise,
     @ColumnInfo(name = "target_rep_range") var targetRepRange: IntRange
-): Item {
-}
+): Item
+
 
 open class ExerciseTemplateEditContent(
     override var name: String,
     var targetRepRange: IntRange
-): ItemContent {
-}
+): ItemContent
+
 
 class ExerciseTemplateNewContent(
     name: String,
     var exercise: Exercise,
     targetRepRange: IntRange
-): ExerciseTemplateEditContent(name, targetRepRange) {
-}
-
-
-// An actual executed exercise
-data class ExerciseRecord(
-    override val id: ItemIdentifier,
-    override var name: String,
-    val exerciseTemplate: ExerciseTemplate,
-    val targetReps: Int,
-    val actualReps: Int,
-    val targetResistance: String, // weight -> number, band-> string todo: how to better represent this?
-    val actualResistance: String
-    // val period -> time it took to perform the exercise
-): Item {
-}
+): ExerciseTemplateEditContent(name, targetRepRange)

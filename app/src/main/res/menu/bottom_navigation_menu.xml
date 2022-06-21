@@ -11,6 +11,12 @@
         android:icon="@drawable/ic_dashboard_24"
         android:title="@string/dashboard"/>
     <item
+        android:id="@id/liveSessionEndFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_end_session_24"
+        android:title="@string/end_live_session"
+        android:visible="false"/>
+    <item
         android:id="@id/statsFragment"
         android:enabled="true"
         android:icon="@drawable/ic_stats_24"

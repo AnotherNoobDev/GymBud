@@ -58,6 +58,10 @@
         <action
             android:id="@+id/action_dashboardFragment_to_startupFragment"
             app:destination="@id/startupFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_liveSessionStartFragment"
+            app:destination="@id/liveSessionStartFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/itemDetailFragment"
@@ -103,4 +107,65 @@
         android:name="com.example.gymbud.ui.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/liveSessionStartFragment"
+        android:name="com.example.gymbud.ui.live_session.LiveSessionStartFragment"
+        android:label="fragment_live_session_start"
+        tools:layout="@layout/fragment_live_session_start" >
+        <action
+            android:id="@+id/action_liveSessionStartFragment_to_liveSessionExerciseFragment"
+            app:destination="@id/liveSessionExerciseFragment" />
+        <action
+            android:id="@+id/action_liveSessionStartFragment_to_liveSessionRestFragment"
+            app:destination="@id/liveSessionRestFragment" />
+        <argument
+            android:name="programId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <argument
+            android:name="workoutId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
+    <fragment
+        android:id="@+id/liveSessionExerciseFragment"
+        android:name="com.example.gymbud.ui.live_session.LiveSessionExerciseFragment"
+        android:label="fragment_live_session_exercise"
+        tools:layout="@layout/fragment_live_session_exercise" >
+        <action
+            android:id="@+id/action_liveSessionExerciseFragment_to_liveSessionEndFragment"
+            app:destination="@id/liveSessionEndFragment" />
+        <action
+            android:id="@+id/action_liveSessionExerciseFragment_to_liveSessionRestFragment"
+            app:destination="@id/liveSessionRestFragment" />
+        <action
+            android:id="@+id/action_liveSessionExerciseFragment_self"
+            app:destination="@id/liveSessionExerciseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/liveSessionRestFragment"
+        android:name="com.example.gymbud.ui.live_session.LiveSessionRestFragment"
+        android:label="fragment_live_session_rest"
+        tools:layout="@layout/fragment_live_session_rest" >
+        <action
+            android:id="@+id/action_liveSessionRestFragment_to_liveSessionEndFragment"
+            app:destination="@id/liveSessionEndFragment" />
+        <action
+            android:id="@+id/action_liveSessionRestFragment_to_liveSessionExerciseFragment"
+            app:destination="@id/liveSessionExerciseFragment" />
+        <action
+            android:id="@+id/action_liveSessionRestFragment_self"
+            app:destination="@id/liveSessionRestFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/liveSessionEndFragment"
+        android:name="com.example.gymbud.ui.live_session.LiveSessionEndFragment"
+        android:label="fragment_live_session_end"
+        tools:layout="@layout/fragment_live_session_end" >
+        <action
+            android:id="@+id/action_liveSessionEndFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@id/startupFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

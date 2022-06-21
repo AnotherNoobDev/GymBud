@@ -20,6 +20,7 @@ private const val NO_PROGRAM_NAME = "None"
 
 data class ActiveProgramAndProgramDay(
     val programName: String ,
+    val programId: ItemIdentifier,
     val programDayPosInProgram: Long, // -1 if not bound to a program
     val programDay: Item? // Workout or Rest day
 )
@@ -56,7 +57,7 @@ class DashboardViewModel(
             }
         }
 
-        return ActiveProgramAndProgramDay(program?.name ?: NO_PROGRAM_NAME, programDayPosInProgram, programDay)
+        return ActiveProgramAndProgramDay(program?.name ?: NO_PROGRAM_NAME, programId, programDayPosInProgram, programDay)
     }
 
 
