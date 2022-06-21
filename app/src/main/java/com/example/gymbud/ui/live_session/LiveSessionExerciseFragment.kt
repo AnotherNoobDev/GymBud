@@ -12,12 +12,12 @@ import androidx.navigation.fragment.findNavController
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.databinding.FragmentLiveSessionExerciseBinding
 import com.example.gymbud.model.ResistanceType
+import com.example.gymbud.model.TagCategory
 import com.example.gymbud.model.WorkoutSessionItem
 import com.example.gymbud.model.WorkoutSessionItemType
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModel
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModelFactory
 
-// todo display tags
 
 class LiveSessionExerciseFragment : Fragment() {
     private val liveSessionViewModel: LiveSessionViewModel by activityViewModels {
@@ -46,6 +46,12 @@ class LiveSessionExerciseFragment : Fragment() {
 
         binding.apply {
             exerciseLabel.text = exerciseSession.getShortName()
+
+            val intensity = exerciseSession.tags?.get(TagCategory.Intensity)?.joinToString() ?: ""
+            if (intensity.isNotEmpty()) {
+                exerciseTags.text = "*  $intensity *"
+            }
+
             previousSessionValue.text = exerciseSession.getPreviousResult()?: "-"
             previousNotes.text = exerciseSession.getPreviousNotes()?: "No notes..."
 

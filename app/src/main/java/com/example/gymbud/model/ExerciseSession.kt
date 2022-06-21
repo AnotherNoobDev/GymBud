@@ -13,7 +13,8 @@ open class WorkoutSessionItem private constructor(val type: WorkoutSessionItemTy
     class ExerciseSession(
         private val name: String,
         val exerciseTemplate: ExerciseTemplate,
-        private var previousSession: ExerciseSession?
+        val tags: Tags?,
+        private var previousSession: ExerciseSession?,
     ): WorkoutSessionItem(WorkoutSessionItemType.Exercise, exerciseTemplate.exercise.name) {
         private var _actualResistance = ""
         val actualResistance get() = _actualResistance
@@ -101,14 +102,15 @@ open class WorkoutSessionItem private constructor(val type: WorkoutSessionItemTy
                 workoutSessionId,
                 _actualResistance,
                 _actualReps,
-                _notes
+                _notes,
+                tags
             )
         }
 
 
         companion object {
             fun fromRecord(record: ExerciseSessionRecord, template: ExerciseTemplate): ExerciseSession {
-                val session = ExerciseSession(record.name, template, null)
+                val session = ExerciseSession(record.name, template, record.tags, null)
                 session._actualResistance =  record.resistance
                 session._actualReps =  record.reps
                 session._notes = record.notes
@@ -153,5 +155,6 @@ data class ExerciseSessionRecord(
     @ColumnInfo(name = "workout_session_id") val workoutSessionId: ItemIdentifier,
     val resistance: String, // we need to store either a number (Weight) or a band type here (red, blue etc)
     val reps: Int,
-    val notes: String
+    val notes: String,
+    val tags: Tags?
 ): Item

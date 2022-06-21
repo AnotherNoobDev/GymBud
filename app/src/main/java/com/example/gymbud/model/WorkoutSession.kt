@@ -44,8 +44,8 @@ class WorkoutSession(
         // setup from template
         workoutTemplate.items.forEach {
             when(it) {
-                is TaggedItem -> addItemToSession(sessionItemsBuilder, it.item)
-                else -> addItemToSession(sessionItemsBuilder, it)
+                is TaggedItem -> addItemToSession(sessionItemsBuilder, it.item, it.tags)
+                else -> addItemToSession(sessionItemsBuilder, it, null)
             }
         }
 
@@ -56,12 +56,12 @@ class WorkoutSession(
     }
 
 
-    private fun addItemToSession(sessionItemsBuilder: MutableList<WorkoutSessionItem>, item: Item) {
+    private fun addItemToSession(sessionItemsBuilder: MutableList<WorkoutSessionItem>, item: Item, tags: Tags?) {
         when (item) {
             is RestPeriod -> addRestPeriodToSession(sessionItemsBuilder, item)
-            is SetTemplate -> addSetTemplateToSession(sessionItemsBuilder, item)
-            is ExerciseTemplate -> addExerciseTemplateToSession(sessionItemsBuilder, item)
-            is TaggedItem -> addItemToSession(sessionItemsBuilder, item.item)
+            is SetTemplate -> addSetTemplateToSession(sessionItemsBuilder, item, tags)
+            is ExerciseTemplate -> addExerciseTemplateToSession(sessionItemsBuilder, item, tags)
+            is TaggedItem -> addItemToSession(sessionItemsBuilder, item, tags?.plus(item.tags) ?: item.tags) // todo not sure if adding tags like this is what I want :)
         }
     }
 
@@ -71,18 +71,19 @@ class WorkoutSession(
     }
 
 
-    private fun addSetTemplateToSession(sessionItemsBuilder: MutableList<WorkoutSessionItem>, setTemplate: SetTemplate) {
+    private fun addSetTemplateToSession(sessionItemsBuilder: MutableList<WorkoutSessionItem>, setTemplate: SetTemplate, tags: Tags?) {
         setTemplate.items.forEach {
-            addItemToSession(sessionItemsBuilder, it)
+            addItemToSession(sessionItemsBuilder, it, tags)
         }
     }
 
 
-    private fun addExerciseTemplateToSession(sessionItemsBuilder: MutableList<WorkoutSessionItem>, exerciseTemplate: ExerciseTemplate) {
+    private fun addExerciseTemplateToSession(sessionItemsBuilder: MutableList<WorkoutSessionItem>, exerciseTemplate: ExerciseTemplate, tags: Tags?) {
         sessionItemsBuilder.add(
             WorkoutSessionItem.ExerciseSession(
                 exerciseTemplate.name + todayStr,
                 exerciseTemplate,
+                tags,
                 null
             )
         )
