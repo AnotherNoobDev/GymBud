@@ -101,7 +101,11 @@
         android:id="@+id/statsFragment"
         android:name="com.example.gymbud.ui.StatsFragment"
         android:label="fragment_stats"
-        tools:layout="@layout/fragment_stats" />
+        tools:layout="@layout/fragment_stats" >
+        <action
+            android:id="@+id/action_statsFragment_to_statsSessionCalendarFragment"
+            app:destination="@id/statsSessionCalendarFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.gymbud.ui.SettingsFragment"
@@ -167,5 +171,23 @@
             app:destination="@id/dashboardFragment"
             app:popUpTo="@id/startupFragment"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/statsSessionCalendarFragment"
+        android:name="com.example.gymbud.ui.stats.StatsSessionCalendarFragment"
+        android:label="fragment_stats_session_calendar"
+        tools:layout="@layout/fragment_stats_session_calendar" >
+        <action
+            android:id="@+id/action_statsSessionCalendarFragment_to_sessionDetailFragment"
+            app:destination="@id/sessionDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/sessionDetailFragment"
+        android:name="com.example.gymbud.ui.stats.SessionDetailFragment"
+        android:label="fragment_session_detail"
+        tools:layout="@layout/fragment_session_detail" >
+        <argument
+            android:name="id"
+            app:argType="long" />
     </fragment>
 </navigation>

@@ -113,6 +113,16 @@ class WorkoutSession(
     }
 
 
+    fun getShortName(): String {
+        return workoutTemplate.name
+    }
+
+
+    fun getStartTime(): Date {
+        return startTime
+    }
+
+
     fun start() {
         assert(state == WorkoutSessionState.Ready)
 
@@ -281,3 +291,10 @@ data class WorkoutSessionRecord(
     val durationMs: Long,
     val notes: String
 ): Item
+
+
+data class DayOfTheMonth(
+    val day: Int,
+    val workoutSessionsId: ItemIdentifier,
+    val workoutSessionName: String
+)

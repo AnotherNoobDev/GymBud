@@ -12,6 +12,7 @@ import com.example.gymbud.BaseApplication
 import com.example.gymbud.databinding.FragmentTemplatesBinding
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 import com.example.gymbud.ui.viewmodel.ItemViewModelFactory
+import com.example.gymbud.utility.populateWithSessions
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -45,6 +46,10 @@ class TemplatesFragment : Fragment() {
             useDefaultsButton.setOnClickListener {
                 viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.populateWithDefaults()
+
+                    // todo remove this (generates test data)!!
+                    val app = activity?.application as BaseApplication
+                    populateWithSessions(app.programRepository, app.sessionRepository)
                 }
             }
 
