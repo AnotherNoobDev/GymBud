@@ -14,7 +14,7 @@ import com.example.gymbud.databinding.FragmentLiveSessionEndBinding
 import com.example.gymbud.ui.SessionExerciseListRecyclerViewAdapter
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModel
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModelFactory
-import com.example.gymbud.utility.getFormattedTimeHHMMSS
+import com.example.gymbud.utility.TimeFormatter
 import kotlinx.coroutines.launch
 
 
@@ -48,7 +48,7 @@ class LiveSessionEndFragment : Fragment() {
         sessionResultsAdapter.submitList(results)
 
         binding.apply {
-            durationValue.text = getFormattedTimeHHMMSS(liveSessionViewModel.getDuration() / 1000)
+            durationValue.text = TimeFormatter.getFormattedTimeHHMMSS(liveSessionViewModel.getDuration() / 1000)
 
             if (results.isEmpty()) {
                 notesInput.isEnabled = false

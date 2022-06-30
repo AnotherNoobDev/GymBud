@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout10"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    tools:context=".ui.stats.PersonalBestsFragment">
+
+    <!-- filters -->
+   <include
+       layout="@layout/layout_exercise_filters_bar"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/personal_bests_grid"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        app:layoutManager=
+            "androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/filters_divider"
+        app:spanCount="2"
+        tools:itemCount="16"
+        tools:listitem="@layout/layout_personal_best_exercise" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

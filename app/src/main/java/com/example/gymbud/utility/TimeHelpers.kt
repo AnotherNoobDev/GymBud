@@ -2,6 +2,9 @@ package com.example.gymbud.utility
 
 import java.util.*
 
+
+private const val ONE_DAY_MS = 24 * 60 * 60 * 1000
+
 /**
  * returns a span of time around a given month (use Calendar.JANUARY.. Calendar..DECEMBER), filling with days from the month before and after
  * return value is [start date timestamp, end date timestamp, list of days in month]
@@ -42,4 +45,9 @@ fun getDayOfMonth(dateMs: Long): Int {
     calendar.time = Date(dateMs)
 
     return calendar[Calendar.DAY_OF_MONTH]
+}
+
+
+fun addDays(nowMs: Long, nDays: Int): Long {
+    return nowMs + nDays * ONE_DAY_MS
 }

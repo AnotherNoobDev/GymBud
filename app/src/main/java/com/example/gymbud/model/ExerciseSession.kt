@@ -158,3 +158,22 @@ data class ExerciseSessionRecord(
     val notes: String,
     val tags: Tags?
 ): Item
+
+
+data class ExercisePersonalBest(
+    @ColumnInfo(name = "workout_session_id") val workoutSessionId: ItemIdentifier,
+    val reps: Int,
+    val resistance: String
+)
+
+
+data class ExercisePersonalBestExtendedInfo(
+    val exerciseName: String,
+    val exerciseId: ItemIdentifier,
+    val dateMs: Long,
+    private val pb: ExercisePersonalBest
+) {
+    val workoutSessionId = pb.workoutSessionId
+    val reps = pb.reps
+    val resistance = pb.resistance
+}

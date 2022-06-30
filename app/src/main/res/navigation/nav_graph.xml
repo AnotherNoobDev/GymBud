@@ -105,6 +105,9 @@
         <action
             android:id="@+id/action_statsFragment_to_statsSessionCalendarFragment"
             app:destination="@id/statsSessionCalendarFragment" />
+        <action
+            android:id="@+id/action_statsFragment_to_personalBestsFragment"
+            app:destination="@id/personalBestsFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -190,4 +193,18 @@
             android:name="id"
             app:argType="long" />
     </fragment>
+    <fragment
+        android:id="@+id/personalBestsFragment"
+        android:name="com.example.gymbud.ui.stats.PersonalBestsFragment"
+        android:label="fragment_personal_bests"
+        tools:layout="@layout/fragment_personal_bests" >
+        <action
+            android:id="@+id/action_personalBestsFragment_to_exerciseFiltersFragment"
+            app:destination="@id/exerciseFiltersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/exerciseFiltersFragment"
+        android:name="com.example.gymbud.ui.stats.ExerciseFiltersFragment"
+        android:label="fragment_exercise_filters"
+        tools:layout="@layout/fragment_exercise_filters" />
 </navigation>

@@ -23,7 +23,8 @@ import java.util.*
 
 class StatsSessionCalendarFragment : Fragment() {
     private val statsViewModel: StatsViewModel by activityViewModels {
-        StatsViewModelFactory((activity?.application as BaseApplication).sessionRepository)
+        val app = activity?.application as BaseApplication
+        StatsViewModelFactory(app.sessionRepository, app.exerciseTemplateRepository)
     }
 
     private var _binding: FragmentStatsSessionCalendarBinding? = null

@@ -15,25 +15,23 @@ import com.example.gymbud.model.WorkoutSession
 import com.example.gymbud.ui.SessionExerciseListRecyclerViewAdapter
 import com.example.gymbud.ui.viewmodel.StatsViewModel
 import com.example.gymbud.ui.viewmodel.StatsViewModelFactory
-import com.example.gymbud.utility.getFormattedTimeHHMMSS
+import com.example.gymbud.utility.TimeFormatter
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
+
 
 
 class SessionDetailFragment : Fragment() {
     private val navigationArgs: SessionDetailFragmentArgs by navArgs()
 
     private val statsViewModel: StatsViewModel by activityViewModels {
-        StatsViewModelFactory((activity?.application as BaseApplication).sessionRepository)
+        val app = activity?.application as BaseApplication
+        StatsViewModelFactory(app.sessionRepository, app.exerciseTemplateRepository)
     }
 
     private var _binding: FragmentSessionDetailBinding? = null
     private val binding get() = _binding!!
 
     private val sessionAdapter = SessionExerciseListRecyclerViewAdapter()
-
-    private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.US)
 
 
     override fun onCreateView(
@@ -71,8 +69,8 @@ class SessionDetailFragment : Fragment() {
     private fun updateSession(session: WorkoutSession) {
         binding.apply {
             workoutLabel.text = session.getShortName()
-            dateValue.text = dateFormat.format(session.getStartTime())
-            durationValue.text = getFormattedTimeHHMMSS(session.getDuration() / 1000)
+            dateValue.text = TimeFormatter.getFormattedDateDDMMYYYY(session.getStartTime())
+            durationValue.text = TimeFormatter.getFormattedTimeHHMMSS(session.getDuration() / 1000)
             sessionAdapter.submitList(session.getExerciseSessions())
             notesValue.text = session.notes
         }

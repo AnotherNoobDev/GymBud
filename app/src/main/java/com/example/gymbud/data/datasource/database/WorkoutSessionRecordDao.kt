@@ -1,9 +1,7 @@
 package com.example.gymbud.data.datasource.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.example.gymbud.model.ItemIdentifier
 import com.example.gymbud.model.WorkoutSessionRecord
 
@@ -15,6 +13,9 @@ interface WorkoutSessionRecordDao {
 
     @Query("SELECT * from workout_session WHERE id = :id")
     suspend fun get(id: ItemIdentifier): WorkoutSessionRecord?
+
+    @Query("SELECT date from workout_session WHERE id = :id")
+    suspend fun getSessionDate(id: ItemIdentifier): Long?
 
     @Query("DELETE from workout_session WHERE id = :id")
     suspend fun delete(id: ItemIdentifier): Int
@@ -32,4 +33,8 @@ interface WorkoutSessionRecordDao {
             "WHERE date BETWEEN :startDate AND :endDate " +
             "ORDER BY date ASC ")
     suspend fun getPreviousSessions(startDate: Long, endDate: Long): List<WorkoutSessionRecord>
+
+
+    @RawQuery
+    suspend fun getPreviousSessionsByFilters(query: SupportSQLiteQuery): List<ItemIdentifier>
 }

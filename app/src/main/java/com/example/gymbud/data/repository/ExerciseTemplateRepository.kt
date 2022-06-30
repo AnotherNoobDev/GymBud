@@ -25,6 +25,18 @@ class ExerciseTemplateRepository(
         }
 
 
+    val exerciseTemplatesByExercise = exerciseTemplates.map { templates ->
+        exerciseRepository.exercises.first().mapNotNull { exercise ->
+            val templatesByExercise = templates.filter { it.exercise.id == exercise.id }
+            if (templatesByExercise.isEmpty()) {
+                null
+            } else {
+                Pair(exercise, templatesByExercise)
+            }
+        }
+    }
+
+
     suspend fun populateWithDefaults() {
         ExerciseDefaultDatasource.exerciseTemplatesForHypertrophy.forEach {
             exerciseTemplateDao.insert(it)
@@ -44,6 +56,7 @@ class ExerciseTemplateRepository(
     }
 
 
+    // todo this is pointless, remove it and others like it --> we can just call first() :)
     suspend fun retrieveExerciseTemplatesOnce(ids: List<ItemIdentifier>): List<ExerciseTemplate> {
         val templates = exerciseTemplateDao.getOnce(ids)
         templates.forEach {

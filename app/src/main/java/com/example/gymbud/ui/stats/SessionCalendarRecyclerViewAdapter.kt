@@ -13,8 +13,7 @@ import com.example.gymbud.model.ItemIdentifier
 
 class SessionCalendarRecyclerViewAdapter(
     private val onSessionClicked: (ItemIdentifier) -> Unit
-):
-    ListAdapter<DayOfTheMonth, SessionCalendarRecyclerViewAdapter.ViewHolder>(DiffCallback) {
+): ListAdapter<DayOfTheMonth, SessionCalendarRecyclerViewAdapter.ViewHolder>(DiffCallback) {
 
     inner class ViewHolder(binding: LayoutCalendarDayBinding) : RecyclerView.ViewHolder(binding.root) {
         val dayOfTheMonthLabel: TextView = binding.dayOfTheMonthLabel

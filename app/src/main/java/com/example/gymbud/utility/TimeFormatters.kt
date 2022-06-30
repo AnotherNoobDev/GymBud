@@ -1,19 +1,32 @@
 package com.example.gymbud.utility
 
-
-fun getFormattedTimeMMSS(elapsedSec: Long): String {
-    val minutes = elapsedSec / 60
-    val sec = elapsedSec % 60
-
-    return String.format("%02d:%02d", minutes, sec)
-}
+import java.text.SimpleDateFormat
+import java.util.*
 
 
-fun getFormattedTimeHHMMSS(elapsedSec: Long): String {
-    val hours = elapsedSec / 3600
-    val remainingSec = elapsedSec % 3600
-    val minutes = remainingSec / 60
-    val sec = remainingSec % 60
+// todo check code for other places that do time formatting and unify here
+object TimeFormatter {
+    private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.US)
 
-    return String.format("%02d:%02d:%02d", hours, minutes, sec)
+    fun getFormattedTimeMMSS(elapsedSec: Long): String {
+        val minutes = elapsedSec / 60
+        val sec = elapsedSec % 60
+
+        return String.format("%02d:%02d", minutes, sec)
+    }
+
+
+    fun getFormattedTimeHHMMSS(elapsedSec: Long): String {
+        val hours = elapsedSec / 3600
+        val remainingSec = elapsedSec % 3600
+        val minutes = remainingSec / 60
+        val sec = remainingSec % 60
+
+        return String.format("%02d:%02d:%02d", hours, minutes, sec)
+    }
+
+
+    fun getFormattedDateDDMMYYYY(date: Date): String {
+        return dateFormat.format(date)
+    }
 }

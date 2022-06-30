@@ -1,9 +1,11 @@
 package com.example.gymbud.data.repository
 
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.data.datasource.database.ExerciseSessionRecordDao
 import com.example.gymbud.data.datasource.database.WorkoutSessionRecordDao
 import com.example.gymbud.model.*
+import com.example.gymbud.ui.viewmodel.ExerciseFilters
 import com.example.gymbud.utility.getDayOfMonth
 import com.example.gymbud.utility.getMonthSpan
 import kotlinx.coroutines.flow.first
@@ -40,6 +42,11 @@ class SessionsRepository(
         }
 
         return WorkoutSession.fromRecord(record, template, exerciseRecords)
+    }
+
+
+    suspend fun getWorkoutSessionDate(workoutSessionId: ItemIdentifier): Long? {
+        return workoutSessionRecordDao.getSessionDate(workoutSessionId)
     }
 
 
@@ -85,6 +92,64 @@ class SessionsRepository(
         }
 
         return sessionDays.toList()
+    }
+
+    /**
+     * exerciseTemplates: the templates associated with this exercise
+     */
+    suspend fun getExercisePersonalBest(exerciseTemplates: List<ItemIdentifier>, filters: ExerciseFilters): ExercisePersonalBest? {
+        // restrict usable workout sessions by filters
+        val sessions = getSessionIdsByFilters(filters)
+
+        return exerciseSessionRecordDao.getExercisePersonalBest(exerciseTemplates, sessions)
+    }
+
+
+    private suspend fun getSessionIdsByFilters(filters: ExerciseFilters): List<ItemIdentifier> {
+        // construct query based on filters
+        var queryString = ""
+        val queryArgs = mutableListOf<Any>()
+        var containsCondition = false
+
+        queryString += "SELECT id from workout_session"
+
+        if (filters.programTemplateId != null) {
+            queryString += " WHERE"
+            queryString += " program_template_id IS ?"
+            queryArgs.add(filters.programTemplateId)
+            containsCondition = true
+        }
+
+        if (filters.periodStart != null) {
+            queryString += if (containsCondition) {
+                " AND"
+            } else {
+                containsCondition = true
+                " WHERE"
+            }
+
+            queryString += " date >= ?"
+            queryArgs.add(filters.periodStart)
+        }
+
+        if (filters.periodEnd != null) {
+            queryString += if (containsCondition) {
+                " AND"
+            } else {
+                // suppressing this, value is set intentionally to avoid future bugs when extending :)
+                @Suppress("UNUSED_VALUE")
+                containsCondition = true
+                " WHERE"
+            }
+
+            queryString += " date <= ?"
+            queryArgs.add(filters.periodEnd)
+        }
+
+        queryString += ";"
+
+        val query = SimpleSQLiteQuery(queryString, queryArgs.toTypedArray())
+        return workoutSessionRecordDao.getPreviousSessionsByFilters(query)
     }
 
 

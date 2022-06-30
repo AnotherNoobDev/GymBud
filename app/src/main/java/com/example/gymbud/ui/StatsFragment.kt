@@ -22,7 +22,8 @@ class StatsFragment : Fragment() {
 
         binding.apply {
             personalBestsBtn.setOnClickListener {
-                // todo
+                val action = StatsFragmentDirections.actionStatsFragmentToPersonalBestsFragment()
+                findNavController().navigate(action)
             }
 
             byExerciseBtn.setOnClickListener {

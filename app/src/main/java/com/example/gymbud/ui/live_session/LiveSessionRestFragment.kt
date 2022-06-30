@@ -17,7 +17,7 @@ import com.example.gymbud.model.WorkoutSessionItem
 import com.example.gymbud.model.WorkoutSessionItemType
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModel
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModelFactory
-import com.example.gymbud.utility.getFormattedTimeMMSS
+import com.example.gymbud.utility.TimeFormatter
 
 
 class LiveSessionRestFragment : Fragment() {
@@ -99,7 +99,7 @@ class LiveSessionRestFragment : Fragment() {
         val elapsedTimeSec = (System.currentTimeMillis() - startTime) / 1000
 
         binding.apply {
-            timerValue.text = getFormattedTimeMMSS(elapsedTimeSec)
+            timerValue.text = TimeFormatter.getFormattedTimeMMSS(elapsedTimeSec)
             timerProgressIndicator.progress = minOf(((elapsedTimeSec * 1.0 / targetRestPeriod.last) * 100).toInt(), 100)
             timerProgressIndicator.indicatorColor[0] = when {
                 elapsedTimeSec < targetRestPeriod.first -> Color.RED
