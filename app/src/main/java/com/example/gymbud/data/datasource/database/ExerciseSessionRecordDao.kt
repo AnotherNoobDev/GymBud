@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.gymbud.model.ExercisePersonalBest
+import com.example.gymbud.model.ExerciseResult
 import com.example.gymbud.model.ExerciseSessionRecord
 import com.example.gymbud.model.ItemIdentifier
 
@@ -22,5 +22,11 @@ interface ExerciseSessionRecordDao {
             "AND workout_session_id IN (:workoutSessions) " +
             "ORDER BY resistance DESC " +
             "LIMIT 1")
-    suspend fun getExercisePersonalBest(exerciseTemplates: List<ItemIdentifier>, workoutSessions: List<ItemIdentifier> ): ExercisePersonalBest?
+    suspend fun getExercisePersonalBest(exerciseTemplates: List<ItemIdentifier>, workoutSessions: List<ItemIdentifier> ): ExerciseResult?
+
+
+    @Query("SELECT workout_session_id, reps, resistance from exercise_session " +
+            "WHERE exercise_template_id IN (:exerciseTemplates) " +
+            "AND workout_session_id IN (:workoutSessions)")
+    suspend fun getExerciseResults(exerciseTemplates: List<ItemIdentifier>, workoutSessions: List<ItemIdentifier> ): List<ExerciseResult>
 }

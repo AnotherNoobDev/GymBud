@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.R
 import com.example.gymbud.databinding.FragmentPersonalBestsBinding
+import com.example.gymbud.model.ItemIdentifier
 import com.example.gymbud.ui.viewmodel.ExerciseFiltersViewModel
 import com.example.gymbud.ui.viewmodel.ExerciseFiltersViewModelFactory
 import com.example.gymbud.ui.viewmodel.StatsViewModel
@@ -37,7 +38,9 @@ class PersonalBestsFragment : Fragment() {
     private var filterByProgram: TextView? = null
     private var filterByPeriod: TextView? = null
 
-    private val personalBestsAdapter = PersonalBestsRecyclerViewAdapter()
+    private val personalBestsAdapter = PersonalBestsRecyclerViewAdapter { exerciseId, sessionDate ->
+        onPersonalBestClicked(exerciseId, sessionDate)
+    }
 
 
     override fun onCreateView(
@@ -75,5 +78,11 @@ class PersonalBestsFragment : Fragment() {
             val filters = exerciseFiltersViewModel.getFilters()
             personalBestsAdapter.submitList(statsViewModel.getPersonalBests(filters))
         }
+    }
+
+
+    private fun onPersonalBestClicked(exerciseId: ItemIdentifier, sessionDate: Long) {
+        val action = PersonalBestsFragmentDirections.actionPersonalBestsFragmentToExerciseProgressionFragment(exerciseId, sessionDate)
+        findNavController().navigate(action)
     }
 }

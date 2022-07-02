@@ -108,6 +108,9 @@
         <action
             android:id="@+id/action_statsFragment_to_personalBestsFragment"
             app:destination="@id/personalBestsFragment" />
+        <action
+            android:id="@+id/action_statsFragment_to_exerciseProgressionFragment"
+            app:destination="@id/exerciseProgressionFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -201,10 +204,30 @@
         <action
             android:id="@+id/action_personalBestsFragment_to_exerciseFiltersFragment"
             app:destination="@id/exerciseFiltersFragment" />
+        <action
+            android:id="@+id/action_personalBestsFragment_to_exerciseProgressionFragment"
+            app:destination="@id/exerciseProgressionFragment" />
     </fragment>
     <fragment
         android:id="@+id/exerciseFiltersFragment"
         android:name="com.example.gymbud.ui.stats.ExerciseFiltersFragment"
         android:label="fragment_exercise_filters"
         tools:layout="@layout/fragment_exercise_filters" />
+    <fragment
+        android:id="@+id/exerciseProgressionFragment"
+        android:name="com.example.gymbud.ui.stats.ExerciseProgressionFragment"
+        android:label="fragment_exercise_progression"
+        tools:layout="@layout/fragment_exercise_progression" >
+        <action
+            android:id="@+id/action_exerciseProgressionFragment_to_exerciseFiltersFragment"
+            app:destination="@id/exerciseFiltersFragment" />
+        <argument
+            android:name="exerciseId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <argument
+            android:name="timeWindowCenter"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
 </navigation>

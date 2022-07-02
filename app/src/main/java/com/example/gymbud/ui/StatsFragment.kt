@@ -27,7 +27,8 @@ class StatsFragment : Fragment() {
             }
 
             byExerciseBtn.setOnClickListener {
-                // todo
+                val action = StatsFragmentDirections.actionStatsFragmentToExerciseProgressionFragment()
+                findNavController().navigate(action)
             }
 
             bySessionBtn.setOnClickListener {

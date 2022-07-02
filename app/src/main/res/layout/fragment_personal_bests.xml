@@ -8,7 +8,6 @@
     android:layout_margin="16dp"
     tools:context=".ui.stats.PersonalBestsFragment">
 
-    <!-- filters -->
    <include
        layout="@layout/layout_exercise_filters_bar"/>
 

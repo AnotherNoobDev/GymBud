@@ -97,11 +97,22 @@ class SessionsRepository(
     /**
      * exerciseTemplates: the templates associated with this exercise
      */
-    suspend fun getExercisePersonalBest(exerciseTemplates: List<ItemIdentifier>, filters: ExerciseFilters): ExercisePersonalBest? {
+    suspend fun getExercisePersonalBest(exerciseTemplates: List<ItemIdentifier>, filters: ExerciseFilters): ExerciseResult? {
         // restrict usable workout sessions by filters
         val sessions = getSessionIdsByFilters(filters)
 
         return exerciseSessionRecordDao.getExercisePersonalBest(exerciseTemplates, sessions)
+    }
+
+
+    /**
+     * exerciseTemplates: the templates associated with this exercise
+     */
+    suspend fun getExerciseResults(exerciseTemplates: List<ItemIdentifier>, filters: ExerciseFilters): List<ExerciseResult> {
+        // restrict usable workout sessions by filters
+        val sessions = getSessionIdsByFilters(filters)
+
+        return exerciseSessionRecordDao.getExerciseResults(exerciseTemplates, sessions)
     }
 
 
