@@ -1,26 +1,34 @@
 package com.example.gymbud.ui.stats
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.androidplot.xy.*
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.R
 import com.example.gymbud.databinding.FragmentExerciseProgressionBinding
-import com.example.gymbud.model.*
+import com.example.gymbud.model.Exercise
+import com.example.gymbud.model.ExerciseProgression
 import com.example.gymbud.ui.viewmodel.*
+import com.example.gymbud.utility.TimeFormatter
+import com.example.gymbud.utility.addDays
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.text.FieldPosition
+import java.text.Format
+import java.text.ParsePosition
+import java.util.*
+import kotlin.math.roundToLong
 
 
 class ExerciseProgressionFragment : Fragment() {
@@ -48,6 +56,10 @@ class ExerciseProgressionFragment : Fragment() {
 
     private var exerciseProgression: ExerciseProgression? = null
 
+    private lateinit var seriesFormatter: LineAndPointFormatter
+    private lateinit var chartPan: PanZoom
+    private var timeWindowCenter: Long = -1
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,21 +85,48 @@ class ExerciseProgressionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // line style
+        seriesFormatter = LineAndPointFormatter(requireContext(), R.xml.exercise_progression_chart_formatter)
+
         binding.apply {
+            progressionPlot.clear()
+
+            // show x labels as dates
+            progressionPlot.graph.getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).format = object : Format() {
+                override fun format(
+                    obj: Any,
+                    toAppendTo: StringBuffer,
+                    pos: FieldPosition?
+                ): StringBuffer? {
+                    val label = TimeFormatter.getFormattedDateDDMM(Date(
+                        (obj as Number).toFloat().roundToLong()
+                    ))
+                    return toAppendTo.append(label)
+                }
+
+                override fun parseObject(source: String?, pos: ParsePosition?): Any? {
+                    return null
+                }
+            }
+
+            // pan todo figure out settings that give best user experience
+            //chartPan = PanZoom.attach(binding.progressionPlot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.SCALE)
+            chartPan = PanZoom.attach(binding.progressionPlot)
+
             exerciseInput.onItemClickListener =
                 AdapterView.OnItemClickListener { _, _, p2, _ ->
                         selectExerciseFromOptions(p2)
                 }
 
-            when (chartViewModel.exerciseEvaluator) {
+            when (chartViewModel.exerciseEvaluatorType) {
                 ExerciseResultEvaluator.OneRepMax -> evaluatorSelection.check(R.id.evaluator_option_1rm)
                 ExerciseResultEvaluator.MaxWeight -> evaluatorSelection.check(R.id.evaluator_option_max_weight)
             }
 
             evaluatorSelection.setOnCheckedChangeListener { _, id ->
                 when (id) {
-                    R.id.evaluator_option_1rm -> chartViewModel.exerciseEvaluator = ExerciseResultEvaluator.OneRepMax
-                    R.id.evaluator_option_max_weight -> chartViewModel.exerciseEvaluator = ExerciseResultEvaluator.MaxWeight
+                    R.id.evaluator_option_1rm -> chartViewModel.exerciseEvaluatorType = ExerciseResultEvaluator.OneRepMax
+                    R.id.evaluator_option_max_weight -> chartViewModel.exerciseEvaluatorType = ExerciseResultEvaluator.MaxWeight
                 }
 
                 updateGraph()
@@ -155,6 +194,13 @@ class ExerciseProgressionFragment : Fragment() {
             val filters = exerciseFiltersViewModel.getFilters()
             exerciseProgression = statsViewModel.getExerciseProgression(exercise, filters)
 
+            // remove timeWindowCenter constraint after progression changes from initial setup
+            timeWindowCenter = if (timeWindowCenter > 0) {
+                -1
+            } else {
+                navigationArgs.timeWindowCenter
+            }
+
             updateGraph()
         }
     }
@@ -163,10 +209,31 @@ class ExerciseProgressionFragment : Fragment() {
     private fun updateGraph() {
         if (exerciseProgression == null) {
             return
-        } else {
-            exerciseProgression?.points?.forEach {
-                Log.i("ExerciseProgression", it.dateMs.toString() + " " + it.resistance)
-            }
         }
+
+        val (time, results) = chartViewModel.generateXYSeries(exerciseProgression!!)
+        val series: XYSeries = SimpleXYSeries(time.reversed(), results.reversed(), "ExerciseProgressionSeries")
+        binding.progressionPlot.clear()
+        binding.progressionPlot.addSeries(series, seriesFormatter)
+
+        // time window (x)
+        val timeWindowInDays = when (chartViewModel.timeWindow) {
+            TimeWindowLength.Week -> 7
+            TimeWindowLength.Month -> 30
+            TimeWindowLength.Year -> 365
+        }
+
+        val upperBound = if (timeWindowCenter > 0) {
+            // todo highlight pb
+            addDays(timeWindowCenter, timeWindowInDays / 2)
+        } else {
+            time.first()
+        }
+
+        binding.progressionPlot.setDomainBoundaries(addDays(upperBound.toLong(), -timeWindowInDays), upperBound,  BoundaryMode.FIXED)
+
+        binding.progressionPlot.setRangeBoundaries(results.minOf { it.toDouble() }, results.maxOf { it.toDouble() }, BoundaryMode.FIXED)
+
+        binding.progressionPlot.redraw()
     }
 }

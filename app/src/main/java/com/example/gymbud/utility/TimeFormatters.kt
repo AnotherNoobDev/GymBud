@@ -7,6 +7,7 @@ import java.util.*
 // todo check code for other places that do time formatting and unify here
 object TimeFormatter {
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.US)
+    private val shortDateFormatDDMM = SimpleDateFormat("dd.MM", Locale.US)
 
     fun getFormattedTimeMMSS(elapsedSec: Long): String {
         val minutes = elapsedSec / 60
@@ -28,5 +29,10 @@ object TimeFormatter {
 
     fun getFormattedDateDDMMYYYY(date: Date): String {
         return dateFormat.format(date)
+    }
+
+
+    fun getFormattedDateDDMM(date: Date): String {
+        return shortDateFormatDDMM.format(date)
     }
 }

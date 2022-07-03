@@ -11,8 +11,8 @@
     <include
         layout="@layout/layout_exercise_filters_bar"/>
 
-    <!-- graph configuration -->
     <LinearLayout
+        android:id="@+id/graph_configuration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/filters_divider"
@@ -81,6 +81,14 @@
         </RadioGroup>
     </LinearLayout>
 
-    <!-- todo graph -->
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/progression_plot"
+        style="@style/APDefacto.Dark"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/graph_configuration"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="20dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

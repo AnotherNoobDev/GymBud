@@ -49,10 +49,10 @@ class StatsViewModel (
 
         val results = sessionRepository.getExerciseResults(templatesForExercise.second.map { it.id }, filters)
 
-        val progressionPoints = results.map {
-            ExerciseProgressionPoint(it, sessionRepository.getWorkoutSessionDate(it.workoutSessionId)!!)
-        }.sortedByDescending { it.dateMs }
-
+        val progressionPoints = results.groupBy { sessionRepository.getWorkoutSessionDate(it.workoutSessionId)!! }
+            .toList().sortedByDescending { it.first }.map {
+                ExerciseProgressionPoint(it.second, it.first)
+            }
 
         return ExerciseProgression(exercise.name, exercise.id, progressionPoints)
     }

@@ -180,13 +180,9 @@ data class ExercisePersonalBest(
 
 
 data class ExerciseProgressionPoint(
-    private val result: ExerciseResult,
+    val results: List<ExerciseResult>,
     val dateMs: Long
-) {
-    val workoutSessionId = result.workoutSessionId
-    val reps = result.reps
-    val resistance = result.resistance
-}
+)
 
 
 data class ExerciseProgression(

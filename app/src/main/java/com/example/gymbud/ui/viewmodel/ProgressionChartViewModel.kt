@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.gymbud.data.repository.ExerciseRepository
 import com.example.gymbud.model.Exercise
+import com.example.gymbud.model.ExerciseProgression
+import com.example.gymbud.model.ExerciseProgressionPoint
 import com.example.gymbud.model.ItemIdentifier
 import kotlinx.coroutines.flow.first
 
@@ -20,11 +22,46 @@ enum class TimeWindowLength {
     Year
 }
 
+/**
+ * Epley formula: https://en.wikipedia.org/wiki/One-repetition_maximum
+ */
+private fun calculateOneRepMax(reps: Int, resistance: Double): Double {
+    assert(reps > 0)
+
+    return if (reps == 1) {
+        resistance
+    } else {
+        resistance * (1 + reps / 30.0)
+    }
+}
+
+
+private fun evaluateExerciseUsingOneRepMax(point: ExerciseProgressionPoint): Number {
+    return point.results.maxOf { calculateOneRepMax(it.reps, it.resistance.toDouble()) }
+}
+
+
+private fun evaluateExerciseUsingMaxWeight(point: ExerciseProgressionPoint): Number {
+    return point.results.maxOf { it.resistance.toDouble() }
+}
+
+
 
 class ProgressionChartViewModel(
     private val exerciseRepository: ExerciseRepository
 ): ViewModel() {
-    var exerciseEvaluator = ExerciseResultEvaluator.OneRepMax
+    var exerciseEvaluatorType = ExerciseResultEvaluator.OneRepMax
+        set(evaluatorType) {
+            field = evaluatorType
+
+            exerciseEvaluator = when(evaluatorType) {
+                ExerciseResultEvaluator.OneRepMax -> ::evaluateExerciseUsingOneRepMax
+                ExerciseResultEvaluator.MaxWeight -> ::evaluateExerciseUsingMaxWeight
+            }
+        }
+
+    private var exerciseEvaluator: (point: ExerciseProgressionPoint) -> Number = ::evaluateExerciseUsingOneRepMax
+
     var timeWindow = TimeWindowLength.Month
 
     private var exercise: Exercise? = null
@@ -60,6 +97,19 @@ class ProgressionChartViewModel(
 
 
     fun getSelectedExercise(): Exercise? = exercise
+
+
+    fun generateXYSeries(exerciseProgression: ExerciseProgression): Pair<List<Number>, List<Number>> {
+        val timeSeries = mutableListOf<Number>()
+        val resultEvalSeries = mutableListOf<Number>()
+
+        exerciseProgression.points.forEach {
+            timeSeries.add(it.dateMs)
+            resultEvalSeries.add(exerciseEvaluator(it))
+        }
+
+        return Pair(timeSeries, resultEvalSeries)
+    }
 }
 
 
