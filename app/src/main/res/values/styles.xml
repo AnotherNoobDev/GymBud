@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTitle" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/walter_turncoat_regular</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+</resources>
