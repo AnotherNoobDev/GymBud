@@ -8,6 +8,7 @@ import com.example.gymbud.data.datasource.defaults.SetTemplateDefaultDatasource
 import com.example.gymbud.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
@@ -42,14 +43,14 @@ class SetTemplateRepository(
 
 
     private suspend fun populateSetTemplateItems(setTemplate: SetTemplate) {
-        val setItems = setTemplateWithItemDao.getAllOnce(setTemplate.id)
+        val setItems = setTemplateWithItemDao.getAll(setTemplate.id)
 
         // get set items from db in bulk
-        val setExerciseTemplates = exerciseTemplateRepository.retrieveExerciseTemplatesOnce(
+        val setExerciseTemplates = exerciseTemplateRepository.retrieveExerciseTemplates(
             setItems.filter { it.isWithExerciseTemplate() }.map { it.exerciseTemplateId!! }
         )
 
-        val setRestPeriods = restPeriodRepository.retrieveRestPeriodsOnce(
+        val setRestPeriods = restPeriodRepository.retrieveRestPeriods(
             setItems.filter { it.isWithRestPeriod() }.map{ it.restPeriodId!! }
         )
 
@@ -70,8 +71,8 @@ class SetTemplateRepository(
     }
 
 
-    suspend fun retrieveSetTemplatesOnce(ids: List<ItemIdentifier>): List<SetTemplate> {
-        val templates = setTemplateDao.getOnce(ids)
+    suspend fun retrieveSetTemplates(ids: List<ItemIdentifier>): List<SetTemplate> {
+        val templates = setTemplateDao.get(ids)
         templates.forEach {
             populateSetTemplateItems(it)
         }
@@ -86,7 +87,7 @@ class SetTemplateRepository(
         items: List<Item>
     ) {
         withContext(Dispatchers.IO) {
-            val validName = getValidName(id, name, setTemplateDao.getAllOnce())
+            val validName = getValidName(id, name, setTemplateDao.getAll().first())
             try {
                 setTemplateDao.insert(SetTemplate(id, validName))
             } catch (e: SQLiteConstraintException) {
@@ -116,7 +117,7 @@ class SetTemplateRepository(
         items: List<Item>
     ) {
         withContext(Dispatchers.IO) {
-            val validName = getValidName(id, name, setTemplateDao.getAllOnce())
+            val validName = getValidName(id, name, setTemplateDao.getAll().first())
             setTemplateDao.update(id, validName)
 
             // first remove older links

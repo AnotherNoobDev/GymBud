@@ -28,16 +28,10 @@ interface SetTemplateDao {
     fun get(id: ItemIdentifier): Flow<SetTemplate?>
 
     @Query("SELECT * from set_template WHERE id IN (:ids)")
-    suspend fun getOnce(ids: List<ItemIdentifier>): List<SetTemplate>
+    suspend fun get(ids: List<ItemIdentifier>): List<SetTemplate>
 
     @Query("SELECT * from set_template ORDER BY name ASC")
     fun getAll(): Flow<List<SetTemplate>>
-
-    @Query("SELECT * from set_template ORDER BY name ASC")
-    fun getAllOnce(): List<SetTemplate>
-
-    @Query("SELECT COUNT(id) from set_template")
-    fun count(): Flow<Int>
 }
 
 
@@ -53,5 +47,5 @@ interface SetTemplateWithItemDao {
     suspend fun deleteAll(setTemplateId: ItemIdentifier): Int
 
     @Query("SELECT * from set_template_item WHERE set_template_id = :setTemplateId ORDER BY set_item_pos ASC")
-    suspend fun getAllOnce(setTemplateId: ItemIdentifier): List<SetTemplateWithItem>
+    suspend fun getAll(setTemplateId: ItemIdentifier): List<SetTemplateWithItem>
 }

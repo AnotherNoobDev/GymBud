@@ -56,9 +56,8 @@ class ExerciseTemplateRepository(
     }
 
 
-    // todo this is pointless, remove it and others like it --> we can just call first() :)
-    suspend fun retrieveExerciseTemplatesOnce(ids: List<ItemIdentifier>): List<ExerciseTemplate> {
-        val templates = exerciseTemplateDao.getOnce(ids)
+    suspend fun retrieveExerciseTemplates(ids: List<ItemIdentifier>): List<ExerciseTemplate> {
+        val templates = exerciseTemplateDao.get(ids)
         templates.forEach {
             exerciseRepository.fillExerciseContent(it.exercise)
         }
@@ -74,7 +73,7 @@ class ExerciseTemplateRepository(
         targetRepRange: IntRange
     ) {
         withContext(Dispatchers.IO) {
-            val validName = getValidName(id, name, exerciseTemplateDao.getAllOnce())
+            val validName = getValidName(id, name, exerciseTemplateDao.getAll().first())
             exerciseTemplateDao.update(id, validName, targetRepRange)
         }
     }
@@ -87,7 +86,7 @@ class ExerciseTemplateRepository(
         targetRepRange: IntRange
     ) {
         withContext(Dispatchers.IO) {
-            val validName = getValidName(id, name, exerciseTemplateDao.getAllOnce())
+            val validName = getValidName(id, name, exerciseTemplateDao.getAll().first())
             try {
                 exerciseTemplateDao.insert(ExerciseTemplate(id, validName, exercise, targetRepRange))
             } catch (e: SQLiteConstraintException) {

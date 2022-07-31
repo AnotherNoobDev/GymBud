@@ -27,16 +27,10 @@ interface WorkoutTemplateDao {
     fun get(id: ItemIdentifier): Flow<WorkoutTemplate?>
 
     @Query("SELECT * from workout_template WHERE id IN (:ids)")
-    suspend fun getOnce(ids: List<ItemIdentifier>): List<WorkoutTemplate>
+    suspend fun get(ids: List<ItemIdentifier>): List<WorkoutTemplate>
 
     @Query("SELECT * from workout_template ORDER BY name ASC")
     fun getAll(): Flow<List<WorkoutTemplate>>
-
-    @Query("SELECT * from workout_template ORDER BY name ASC")
-    fun getAllOnce(): List<WorkoutTemplate>
-
-    @Query("SELECT COUNT(id) from workout_template")
-    fun count(): Flow<Int>
 }
 
 
@@ -52,5 +46,5 @@ interface WorkoutTemplateWithItemDao {
     suspend fun deleteAll(workoutTemplateId: ItemIdentifier): Int
 
     @Query("SELECT * from workout_template_item WHERE workout_template_id = :workoutTemplateId ORDER BY workout_item_pos ASC")
-    suspend fun getAllOnce(workoutTemplateId: ItemIdentifier): List<WorkoutTemplateWithItem>
+    suspend fun getAll(workoutTemplateId: ItemIdentifier): List<WorkoutTemplateWithItem>
 }

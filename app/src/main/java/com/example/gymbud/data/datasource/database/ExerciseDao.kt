@@ -34,14 +34,8 @@ interface ExerciseDao {
     @Query("SELECT * from exercise WHERE id = :id")
     fun get(id: ItemIdentifier): Flow<Exercise?>
 
-    @Query("SELECT * from exercise WHERE id = :id")
-    suspend fun getOnce(id:ItemIdentifier): Exercise?
-
     @Query("SELECT * from exercise ORDER BY name ASC")
     fun getAll(): Flow<List<Exercise>>
-
-    @Query("SELECT * from exercise ORDER BY name ASC")
-    suspend fun getAllOnce(): List<Exercise>
 
     @Query("SELECT COUNT(id) from exercise")
     fun count(): Flow<Int>

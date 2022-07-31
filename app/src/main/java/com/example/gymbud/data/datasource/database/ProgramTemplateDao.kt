@@ -26,17 +26,8 @@ interface ProgramTemplateDao {
     @Query("SELECT * from program_template WHERE id = :id")
     fun get(id: ItemIdentifier): Flow<ProgramTemplate?>
 
-    @Query("SELECT * from program_template WHERE id IN (:ids)")
-    suspend fun getOnce(ids: List<ItemIdentifier>): List<ProgramTemplate>
-
     @Query("SELECT * from program_template ORDER BY name ASC")
     fun getAll(): Flow<List<ProgramTemplate>>
-
-    @Query("SELECT * from program_template ORDER BY name ASC")
-    fun getAllOnce(): List<ProgramTemplate>
-
-    @Query("SELECT COUNT(id) from program_template")
-    fun count(): Flow<Int>
 }
 
 
@@ -52,5 +43,5 @@ interface ProgramTemplateWithItemDao {
     suspend fun deleteAll(programTemplateId: ItemIdentifier): Int
 
     @Query("SELECT * from program_template_item WHERE program_template_id = :programTemplateId ORDER BY program_item_pos ASC")
-    suspend fun getAllOnce(programTemplateId: ItemIdentifier): List<ProgramTemplateWithItem>
+    suspend fun getAll(programTemplateId: ItemIdentifier): List<ProgramTemplateWithItem>
 }

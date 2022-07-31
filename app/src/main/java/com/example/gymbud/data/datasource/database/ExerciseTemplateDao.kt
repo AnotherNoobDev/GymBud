@@ -29,14 +29,8 @@ interface ExerciseTemplateDao {
     fun get(id: ItemIdentifier): Flow<ExerciseTemplate?>
 
     @Query("SELECT * from exercise_template WHERE id IN (:ids)")
-    suspend fun getOnce(ids: List<ItemIdentifier>): List<ExerciseTemplate>
+    suspend fun get(ids: List<ItemIdentifier>): List<ExerciseTemplate>
 
     @Query("SELECT * from exercise_template ORDER BY name ASC")
     fun getAll(): Flow<List<ExerciseTemplate>>
-
-    @Query("SELECT * from exercise_template ORDER BY name ASC")
-    fun getAllOnce(): List<ExerciseTemplate>
-
-    @Query("SELECT COUNT(id) from exercise_template")
-    fun count(): Flow<Int>
 }

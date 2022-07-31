@@ -17,19 +17,9 @@ interface RestPeriodDao {
     @Query("SELECT * from rest_period WHERE id = :id")
     fun get(id: ItemIdentifier): Flow<RestPeriod?>
 
-    /*
-    @Query("SELECT * from exercise WHERE id = :id")
-    suspend fun getOnce(id:ItemIdentifier): Exercise?
-    */
-
     @Query("SELECT * from rest_period WHERE id IN (:ids)")
-    suspend fun getOnce(ids: List<ItemIdentifier>): List<RestPeriod>
+    suspend fun get(ids: List<ItemIdentifier>): List<RestPeriod>
 
     @Query("SELECT * from rest_period ORDER BY name ASC")
     fun getAll(): Flow<List<RestPeriod>>
-
-    /*
-    @Query("SELECT * from exercise ORDER BY name ASC")
-    suspend fun getAllOnce(): List<Exercise>
-    */
 }

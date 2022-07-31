@@ -8,6 +8,7 @@ import com.example.gymbud.data.datasource.defaults.WorkoutTemplateDefaultDatasou
 import com.example.gymbud.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
@@ -44,14 +45,14 @@ class WorkoutTemplateRepository(
 
 
     private suspend fun populateWorkoutTemplateItems(workoutTemplate: WorkoutTemplate) {
-        val workoutItems = workoutTemplateWithItemDao.getAllOnce(workoutTemplate.id)
+        val workoutItems = workoutTemplateWithItemDao.getAll(workoutTemplate.id)
 
         // get workout items from db in bulk
-        val workoutSetTemplates = setTemplateRepository.retrieveSetTemplatesOnce(
+        val workoutSetTemplates = setTemplateRepository.retrieveSetTemplates(
             workoutItems.filter { it.isWithSetTemplate() }.map { it.setTemplateId!! }
         )
 
-        val workoutRestPeriods = restPeriodRepository.retrieveRestPeriodsOnce(
+        val workoutRestPeriods = restPeriodRepository.retrieveRestPeriods(
             workoutItems.filter { it.isWithRestPeriod() }.map{ it.restPeriodId!! }
         )
 
@@ -86,8 +87,8 @@ class WorkoutTemplateRepository(
     }
 
 
-    suspend fun retrieveWorkoutTemplatesOnce(ids: List<ItemIdentifier>): List<WorkoutTemplate> {
-        val templates = workoutTemplateDao.getOnce(ids)
+    suspend fun retrieveWorkoutTemplates(ids: List<ItemIdentifier>): List<WorkoutTemplate> {
+        val templates = workoutTemplateDao.get(ids)
         templates.forEach {
             populateWorkoutTemplateItems(it)
         }
@@ -102,7 +103,7 @@ class WorkoutTemplateRepository(
         items: List<Item>
     ) {
         withContext(Dispatchers.IO) {
-            val validName = getValidName(id, name, workoutTemplateDao.getAllOnce())
+            val validName = getValidName(id, name, workoutTemplateDao.getAll().first())
             try {
                 workoutTemplateDao.insert(WorkoutTemplate(id, validName))
             } catch (e: SQLiteConstraintException) {
@@ -141,7 +142,7 @@ class WorkoutTemplateRepository(
         items: List<Item>
     ) {
         withContext(Dispatchers.IO) {
-            val validName = getValidName(id, name, workoutTemplateDao.getAllOnce())
+            val validName = getValidName(id, name, workoutTemplateDao.getAll().first())
             workoutTemplateDao.update(id, validName)
 
             // first remove older links

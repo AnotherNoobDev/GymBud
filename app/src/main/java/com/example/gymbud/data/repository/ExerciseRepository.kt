@@ -7,6 +7,7 @@ import com.example.gymbud.data.datasource.defaults.ExerciseDefaultDatasource
 import com.example.gymbud.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 private const val TAG = "ExerciseRepo"
@@ -28,7 +29,7 @@ class ExerciseRepository(
     fun retrieveExercise(id: ItemIdentifier): Flow<Exercise?> = exerciseDao.get(id)
 
     suspend fun fillExerciseContent(exercise: Exercise) {
-        val exerciseEntry = exerciseDao.getOnce(exercise.id)
+        val exerciseEntry = exerciseDao.get(exercise.id).first()
 
         if (exerciseEntry != null) {
             exercise.name = exerciseEntry.name
@@ -47,7 +48,7 @@ class ExerciseRepository(
         description: String
     ) {
         withContext(Dispatchers.IO) {
-            val validName = getValidName(id, name, exerciseDao.getAllOnce())
+            val validName = getValidName(id, name, exerciseDao.getAll().first())
             exerciseDao.update(id, validName, description, targetMuscle, resistance)
         }
     }
@@ -61,7 +62,7 @@ class ExerciseRepository(
         description: String
     ) {
         withContext(Dispatchers.IO) {
-            val validName = getValidName(id, name, exerciseDao.getAllOnce())
+            val validName = getValidName(id, name, exerciseDao.getAll().first())
 
             try {
                 exerciseDao.insert(Exercise(id, validName, description, targetMuscle, resistance))

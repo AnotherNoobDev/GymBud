@@ -29,7 +29,7 @@ class RestPeriodRepository(
     fun retrieveRestPeriod(id: ItemIdentifier): Flow<RestPeriod?> = restPeriodDao.get(id)
 
 
-    suspend fun retrieveRestPeriodsOnce(ids: List<ItemIdentifier>): List<RestPeriod> {
-        return restPeriodDao.getOnce(ids)
+    suspend fun retrieveRestPeriods(ids: List<ItemIdentifier>): List<RestPeriod> {
+        return restPeriodDao.get(ids)
     }
 }

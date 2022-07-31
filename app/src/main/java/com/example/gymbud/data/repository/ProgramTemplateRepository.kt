@@ -8,6 +8,7 @@ import com.example.gymbud.data.datasource.defaults.ProgramTemplateDefaultDatasou
 import com.example.gymbud.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
@@ -50,14 +51,14 @@ class ProgramTemplateRepository(
 
 
     private suspend fun populateProgramTemplateItems(programTemplate: ProgramTemplate) {
-        val programItems = programTemplateWithItemDao.getAllOnce(programTemplate.id)
+        val programItems = programTemplateWithItemDao.getAll(programTemplate.id)
 
         // get set items from db in bulk
-        val programWorkoutTemplates = workoutTemplateRepository.retrieveWorkoutTemplatesOnce(
+        val programWorkoutTemplates = workoutTemplateRepository.retrieveWorkoutTemplates(
             programItems.filter { it.isWithWorkoutTemplate() }.map { it.workoutTemplateId!! }
         )
 
-        val programRestPeriods = restPeriodRepository.retrieveRestPeriodsOnce(
+        val programRestPeriods = restPeriodRepository.retrieveRestPeriods(
             programItems.filter { it.isWithRestPeriod() }.map{ it.restPeriodId!! }
         )
 
@@ -88,7 +89,7 @@ class ProgramTemplateRepository(
         items: List<Item>
     ) {
         withContext(Dispatchers.IO) {
-            val validName = getValidName(id, name, programTemplateDao.getAllOnce())
+            val validName = getValidName(id, name, programTemplateDao.getAll().first())
             try {
                 programTemplateDao.insert(ProgramTemplate(id, validName))
             } catch (e: SQLiteConstraintException) {
@@ -118,7 +119,7 @@ class ProgramTemplateRepository(
         items: List<Item>
     ) {
         withContext(Dispatchers.IO) {
-            val validName = getValidName(id, name, programTemplateDao.getAllOnce())
+            val validName = getValidName(id, name, programTemplateDao.getAll().first())
             programTemplateDao.update(id, validName)
 
             // first remove older links
