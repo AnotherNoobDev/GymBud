@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="black_800">#FF262626</color>
+    <color name="eerie_black">#FF262626</color>
+    <color name="dutch_white">#FFD8CFAF</color>
+
+    <color name="red_ryb">#FFFF1B1C</color>
+    <color name="jet">#353535</color>
+    <color name="sea_green">#3E885B</color>
+
+    <color name="maximum_green">#FF4d8b31</color>
+    <color name="celadon_blue">#FF087ca7</color>
+    <color name="cyber_yellow">#FFffcf00</color>
+
+    <color name="electric_indigo">#FF6610F2</color>
+    <color name="deep_saffron">#F39237</color>
+    <color name="maximum_blue_purple">#B79CED</color>
+    <color name="verdigris">#48A9A6</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="red">#FFFF0000</color>
 </resources>

@@ -1,10 +1,10 @@
 package com.example.gymbud
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -41,9 +41,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.app_bar))
 
-        // todo set color spans based on theme
         val str = SpannableStringBuilder("GYMBUD")
-        str.setSpan(ForegroundColorSpan(Color.RED), 0, 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        val colorPrimaryVariant = TypedValue()
+        theme.resolveAttribute(com.google.android.material.R.attr.colorPrimaryVariant, colorPrimaryVariant, true)
+
+        val colorSecondary = TypedValue()
+        theme.resolveAttribute(com.google.android.material.R.attr.colorSecondary, colorSecondary, true)
+
+        str.setSpan(ForegroundColorSpan(colorPrimaryVariant.data), 0, 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        str.setSpan(ForegroundColorSpan(colorSecondary.data), 3, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         supportActionBar!!.title = str
 
         val navHostFragment = supportFragmentManager

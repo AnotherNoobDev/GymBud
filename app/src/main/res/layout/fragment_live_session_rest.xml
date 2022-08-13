@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             app:indicatorSize="200dp"
-            app:indicatorColor="@color/red"
+            app:indicatorColor="@color/red_ryb"
             tools:progress="80" />
 
         <TextView

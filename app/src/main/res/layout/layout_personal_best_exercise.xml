@@ -4,42 +4,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/red"
-    android:layout_margin="4dp">
+    android:layout_margin="4dp"
+    android:background="?personalBestBackgroundColor">
 
     <TextView
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="08.02.1969"
+        android:textColor="?personalBestTextColor"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="08.02.1969" />
 
     <TextView
         android:id="@+id/exercise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        tools:text="Bench Press"
         android:textAlignment="center"
         android:textSize="25sp"
+        android:textColor="?personalBestTextColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/date" />
+        app:layout_constraintTop_toBottomOf="@+id/date"
+        tools:text="Bench Press" />
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exercise">
+
         <TextView
             android:id="@+id/reps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="25sp"
-            tools:text="12 x"/>
+            android:textColor="?personalBestTextColor"
+            tools:text="12 x" />
+
         <TextView
             android:id="@+id/resistance"
             android:layout_width="wrap_content"
@@ -47,6 +53,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:textSize="30sp"
+            android:textColor="?personalBestTextColor"
             tools:text="32.5kg" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

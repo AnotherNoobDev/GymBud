@@ -1,9 +1,10 @@
 package com.example.gymbud.ui.viewbuilder
 
-import android.graphics.Color
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -17,8 +18,13 @@ import com.google.android.material.button.MaterialButton
 // todo lots of duplication with SetTemplateRecyclerViewAdapter atm (basically copy-pasta, only big diff is adapter (setListAdapter))
 //  -> can we do better? will other things change in the "final" version to justify keeping them separate? (should still try to remove duplication)
 class WorkoutTemplateRecyclerViewAdapter(
+    context: Context,
     private val functionality: Functionality
 ) : ListAdapter<Item, WorkoutTemplateRecyclerViewAdapter.ViewHolder>(DiffCallback){
+
+    private val colorWarmup = ContextCompat.getColor(context, R.color.cyber_yellow)
+    private val colorWorking = ContextCompat.getColor(context, R.color.celadon_blue)
+    private val colorDefault = ContextCompat.getColor(context, R.color.dutch_white)
 
     private var onItemClicked: ((Item) -> Unit)? = null
     fun setOnItemClickedCallback(callback: (Item) -> Unit) {
@@ -38,9 +44,9 @@ class WorkoutTemplateRecyclerViewAdapter(
 
         protected fun getColorForSetIntensity(intensity: String): Int {
             return when (intensity) {
-                SetIntensity.Warmup.toString() -> Color.CYAN // todo should set from resource
-                SetIntensity.Working.toString() -> Color.MAGENTA
-                else ->  Color.WHITE
+                SetIntensity.Warmup.toString() -> colorWarmup
+                SetIntensity.Working.toString() -> colorWorking
+                else ->  colorDefault
             }
         }
 

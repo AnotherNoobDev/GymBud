@@ -8,13 +8,14 @@ class ItemViewFactory {
     companion object {
         fun create(
             type: ItemType,
+            context: Context,
             onDetailsCallback: (ItemIdentifier, ItemType) -> Unit
         ): ItemView {
             return when (type) {
                 ItemType.EXERCISE -> ExerciseDetailView()
                 ItemType.EXERCISE_TEMPLATE -> ExerciseTemplateDetailView(onDetailsCallback)
                 ItemType.SET_TEMPLATE -> SetTemplateDetailView(onDetailsCallback)
-                ItemType.WORKOUT_TEMPLATE -> WorkoutTemplateDetailView(onDetailsCallback)
+                ItemType.WORKOUT_TEMPLATE -> WorkoutTemplateDetailView(context, onDetailsCallback)
                 ItemType.PROGRAM_TEMPLATE -> ProgramTemplateDetailView(onDetailsCallback)
                 else ->  ExerciseDetailView() // todo
             }

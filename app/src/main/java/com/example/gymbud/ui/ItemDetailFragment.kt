@@ -24,7 +24,7 @@ class ItemDetailFragment : Fragment() {
 
     private val navigationArgs: ItemDetailFragmentArgs by navArgs()
 
-    private val viewModel: ItemViewModel by activityViewModels() {
+    private val viewModel: ItemViewModel by activityViewModels {
         ItemViewModelFactory(
             (activity?.application as BaseApplication).itemRepository
         )
@@ -43,7 +43,7 @@ class ItemDetailFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentItemDetailBinding.inflate(inflater, container, false)
-        _itemView = ItemViewFactory.create(navigationArgs.type) { itemId, itemType ->
+        _itemView = ItemViewFactory.create(navigationArgs.type, requireContext()) { itemId, itemType ->
             val action = ItemDetailFragmentDirections.actionItemDetailFragmentSelf(itemId, itemType)
             findNavController().navigate(action)
         }

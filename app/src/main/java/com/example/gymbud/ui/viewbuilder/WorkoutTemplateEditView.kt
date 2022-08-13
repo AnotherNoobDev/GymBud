@@ -45,7 +45,7 @@ class WorkoutTemplateEditView(
 
     // the set templates (+rest periods) in the workout
     private var workoutTemplateEditableItems: MutableList<Item> = mutableListOf()
-    private val setListAdapter =  WorkoutTemplateRecyclerViewAdapter(Functionality.Edit)
+    private val setListAdapter =  WorkoutTemplateRecyclerViewAdapter(context, Functionality.Edit)
 
     // available set templates to chose from
     private var setTemplates: List<Item>? = null

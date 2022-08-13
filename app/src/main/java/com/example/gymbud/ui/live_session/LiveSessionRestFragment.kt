@@ -9,9 +9,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.gymbud.BaseApplication
+import com.example.gymbud.R
 import com.example.gymbud.databinding.FragmentLiveSessionRestBinding
 import com.example.gymbud.model.WorkoutSessionItem
 import com.example.gymbud.model.WorkoutSessionItemType
@@ -29,6 +31,10 @@ class LiveSessionRestFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var targetRestPeriod: IntRange
+
+    private var colorInsufficientRest: Int = Color.RED
+    private var colorRecommendedRest: Int = Color.YELLOW
+    private var colorExceededRest: Int = Color.GREEN
 
     private val timerIntervalMs: Long = 1000 // 1 second in this case
     private var timerHandler: Handler? = null
@@ -58,6 +64,10 @@ class LiveSessionRestFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        colorInsufficientRest = ContextCompat.getColor(requireContext(), R.color.red_ryb)
+        colorRecommendedRest = ContextCompat.getColor(requireContext(), R.color.cyber_yellow)
+        colorExceededRest = ContextCompat.getColor(requireContext(), R.color.maximum_green)
 
         val restPeriodSession = liveSessionViewModel.getCurrentItem() as WorkoutSessionItem.RestPeriodSession
         targetRestPeriod = restPeriodSession.getTargetRestPeriod()
@@ -102,9 +112,9 @@ class LiveSessionRestFragment : Fragment() {
             timerValue.text = TimeFormatter.getFormattedTimeMMSS(elapsedTimeSec)
             timerProgressIndicator.progress = minOf(((elapsedTimeSec * 1.0 / targetRestPeriod.last) * 100).toInt(), 100)
             timerProgressIndicator.indicatorColor[0] = when {
-                elapsedTimeSec < targetRestPeriod.first -> Color.RED
-                (targetRestPeriod.first <= elapsedTimeSec) && (elapsedTimeSec < targetRestPeriod.last) -> Color.YELLOW
-                else -> Color.GREEN
+                elapsedTimeSec < targetRestPeriod.first -> colorInsufficientRest
+                (targetRestPeriod.first <= elapsedTimeSec) && (elapsedTimeSec < targetRestPeriod.last) -> colorRecommendedRest
+                else -> colorExceededRest
             }
         }
     }

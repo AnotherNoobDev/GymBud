@@ -1,5 +1,6 @@
 package com.example.gymbud.ui.viewbuilder
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ private const val TAG = "WorkoutTemplateDV"
 // todo lots of duplication with SetTemplateDetailView atm (basically copy-pasta, only big diff is adapter (setListAdapter))
 //  -> can we do better? will other things change in the "final" version to justify keeping them separate? (should still try to remove duplication)
 class WorkoutTemplateDetailView(
+    val context: Context,
     private val onDetailsCallback: (ItemIdentifier, ItemType) -> Unit
 ): ItemView {
     private var _nameBinding: LayoutDetailNameBinding? = null
@@ -26,7 +28,7 @@ class WorkoutTemplateDetailView(
     private var _setListBinding: FragmentItemListBinding? = null
     private val setListBinding get() = _setListBinding!!
 
-    private val setListAdapter = WorkoutTemplateRecyclerViewAdapter(Functionality.Detail)
+    private val setListAdapter = WorkoutTemplateRecyclerViewAdapter(context, Functionality.Detail)
 
     init {
         setListAdapter.setOnItemClickedCallback {
