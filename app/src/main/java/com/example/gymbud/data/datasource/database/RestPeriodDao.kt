@@ -14,6 +14,16 @@ interface RestPeriodDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(restPeriod: RestPeriod)
 
+    @Query("UPDATE rest_period SET" +
+            " name = :name," +
+            " target_in_seconds = :targetPeriodSec" +
+            " WHERE id = :id")
+    suspend fun update(
+        id: ItemIdentifier,
+        name: String,
+        targetPeriodSec: IntRange
+    )
+
     @Query("SELECT * from rest_period WHERE id = :id")
     fun get(id: ItemIdentifier): Flow<RestPeriod?>
 
@@ -22,4 +32,7 @@ interface RestPeriodDao {
 
     @Query("SELECT * from rest_period ORDER BY name ASC")
     fun getAll(): Flow<List<RestPeriod>>
+
+    @Query("DELETE from rest_period WHERE id = :id")
+    suspend fun delete(id: ItemIdentifier): Int
 }

@@ -239,12 +239,7 @@ class SetTemplateEditView(
             viewModel.getItemsByType(ItemType.REST_PERIOD).collect {
                 restPeriods = it
 
-                val restPeriodsByName = it.mapNotNull { rest ->
-                    if ((rest as RestPeriod).isIntraWorkoutRestPeriod())
-                        rest.name
-                    else
-                        null
-                }
+                val restPeriodsByName = it.map { rest -> rest.name }
 
                 restPeriodsSelectionAdapter =
                     ArrayAdapter(context, R.layout.dropdown_list_item, restPeriodsByName)

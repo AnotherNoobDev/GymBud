@@ -33,7 +33,7 @@
         android:label="fragment_program_builder"
         tools:layout="@layout/fragment_program_builder" >
         <action
-            android:id="@+id/action_programBuilderFragment_to_addItemFragment"
+            android:id="@+id/action_programBuilderFragment_to_itemListFragment"
             app:destination="@id/itemListFragment" />
     </fragment>
     <fragment

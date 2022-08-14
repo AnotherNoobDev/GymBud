@@ -104,9 +104,10 @@ class ItemRepository(
             is ProgramTemplateContent -> {
                 addProgramTemplate(content)
             }
+            is RestPeriodContent -> {
+                addRestPeriod(content)
+            }
         }
-
-        // todo rest period?
     }
 
 
@@ -154,6 +155,14 @@ class ItemRepository(
         )
     }
 
+    private suspend fun addRestPeriod(content: RestPeriodContent) {
+        restPeriodRepository.addRestPeriod(
+            ItemIdentifierGenerator.generateId(),
+            content.name,
+            content.targetRestPeriodSec
+        )
+    }
+
 
     suspend fun updateItem(id: ItemIdentifier, content: ItemContent) {
         when (content) {
@@ -171,6 +180,9 @@ class ItemRepository(
             }
             is ProgramTemplateContent -> {
                 updateProgramTemplate(id, content)
+            }
+            is RestPeriodContent -> {
+                updateRestPeriod(id, content)
             }
         }
     }
@@ -219,6 +231,14 @@ class ItemRepository(
         )
     }
 
+    private suspend fun updateRestPeriod(id: ItemIdentifier, content: RestPeriodContent) {
+        restPeriodRepository.updateRestPeriod(
+            id,
+            content.name,
+            content.targetRestPeriodSec
+        )
+    }
+
 
     suspend fun removeItem(id: ItemIdentifier, type: ItemType? = null) {
         when (type) {
@@ -227,6 +247,7 @@ class ItemRepository(
             ItemType.SET_TEMPLATE -> setTemplateRepository.removeSetTemplate(id)
             ItemType.WORKOUT_TEMPLATE -> workoutTemplateRepository.removeWorkoutTemplate(id)
             ItemType.PROGRAM_TEMPLATE -> programTemplateRepository.removeProgramTemplate(id)
+            ItemType.REST_PERIOD -> restPeriodRepository.removeRestPeriod(id)
             else -> removeItemInAll(id)
         }
     }
@@ -235,10 +256,10 @@ class ItemRepository(
     // todo might want to replace with single query over all DB
     private suspend fun removeItemInAll(id: ItemIdentifier) {
         exerciseRepository.removeExercise(id) ||
-                exerciseTemplateRepository.removeExerciseTemplate(id) ||
-                setTemplateRepository.removeSetTemplate(id) ||
-                workoutTemplateRepository.removeWorkoutTemplate(id) ||
-                programTemplateRepository.removeProgramTemplate(id)
-
+        exerciseTemplateRepository.removeExerciseTemplate(id) ||
+        setTemplateRepository.removeSetTemplate(id) ||
+        workoutTemplateRepository.removeWorkoutTemplate(id) ||
+        programTemplateRepository.removeProgramTemplate(id) ||
+        restPeriodRepository.removeRestPeriod(id)
     }
 }

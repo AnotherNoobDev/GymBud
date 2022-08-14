@@ -33,3 +33,9 @@ data class RestPeriod(
     }
 }
 
+
+data class RestPeriodContent(
+    override var name: String,
+    var targetRestPeriodSec: IntRange
+): ItemContent
+

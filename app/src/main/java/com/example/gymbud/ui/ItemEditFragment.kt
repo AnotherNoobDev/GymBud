@@ -1,7 +1,6 @@
 package com.example.gymbud.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.R
+import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.databinding.FragmentItemEditBinding
 import com.example.gymbud.ui.viewbuilder.EditItemView
 import com.example.gymbud.ui.viewbuilder.EditItemViewFactory
@@ -25,7 +25,7 @@ class ItemEditFragment : Fragment() {
 
     private val navigationArgs: ItemEditFragmentArgs by navArgs()
 
-    private val viewModel: ItemViewModel by activityViewModels() {
+    private val viewModel: ItemViewModel by activityViewModels {
         ItemViewModelFactory(
             (activity?.application as BaseApplication).itemRepository
         )
@@ -62,7 +62,7 @@ class ItemEditFragment : Fragment() {
 
         val id = navigationArgs.id
 
-        if (id >= 0) {
+        if (id != ItemIdentifierGenerator.NO_ID) {
             onViewCreatedWithExistingItem()
         } else {
             onViewCreatedWithNewItem()

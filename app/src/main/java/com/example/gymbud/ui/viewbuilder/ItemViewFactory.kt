@@ -17,7 +17,8 @@ class ItemViewFactory {
                 ItemType.SET_TEMPLATE -> SetTemplateDetailView(onDetailsCallback)
                 ItemType.WORKOUT_TEMPLATE -> WorkoutTemplateDetailView(context, onDetailsCallback)
                 ItemType.PROGRAM_TEMPLATE -> ProgramTemplateDetailView(onDetailsCallback)
-                else ->  ExerciseDetailView() // todo
+                ItemType.REST_PERIOD -> RestPeriodDetailView()
+                else -> throw Exception("Can't create ItemView for type:$type")
             }
         }
     }
@@ -33,7 +34,8 @@ class EditItemViewFactory {
                 ItemType.SET_TEMPLATE -> SetTemplateEditView(context)
                 ItemType.WORKOUT_TEMPLATE -> WorkoutTemplateEditView(context)
                 ItemType.PROGRAM_TEMPLATE -> ProgramTemplateEditView(context)
-                else ->  ExerciseEditView(context) // todo
+                ItemType.REST_PERIOD -> RestPeriodEditView(context)
+                else -> throw Exception("Can't create EditItemView for type:$type")
             }
         }
     }
