@@ -261,8 +261,11 @@ class WorkoutTemplateEditView(
             viewModel.getItemsByType(ItemType.REST_PERIOD).collect {
                 restPeriods = it
 
-                val restPeriodsByName = it.map { rest ->
-                    rest.name
+                val restPeriodsByName = it.mapNotNull { rest ->
+                    if ((rest as RestPeriod).isIntraWorkoutRestPeriod())
+                        rest.name
+                    else
+                        null
                 }
 
                 restPeriodsSelectionAdapter =

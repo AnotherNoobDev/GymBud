@@ -20,6 +20,10 @@ data class RestPeriod(
         }
     }
 
+
+    fun isIntraWorkoutRestPeriod(): Boolean = (this != RestDay)
+
+
     companion object {
         val RestDay = RestPeriod(
             ItemIdentifierGenerator.REST_DAY_ID,
