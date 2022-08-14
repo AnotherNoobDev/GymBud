@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="4 day-split Hypertrophy Program"
+        tools:text="4 day-split Hypertrophy Program"
         android:textAlignment="center"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="@+id/active_program_label"
@@ -72,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Chest, Back, Traps and Neck 1"
+        tools:text="Chest, Back, Traps and Neck 1"
         android:textAlignment="center"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="@+id/active_program_day_label"
@@ -125,7 +125,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/active_program_day_divider"
-        android:text="Strength does not come from physical capacity. It comes from an indomitable will." />
+        tools:text="Strength does not come from physical capacity. It comes from an indomitable will." />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
