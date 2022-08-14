@@ -7,56 +7,26 @@
     android:layout_height="match_parent"
     tools:context=".ui.TemplatesFragment">
 
-    <TextView
-        android:id="@+id/no_data_found_text"
+    <Button
+        android:id="@+id/library_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No data found on device."
+        android:text="Library"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/use_defaults_button"
+        android:id="@+id/load_defaults_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Use defaults"
-        app:layout_constraintBottom_toTopOf="@+id/create_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/no_data_found_text" />
-
-
-    <Button
-        android:id="@+id/browse_templates_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Browse"
-        app:layout_constraintBottom_toTopOf="@id/create_button"
-        app:layout_constraintTop_toBottomOf="@+id/no_data_found_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"/>
-
-
-    <Button
-        android:id="@+id/create_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create"
-        app:layout_constraintBottom_toTopOf="@+id/import_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/no_data_found_text" />
-
-    <Button
-        android:id="@+id/import_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="76dp"
-        android:text="Import"
+        android:text="Load defaults"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/library_button" />
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,16 +34,12 @@ class TemplatesFragment : Fragment() {
         _binding = FragmentTemplatesBinding.inflate(inflater, container, false)
 
         binding.apply {
-            createButton.setOnClickListener {
+            libraryButton.setOnClickListener {
                 val action = TemplatesFragmentDirections.actionTemplatesFragmentToProgramBuilderFragment()
                 findNavController().navigate(action)
             }
 
-            importButton.setOnClickListener {
-                // todo add Import functionality
-            }
-
-            useDefaultsButton.setOnClickListener {
+            loadDefaultsButton.setOnClickListener {
                 viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.populateWithDefaults()
 
@@ -53,21 +49,12 @@ class TemplatesFragment : Fragment() {
                 }
             }
 
-            browseTemplatesButton.setOnClickListener {
-                val action = TemplatesFragmentDirections.actionTemplatesFragmentToProgramBuilderFragment()
-                findNavController().navigate(action)
-            }
-
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.hasData().collect { withData ->
                     if (withData) {
-                        browseTemplatesButton.visibility = View.VISIBLE
-                        useDefaultsButton.visibility = View.GONE
-                        noDataFoundText.visibility = View.GONE
+                        loadDefaultsButton.visibility = View.GONE
                     } else {
-                        browseTemplatesButton.visibility = View.GONE
-                        useDefaultsButton.visibility = View.VISIBLE
-                        noDataFoundText.visibility = View.VISIBLE
+                        loadDefaultsButton.visibility = View.VISIBLE
                     }
                 }
             }
