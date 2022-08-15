@@ -16,7 +16,7 @@ open class WorkoutSessionItem private constructor(val type: WorkoutSessionItemTy
         val tags: Tags?,
         private var previousSession: ExerciseSession?,
     ): WorkoutSessionItem(WorkoutSessionItemType.Exercise, exerciseTemplate.exercise.name) {
-        private var _actualResistance = ""
+        private var _actualResistance = 0.0 // in KG
         val actualResistance get() = _actualResistance
 
         private var _actualReps: Int = 0
@@ -69,7 +69,7 @@ open class WorkoutSessionItem private constructor(val type: WorkoutSessionItemTy
         }
 
 
-        fun complete(reps: Int, resistance: String, notes: String) {
+        fun complete(reps: Int, resistance: Double, notes: String) {
             _actualReps = reps
             _actualResistance = resistance
             _notes = notes
@@ -79,7 +79,7 @@ open class WorkoutSessionItem private constructor(val type: WorkoutSessionItemTy
 
 
         private fun isValid(): Pair<Boolean, String> {
-            if (_actualResistance.isEmpty()) {
+            if (_actualResistance <= 0.0) {
                 return Pair(false, "Resistance needs to be specified")
             }
 
@@ -153,7 +153,7 @@ data class ExerciseSessionRecord(
     override var name: String,
     @ColumnInfo(name = "exercise_template_id") val exerciseTemplateId: ItemIdentifier,
     @ColumnInfo(name = "workout_session_id") val workoutSessionId: ItemIdentifier,
-    val resistance: String, // we need to store either a number (Weight) or a band type here (red, blue etc)
+    val resistance: Double, // in KG
     val reps: Int,
     val notes: String,
     val tags: Tags?
@@ -163,7 +163,7 @@ data class ExerciseSessionRecord(
 data class ExerciseResult(
     @ColumnInfo(name = "workout_session_id") val workoutSessionId: ItemIdentifier,
     val reps: Int,
-    val resistance: String
+    val resistance: Double // in KG
 )
 
 

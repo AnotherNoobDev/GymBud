@@ -20,9 +20,6 @@ class ExerciseDetailView: ItemView {
     private var _targetMuscleBinding: LayoutDetailTextFieldBinding? = null
     private val targetMuscleBinding get() = _targetMuscleBinding!!
 
-    private var _equipmentBinding: LayoutDetailTextFieldBinding? = null
-    private val equipmentBinding get() = _equipmentBinding!!
-
     private var _notesBinding: LayoutDetailTextFieldBinding? = null
     private val notesBinding get() = _notesBinding!!
 
@@ -30,24 +27,18 @@ class ExerciseDetailView: ItemView {
     override fun inflate(inflater: LayoutInflater): List<View> {
         _nameBinding = LayoutDetailNameBinding.inflate(inflater)
         _targetMuscleBinding = LayoutDetailTextFieldBinding.inflate(inflater)
-        _equipmentBinding = LayoutDetailTextFieldBinding.inflate(inflater)
         _notesBinding = LayoutDetailTextFieldBinding.inflate(inflater)
 
         targetMuscleBinding.icon.setImageResource(R.drawable.ic_target_muscle_24)
-        equipmentBinding.icon.setImageResource(R.drawable.ic_equipment_24)
         notesBinding.icon.setImageResource(R.drawable.ic_notes_24)
         notesBinding.text.isSingleLine = false
 
         val divider1 = LayoutDetailDividerBinding.inflate(inflater).root
-        val divider2 = LayoutDetailDividerBinding.inflate(inflater).root
-
 
         return listOf(
             nameBinding.root,
             targetMuscleBinding.root,
             divider1,
-            equipmentBinding.root,
-            divider2,
             notesBinding.root
         )
     }
@@ -64,7 +55,6 @@ class ExerciseDetailView: ItemView {
 
         nameBinding.name.text = item.name
         targetMuscleBinding.text.text = item.targetMuscle.toString()
-        equipmentBinding.text.text = item.resistance.toString()
         notesBinding.text.text = item.notes
     }
 }

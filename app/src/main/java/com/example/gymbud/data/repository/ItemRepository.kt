@@ -115,7 +115,6 @@ class ItemRepository(
         exerciseRepository.addExercise(
             ItemIdentifierGenerator.generateId(),
             content.name,
-            content.resistance,
             content.targetMuscle,
             content.description
         )
@@ -192,7 +191,6 @@ class ItemRepository(
         exerciseRepository.updateExercise(
             id,
             content.name,
-            content.resistance,
             content.targetMuscle,
             content.description
         )

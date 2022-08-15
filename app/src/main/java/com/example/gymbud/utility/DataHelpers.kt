@@ -71,7 +71,7 @@ private fun generateSessionRecordsForProgramBlock(builder: SessionRecordBuilder,
 }
 
 
-private typealias ExerciseResult = Pair<Int, String>
+private typealias ExerciseResult = Pair<Int, Double>
 
 private class SessionRecordBuilder(
     val calendar: Calendar
@@ -123,29 +123,18 @@ private class SessionRecordBuilder(
         val nextWorking = if (working.first < exerciseTemplate.targetRepRange.last) {
             Pair(working.first + 2, working.second)
         } else {
-            Pair(exerciseTemplate.targetRepRange.first, incrementResistance(working.second, exerciseTemplate.exercise.resistance))
+            Pair(exerciseTemplate.targetRepRange.first, incrementResistance(working.second))
         }
 
-        val nextWarmup = Pair(10, getWarmupForResistance(nextWorking.second, exerciseTemplate.exercise.resistance))
+        val nextWarmup = Pair(10, getWarmupForResistance(nextWorking.second))
 
         return Pair(nextWarmup, nextWorking)
     }
 
 
-    private fun incrementResistance(v: String, resistance: ResistanceType): String {
-        return when (resistance) {
-            ResistanceType.WEIGHT -> (v.toDouble() + 2.5).toString()
-            ResistanceType.BAND -> (v.toInt() + 1).toString()
-        }
-    }
+    private fun incrementResistance(v: Double): Double = v + 2.5
 
-
-    private fun getWarmupForResistance(workingValue: String, resistance: ResistanceType): String {
-        return when (resistance) {
-            ResistanceType.WEIGHT -> (workingValue.toDouble() / 2).toString()
-            ResistanceType.BAND -> (workingValue.toInt() / 2).toString()
-        }
-    }
+    private fun getWarmupForResistance(workingValue: Double): Double = workingValue / 2.0
 
 
     fun getRepsAndResistanceForExercise(exerciseTemplate: ExerciseTemplate, tags: Tags?): ExerciseResult {
@@ -163,19 +152,10 @@ private class SessionRecordBuilder(
     }
 
 
-    private fun generateWarmupRepsAndResistanceForExercise(exerciseTemplate: ExerciseTemplate): ExerciseResult {
-        return when(exerciseTemplate.exercise.resistance) {
-            ResistanceType.WEIGHT -> Pair(10, "10")
-            ResistanceType.BAND -> Pair(exerciseTemplate.targetRepRange.random(), "1")
-        }
-    }
+    private fun generateWarmupRepsAndResistanceForExercise(exerciseTemplate: ExerciseTemplate): ExerciseResult = Pair(exerciseTemplate.targetRepRange.random() / 2, 10.0)
 
-    private fun generateWorkingRepsAndResistanceForExercise(exerciseTemplate: ExerciseTemplate): ExerciseResult {
-        return when(exerciseTemplate.exercise.resistance) {
-            ResistanceType.WEIGHT -> Pair(exerciseTemplate.targetRepRange.random(), "20")
-            ResistanceType.BAND -> Pair(exerciseTemplate.targetRepRange.random(), "2")
-        }
-    }
+
+    private fun generateWorkingRepsAndResistanceForExercise(exerciseTemplate: ExerciseTemplate): ExerciseResult = Pair(exerciseTemplate.targetRepRange.random(), 20.0)
 }
 
 

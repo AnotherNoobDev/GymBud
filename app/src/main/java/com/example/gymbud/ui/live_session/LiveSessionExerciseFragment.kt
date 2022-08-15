@@ -11,7 +11,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.databinding.FragmentLiveSessionExerciseBinding
-import com.example.gymbud.model.ResistanceType
 import com.example.gymbud.model.TagCategory
 import com.example.gymbud.model.WorkoutSessionItem
 import com.example.gymbud.model.WorkoutSessionItemType
@@ -63,9 +62,7 @@ class LiveSessionExerciseFragment : Fragment() {
                 resistanceLabel.error = null
             }
 
-            if (exerciseSession.exerciseTemplate.exercise.resistance == ResistanceType.WEIGHT) {
-                resistanceValue.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-            }
+            resistanceValue.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
 
             if (liveSessionViewModel.hasNextItem()) {
                 nextItemHint.text = liveSessionViewModel.getNextItemHint()
@@ -97,7 +94,7 @@ class LiveSessionExerciseFragment : Fragment() {
 
         val inputNotes = binding.notesInput.text.toString()
 
-        exerciseSession.complete(inputReps, inputResistance, inputNotes)
+        exerciseSession.complete(inputReps, inputResistance.toDouble(), inputNotes)
 
 
         return true

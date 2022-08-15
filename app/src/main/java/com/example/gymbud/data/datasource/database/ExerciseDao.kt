@@ -15,15 +15,13 @@ interface ExerciseDao {
     @Query("UPDATE exercise SET" +
             " name = :name," +
             " notes = :description," +
-            " target_muscle = :targetMuscle," +
-            " resistance = :resistance" +
+            " target_muscle = :targetMuscle" +
             " WHERE id = :id")
     suspend fun update(
         id: ItemIdentifier,
         name: String,
         description: String,
         targetMuscle: MuscleGroup,
-        resistance: ResistanceType
     )
 
     @Query("DELETE from exercise WHERE id = :id")

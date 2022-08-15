@@ -45,7 +45,7 @@ class PersonalBestsRecyclerViewAdapter(
         holder.date.text = TimeFormatter.getFormattedDateDDMMYYYY(Date(item.dateMs))
         holder.exercise.text = item.exerciseName
         holder.reps.text = item.reps.toString() + " x"
-        holder.resistance.text = item.resistance
+        holder.resistance.text = item.resistance.toString()
 
         holder.itemView.setOnClickListener{
             onPersonalBestClicked(item.exerciseId, item.dateMs)

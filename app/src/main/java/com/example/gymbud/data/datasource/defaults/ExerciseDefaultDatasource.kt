@@ -4,7 +4,6 @@ import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.model.Exercise
 import com.example.gymbud.model.ExerciseTemplate
 import com.example.gymbud.model.MuscleGroup
-import com.example.gymbud.model.ResistanceType
 
 const val BENCH_PRESS =  "Bench press"
 const val ROWS = "Rows"
@@ -50,175 +49,150 @@ object ExerciseDefaultDatasource {
                 BENCH_PRESS,
                 "Add notes here...\nAdd notes here...\nAdd notes here...\nAdd notes here...\nAdd notes here...\n",
                 MuscleGroup.CHEST,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 ROWS,
                 "Add notes here...",
                 MuscleGroup.BACK,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 PUSH_UPS,
                 "Add notes here...",
                 MuscleGroup.CHEST,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 PULL_UPS,
                 "Add notes here...",
                 MuscleGroup.BACK,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 OHP,
                 "Add notes here...",
                 MuscleGroup.FRONT_DELT,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 LATERAL_RAISES,
                 "Add notes here...",
                 MuscleGroup.SIDE_DELT,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 REVERSE_FLY,
                 "Add notes here...",
                 MuscleGroup.REAR_DELT,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 SQUAT,
                 "Add notes here...",
                 MuscleGroup.QUADS,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 BARBELL_SHRUG,
                 "Add notes here...",
                 MuscleGroup.BACK,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 DUMBELL_SHRUG,
                 "Add notes here...",
                 MuscleGroup.BACK,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 HIP_THRUST,
                 "Add notes here...",
                 MuscleGroup.GLUTES,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 INCLINE_CURL,
                 "Add notes here...",
                 MuscleGroup.BICEPS,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 PUSH_DOWN,
                 "Add notes here...",
                 MuscleGroup.TRICEPS,
-                ResistanceType.BAND
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 CALF_RAISES,
                 "Add notes here...",
                 MuscleGroup.CALVES,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 INCLINE_PRESS,
                 "Add notes here...",
                 MuscleGroup.CHEST,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 NECK_EXTENSIONS,
                 "Add notes here...",
                 MuscleGroup.NECK,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 CHEST_FLY,
                 "Add notes here...",
                 MuscleGroup.CHEST,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 INVERTED_ROW,
                 "Add notes here...",
                 MuscleGroup.BACK,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 ARNOLD_PRESS,
                 "Add notes here...",
                 MuscleGroup.FRONT_DELT,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 FACE_PULL,
                 "Add notes here...",
                 MuscleGroup.REAR_DELT,
-                ResistanceType.BAND
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 NORDIC_CURL,
                 "Add notes here...",
                 MuscleGroup.BACK,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 LUNGES,
                 "Add notes here...",
                 MuscleGroup.QUADS,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 BICEPS_CURL,
                 "Add notes here...",
                 MuscleGroup.BICEPS,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 SKULLCRUSHERS,
                 "Add notes here...",
                 MuscleGroup.TRICEPS,
-                ResistanceType.WEIGHT
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 NECK_CURL,
                 "Add notes here...",
                 MuscleGroup.NECK,
-                ResistanceType.WEIGHT
             )
         )
     }

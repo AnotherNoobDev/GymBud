@@ -10,10 +10,9 @@ data class Exercise(
     override var name: String,
     var notes: String,
     @ColumnInfo(name = "target_muscle") var targetMuscle: MuscleGroup,
-    var resistance: ResistanceType
 ) : Item {
 
-    constructor(id: ItemIdentifier): this(id, "FILLER", "", MuscleGroup.BACK, ResistanceType.WEIGHT)
+    constructor(id: ItemIdentifier): this(id, "FILLER", "", MuscleGroup.BACK)
 
     override fun toString(): String {
         return name
@@ -25,7 +24,6 @@ data class ExerciseContent(
     override var name: String,
     var description: String,
     var targetMuscle: MuscleGroup,
-    var resistance: ResistanceType,
 ): ItemContent
 
 

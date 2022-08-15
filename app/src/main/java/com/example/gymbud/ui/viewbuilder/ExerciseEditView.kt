@@ -28,16 +28,12 @@ class ExerciseEditView(
     private var _targetMuscleBinding: LayoutEditDropdownFieldBinding? = null
     private val targetMuscleBinding get() = _targetMuscleBinding!!
 
-    private var _equipmentBinding: LayoutEditDropdownFieldBinding? = null
-    private val equipmentBinding get() = _equipmentBinding!!
-
     private var _notesBinding: LayoutEditTextFieldBinding? = null
     private val notesBinding get() = _notesBinding!!
 
     override fun inflate(inflater: LayoutInflater): List<View> {
         _nameBinding = LayoutEditTextFieldBinding.inflate(inflater)
         _targetMuscleBinding = LayoutEditDropdownFieldBinding.inflate(inflater)
-        _equipmentBinding = LayoutEditDropdownFieldBinding.inflate(inflater)
         _notesBinding = LayoutEditTextFieldBinding.inflate(inflater)
 
         nameBinding.label.hint = context.getString(R.string.item_name)
@@ -46,7 +42,6 @@ class ExerciseEditView(
         }
 
         targetMuscleBinding.label.setStartIconDrawable(R.drawable.ic_target_muscle_24)
-        equipmentBinding.label.setStartIconDrawable(R.drawable.ic_equipment_24)
 
         notesBinding.label.setStartIconDrawable(R.drawable.ic_notes_24)
         notesBinding.label.hint = context.getString(R.string.item_notes)
@@ -59,16 +54,9 @@ class ExerciseEditView(
         targetMuscleBinding.input.setAdapter(targetMuscleAdapter)
 
 
-        val resistanceType = ResistanceType.values()
-        val equipmentAdapter = ArrayAdapter(context, R.layout.dropdown_list_item, resistanceType)
-        equipmentBinding.input.setAdapter(equipmentAdapter)
-
-        equipmentBinding.label.hint = context.getString(R.string.equipment)
-
         return listOf(
             nameBinding.root,
             targetMuscleBinding.root,
-            equipmentBinding.root,
             notesBinding.root
         )
     }
@@ -86,14 +74,12 @@ class ExerciseEditView(
 
         nameBinding.input.setText(item.name,  TextView.BufferType.SPANNABLE)
         targetMuscleBinding.input.setText(item.targetMuscle.toString(), false)
-        equipmentBinding.input.setText(item.resistance.toString(), false)
         notesBinding.input.setText(item.notes, TextView.BufferType.SPANNABLE)
     }
 
 
     override fun populateForNewItem(lifecycle: LifecycleCoroutineScope, viewModel: ItemViewModel) {
         targetMuscleBinding.input.setText(MuscleGroup.QUADS.toString(), false)
-        equipmentBinding.input.setText(ResistanceType.WEIGHT.toString(), false)
     }
 
 
@@ -105,8 +91,7 @@ class ExerciseEditView(
         return ExerciseContent(
             nameBinding.input.text.toString(),
             notesBinding.input.text.toString(),
-            MuscleGroup.valueOf(targetMuscleBinding.input.text.toString()),
-            ResistanceType.valueOf(equipmentBinding.input.text.toString())
+            MuscleGroup.valueOf(targetMuscleBinding.input.text.toString())
         )
     }
 

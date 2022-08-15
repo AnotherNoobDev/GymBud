@@ -33,7 +33,6 @@ class ExerciseRepository(
 
         if (exerciseEntry != null) {
             exercise.name = exerciseEntry.name
-            exercise.resistance = exerciseEntry.resistance
             exercise.targetMuscle = exerciseEntry.targetMuscle
             exercise.notes = exerciseEntry.notes
         }
@@ -43,13 +42,12 @@ class ExerciseRepository(
     suspend fun updateExercise(
         id: ItemIdentifier,
         name: String,
-        resistance: ResistanceType,
         targetMuscle: MuscleGroup,
         description: String
     ) {
         withContext(Dispatchers.IO) {
             val validName = getValidName(id, name, exerciseDao.getAll().first())
-            exerciseDao.update(id, validName, description, targetMuscle, resistance)
+            exerciseDao.update(id, validName, description, targetMuscle)
         }
     }
 
@@ -57,7 +55,6 @@ class ExerciseRepository(
     suspend fun addExercise(
         id: ItemIdentifier,
         name: String,
-        resistance: ResistanceType,
         targetMuscle: MuscleGroup,
         description: String
     ) {
@@ -65,7 +62,7 @@ class ExerciseRepository(
             val validName = getValidName(id, name, exerciseDao.getAll().first())
 
             try {
-                exerciseDao.insert(Exercise(id, validName, description, targetMuscle, resistance))
+                exerciseDao.insert(Exercise(id, validName, description, targetMuscle))
             } catch (e: SQLiteConstraintException) {
                 Log.e(TAG, "Exercise with id: $id already exists!")
                 throw e
