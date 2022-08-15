@@ -124,14 +124,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        // Disabled in production since we have nothing here for the user at the moment
-        // todo How do distinguish between dev and production environments?
-        val isProduction = false // todo set to true before releasing!!!
-
-        if (!isProduction) {
-            menuInflater.inflate(R.menu.app_bar_menu, menu)
-        }
-
+        menuInflater.inflate(R.menu.app_bar_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 

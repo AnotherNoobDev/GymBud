@@ -39,24 +39,14 @@ open class WorkoutSessionItem private constructor(val type: WorkoutSessionItemTy
         }
 
 
-        /*
-        fun getPreviousResistance(): String? {
+
+        fun getPreviousResistance(): Double? {
             return previousSession?._actualResistance
         }
 
 
         fun getPreviousReps(): Int? {
             return previousSession?._actualReps
-        }
-         */
-
-
-        fun getPreviousResult(): String? {
-            return if (previousSession == null) {
-                null
-            } else {
-                "${previousSession!!._actualReps} x ${previousSession!!._actualResistance}"
-            }
         }
 
 
@@ -79,10 +69,6 @@ open class WorkoutSessionItem private constructor(val type: WorkoutSessionItemTy
 
 
         private fun isValid(): Pair<Boolean, String> {
-            if (_actualResistance <= 0.0) {
-                return Pair(false, "Resistance needs to be specified")
-            }
-
             if (_actualReps <= 0) {
                 return Pair(false, "Reps need to be specified")
             }

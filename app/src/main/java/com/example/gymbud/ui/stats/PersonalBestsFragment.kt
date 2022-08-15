@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.R
+import com.example.gymbud.data.repository.AppRepository
 import com.example.gymbud.databinding.FragmentPersonalBestsBinding
 import com.example.gymbud.model.ItemIdentifier
 import com.example.gymbud.ui.viewmodel.ExerciseFiltersViewModel
@@ -18,6 +19,7 @@ import com.example.gymbud.ui.viewmodel.ExerciseFiltersViewModelFactory
 import com.example.gymbud.ui.viewmodel.StatsViewModel
 import com.example.gymbud.ui.viewmodel.StatsViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -31,6 +33,8 @@ class PersonalBestsFragment : Fragment() {
     private val exerciseFiltersViewModel: ExerciseFiltersViewModel by activityViewModels {
         ExerciseFiltersViewModelFactory((activity?.application as BaseApplication).programRepository)
     }
+
+    private lateinit var appRepository: AppRepository
 
     private var _binding: FragmentPersonalBestsBinding? = null
     private val binding get() = _binding!!
@@ -68,6 +72,14 @@ class PersonalBestsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        appRepository = (activity?.application as BaseApplication).appRepository
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            appRepository.weightUnit.collect {
+                personalBestsAdapter.displayWeightUnit = it
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             filterByProgram?.text = exerciseFiltersViewModel.getFilterForProgramAsText().first()

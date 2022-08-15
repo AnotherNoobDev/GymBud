@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.R
+import com.example.gymbud.data.repository.AppRepository
 import com.example.gymbud.databinding.FragmentLiveSessionStartBinding
 import com.example.gymbud.model.*
 import com.example.gymbud.ui.SessionExerciseListRecyclerViewAdapter
@@ -35,6 +36,8 @@ class LiveSessionStartFragment : Fragment() {
         )
     }
 
+    private lateinit var appRepository: AppRepository
+
     private var _binding: FragmentLiveSessionStartBinding? = null
     private val binding get() = _binding!!
 
@@ -52,6 +55,14 @@ class LiveSessionStartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        appRepository = (activity?.application as BaseApplication).appRepository
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            appRepository.weightUnit.collect {
+                previousSessionAdapter.displayWeightUnit = it
+            }
+        }
 
         binding.continueBtn.setOnClickListener {
 

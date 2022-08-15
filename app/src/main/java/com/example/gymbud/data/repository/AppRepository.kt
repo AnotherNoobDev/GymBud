@@ -2,13 +2,11 @@ package com.example.gymbud.data.repository
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.model.ItemIdentifier
+import com.example.gymbud.model.WeightUnit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -30,6 +28,8 @@ class AppRepository(private val context: Context) {
     // todo kinda dirty, what if ItemIdentifier wouldn't hold a pos(Int)?
     private val activeProgramIdKey = longPreferencesKey("active_program_id")
     private val activeProgramDayKey = longPreferencesKey("active_program_day")
+
+    private val weightUnitKey = stringPreferencesKey("weight_unit")
 
 
     suspend fun reset() {
@@ -99,6 +99,20 @@ class AppRepository(private val context: Context) {
         }
 
 
+    val weightUnit: Flow<WeightUnit> = context.dataStore.data
+        .catch {
+            if (it is IOException) {
+                it.printStackTrace()
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            WeightUnit.valueOf(preferences[weightUnitKey]?: "KG")
+        }
+
+
     suspend fun updateLastUsedItemIdentifier(id: ItemIdentifier) {
         context.dataStore.edit { preferences ->
             preferences[lastItemIdentifierKey] = id
@@ -124,6 +138,13 @@ class AppRepository(private val context: Context) {
         context.dataStore.edit { preferences ->
             preferences[activeProgramIdKey] = programId
             preferences[activeProgramDayKey] = programDayIdOrPos
+        }
+    }
+
+
+    suspend fun updateWeightUnit(unit: WeightUnit) {
+        context.dataStore.edit { preferences ->
+            preferences[weightUnitKey] = unit.toString()
         }
     }
 }

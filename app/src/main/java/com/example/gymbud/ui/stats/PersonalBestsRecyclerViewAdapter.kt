@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gymbud.databinding.LayoutPersonalBestExerciseBinding
 import com.example.gymbud.model.ExercisePersonalBest
 import com.example.gymbud.model.ItemIdentifier
+import com.example.gymbud.model.WeightUnit
+import com.example.gymbud.model.convertKGtoLB
 import com.example.gymbud.utility.TimeFormatter
 import java.util.*
 
@@ -17,6 +19,9 @@ import java.util.*
 class PersonalBestsRecyclerViewAdapter(
     private val onPersonalBestClicked: (ItemIdentifier, Long) -> Unit
 ): ListAdapter<ExercisePersonalBest, PersonalBestsRecyclerViewAdapter.ViewHolder>(DiffCallback) {
+
+    var displayWeightUnit: WeightUnit = WeightUnit.KG
+
 
     inner class ViewHolder(binding: LayoutPersonalBestExerciseBinding) : RecyclerView.ViewHolder(binding.root) {
         val date: TextView = binding.date
@@ -44,8 +49,11 @@ class PersonalBestsRecyclerViewAdapter(
         val item = getItem(position)
         holder.date.text = TimeFormatter.getFormattedDateDDMMYYYY(Date(item.dateMs))
         holder.exercise.text = item.exerciseName
-        holder.reps.text = item.reps.toString() + " x"
-        holder.resistance.text = item.resistance.toString()
+        holder.reps.text = item.reps.toString() + " x "
+        holder.resistance.text = when(displayWeightUnit) {
+            WeightUnit.KG -> String.format("%.2f kg", item.resistance)
+            WeightUnit.LB -> String.format("%.2f lb", convertKGtoLB(item.resistance))
+        }
 
         holder.itemView.setOnClickListener{
             onPersonalBestClicked(item.exerciseId, item.dateMs)

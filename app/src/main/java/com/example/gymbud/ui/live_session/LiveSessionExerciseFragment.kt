@@ -8,14 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.gymbud.BaseApplication
+import com.example.gymbud.data.repository.AppRepository
 import com.example.gymbud.databinding.FragmentLiveSessionExerciseBinding
-import com.example.gymbud.model.TagCategory
-import com.example.gymbud.model.WorkoutSessionItem
-import com.example.gymbud.model.WorkoutSessionItemType
+import com.example.gymbud.model.*
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModel
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModelFactory
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 class LiveSessionExerciseFragment : Fragment() {
@@ -23,10 +25,15 @@ class LiveSessionExerciseFragment : Fragment() {
         LiveSessionViewModelFactory((activity?.application as BaseApplication).sessionRepository)
     }
 
+    private lateinit var appRepository: AppRepository
+
     private var _binding: FragmentLiveSessionExerciseBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var exerciseSession: WorkoutSessionItem.ExerciseSession
+
+    private var displayWeightUnit: WeightUnit = WeightUnit.KG
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +48,17 @@ class LiveSessionExerciseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        appRepository = (activity?.application as BaseApplication).appRepository
+
         exerciseSession = liveSessionViewModel.getCurrentItem() as WorkoutSessionItem.ExerciseSession
+
+        updateDisplayWeightUnit(WeightUnit.KG) // defaults
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            appRepository.weightUnit.collect {
+                updateDisplayWeightUnit(it)
+            }
+        }
 
         binding.apply {
             exerciseLabel.text = exerciseSession.getShortName()
@@ -51,7 +68,6 @@ class LiveSessionExerciseFragment : Fragment() {
                 exerciseTags.text = "*  $intensity *"
             }
 
-            previousSessionValue.text = exerciseSession.getPreviousResult()?: "-"
             previousNotes.text = exerciseSession.getPreviousNotes()?: "No notes..."
 
             repsLabel.setOnClickListener {
@@ -79,6 +95,36 @@ class LiveSessionExerciseFragment : Fragment() {
     }
 
 
+    private fun updateDisplayWeightUnit(u: WeightUnit) {
+        var exerciseValueStr = ""
+
+        val prevReps = exerciseSession.getPreviousReps()
+        val prevResistance = exerciseSession.getPreviousResistance()
+
+        if (prevReps != null && prevResistance != null) {
+            exerciseValueStr = "$prevReps x " + when(u) {
+                WeightUnit.KG-> String.format("%.2f kg", prevResistance)
+                WeightUnit.LB-> String.format("%.2f lb", convertKGtoLB(prevResistance))
+            }
+        }
+
+        binding.apply {
+            previousSessionValue.text = exerciseValueStr
+
+            when(u) {
+                WeightUnit.KG -> {
+                    resistanceLabel.hint = "Resistance (kg)"
+                }
+                WeightUnit.LB -> {
+                    resistanceLabel.hint = "Resistance (lb)"
+                }
+            }
+        }
+
+        displayWeightUnit = u
+    }
+
+
     private fun recordValues(): Boolean {
         val inputReps =  binding.repsValue.text.toString().toIntOrNull()
         if (inputReps == null) {
@@ -86,15 +132,20 @@ class LiveSessionExerciseFragment : Fragment() {
             return false
         }
 
-        val inputResistance = binding.resistanceValue.text.toString()
-        if (inputResistance.isEmpty()) {
+        val inputResistanceStr = binding.resistanceValue.text.toString()
+        if (inputResistanceStr.isEmpty()) {
             binding.resistanceLabel.error = "Please enter resistance"
             return false
         }
 
+        val inputResistanceNumber = when (displayWeightUnit) {
+            WeightUnit.KG -> inputResistanceStr.toDouble()
+            WeightUnit.LB -> convertLBtoKG(inputResistanceStr.toDouble())
+        }
+
         val inputNotes = binding.notesInput.text.toString()
 
-        exerciseSession.complete(inputReps, inputResistance.toDouble(), inputNotes)
+        exerciseSession.complete(inputReps, inputResistanceNumber, inputNotes)
 
 
         return true
