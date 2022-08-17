@@ -21,17 +21,23 @@ class StatsFragment : Fragment() {
         _binding = FragmentStatsBinding.inflate(inflater, container, false)
 
         binding.apply {
-            personalBestsBtn.setOnClickListener {
+            personalBestsPanel.title.text="Personal Bests"
+            personalBestsPanel.description.text="Your best results for each Exercise."
+            personalBestsPanel.card.setOnClickListener {
                 val action = StatsFragmentDirections.actionStatsFragmentToPersonalBestsFragment()
                 findNavController().navigate(action)
             }
 
-            byExerciseBtn.setOnClickListener {
+            progressionChartsPanel.title.text="Progression Charts"
+            progressionChartsPanel.description.text="See how you progressed over time for each Exercise"
+            progressionChartsPanel.card.setOnClickListener {
                 val action = StatsFragmentDirections.actionStatsFragmentToExerciseProgressionFragment()
                 findNavController().navigate(action)
             }
 
-            bySessionBtn.setOnClickListener {
+            sessionHistoryPanel.title.text="Session History"
+            sessionHistoryPanel.description.text="Lookup a specific session in the calendar."
+            sessionHistoryPanel.card.setOnClickListener {
                 val action = StatsFragmentDirections.actionStatsFragmentToStatsSessionCalendarFragment()
                 findNavController().navigate(action)
             }

@@ -24,32 +24,44 @@ class ProgramBuilderFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.apply {
-            viewExercisesButton.setOnClickListener {
+            exercisesPanel.title.text = "Exercises"
+            exercisesPanel.description.text = "Descriptions of movements to target specific muscles."
+            exercisesPanel.card.setOnClickListener {
                 val action = ProgramBuilderFragmentDirections.actionProgramBuilderFragmentToItemListFragment(ItemType.EXERCISE)
                 findNavController().navigate(action)
             }
 
-            viewExerciseTemplatesButton.setOnClickListener {
+            exerciseTemplatesPanel.title.text = "Exercise Templates"
+            exerciseTemplatesPanel.description.text = "Customizations on top of Exercises, for example rep. ranges."
+            exerciseTemplatesPanel.card.setOnClickListener {
                 val action = ProgramBuilderFragmentDirections.actionProgramBuilderFragmentToItemListFragment(ItemType.EXERCISE_TEMPLATE)
                 findNavController().navigate(action)
             }
 
-            viewRestPeriodsButton.setOnClickListener {
+            restPeriodsPanel.title.text = "Rest Periods"
+            restPeriodsPanel.description.text = "Amount of time to rest between Exercises or Sets."
+            restPeriodsPanel.card.setOnClickListener {
                 val action = ProgramBuilderFragmentDirections.actionProgramBuilderFragmentToItemListFragment(ItemType.REST_PERIOD)
                 findNavController().navigate(action)
             }
 
-            viewSetTemplatesButton.setOnClickListener {
+            setTemplatesPanel.title.text = "Set Templates"
+            setTemplatesPanel.description.text = "Group of ExerciseTemplates and RestPeriods."
+            setTemplatesPanel.card.setOnClickListener {
                 val action = ProgramBuilderFragmentDirections.actionProgramBuilderFragmentToItemListFragment(ItemType.SET_TEMPLATE)
                 findNavController().navigate(action)
             }
 
-            viewWorkoutTemplatesButton.setOnClickListener {
+            workoutTemplatesPanel.title.text = "Workout Templates"
+            workoutTemplatesPanel.description.text = "Group of Sets and RestPeriods"
+            workoutTemplatesPanel.card.setOnClickListener {
                 val action = ProgramBuilderFragmentDirections.actionProgramBuilderFragmentToItemListFragment(ItemType.WORKOUT_TEMPLATE)
                 findNavController().navigate(action)
             }
 
-            viewProgramsButton.setOnClickListener {
+            programTemplatesPanel.title.text = "Programs"
+            programTemplatesPanel.description.text = "Group of Workouts."
+            programTemplatesPanel.card.setOnClickListener {
                 val action = ProgramBuilderFragmentDirections.actionProgramBuilderFragmentToItemListFragment(ItemType.PROGRAM_TEMPLATE)
                 findNavController().navigate(action)
             }

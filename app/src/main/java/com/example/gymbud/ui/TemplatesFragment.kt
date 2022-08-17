@@ -34,7 +34,9 @@ class TemplatesFragment : Fragment() {
         _binding = FragmentTemplatesBinding.inflate(inflater, container, false)
 
         binding.apply {
-            libraryButton.setOnClickListener {
+            libraryPanel.title.text = "Library"
+            libraryPanel.description.text = "View, add and modify the Templates available on this device."
+            libraryPanel.card.setOnClickListener {
                 val action = TemplatesFragmentDirections.actionTemplatesFragmentToProgramBuilderFragment()
                 findNavController().navigate(action)
             }
