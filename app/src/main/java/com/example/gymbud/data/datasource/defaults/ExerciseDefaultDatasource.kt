@@ -49,150 +49,175 @@ object ExerciseDefaultDatasource {
                 BENCH_PRESS,
                 "Add notes here...\nAdd notes here...\nAdd notes here...\nAdd notes here...\nAdd notes here...\n",
                 MuscleGroup.CHEST,
+                "HnQGKxU3eds"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 ROWS,
                 "Add notes here...",
                 MuscleGroup.BACK,
+                "xVFU7XSgdxI"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 PUSH_UPS,
                 "Add notes here...",
                 MuscleGroup.CHEST,
+                "IODxDxX7oi4"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 PULL_UPS,
                 "Add notes here...",
                 MuscleGroup.BACK,
+                "B5z3k20QCS0"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 OHP,
                 "Add notes here...",
                 MuscleGroup.FRONT_DELT,
+                "hxH2F2Qp2YA"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 LATERAL_RAISES,
                 "Add notes here...",
                 MuscleGroup.SIDE_DELT,
+                "fD6kaKjiy84"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 REVERSE_FLY,
                 "Add notes here...",
                 MuscleGroup.REAR_DELT,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 SQUAT,
                 "Add notes here...",
                 MuscleGroup.QUADS,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 BARBELL_SHRUG,
                 "Add notes here...",
                 MuscleGroup.BACK,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 DUMBELL_SHRUG,
                 "Add notes here...",
                 MuscleGroup.BACK,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 HIP_THRUST,
                 "Add notes here...",
                 MuscleGroup.GLUTES,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 INCLINE_CURL,
                 "Add notes here...",
                 MuscleGroup.BICEPS,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 PUSH_DOWN,
                 "Add notes here...",
                 MuscleGroup.TRICEPS,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 CALF_RAISES,
                 "Add notes here...",
                 MuscleGroup.CALVES,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 INCLINE_PRESS,
                 "Add notes here...",
                 MuscleGroup.CHEST,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 NECK_EXTENSIONS,
                 "Add notes here...",
                 MuscleGroup.NECK,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 CHEST_FLY,
                 "Add notes here...",
                 MuscleGroup.CHEST,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 INVERTED_ROW,
                 "Add notes here...",
                 MuscleGroup.BACK,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 ARNOLD_PRESS,
                 "Add notes here...",
                 MuscleGroup.FRONT_DELT,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 FACE_PULL,
                 "Add notes here...",
                 MuscleGroup.REAR_DELT,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 NORDIC_CURL,
                 "Add notes here...",
                 MuscleGroup.BACK,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 LUNGES,
                 "Add notes here...",
                 MuscleGroup.QUADS,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 BICEPS_CURL,
                 "Add notes here...",
                 MuscleGroup.BICEPS,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 SKULLCRUSHERS,
                 "Add notes here...",
                 MuscleGroup.TRICEPS,
+                ""
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 NECK_CURL,
                 "Add notes here...",
                 MuscleGroup.NECK,
+                ""
             )
         )
     }

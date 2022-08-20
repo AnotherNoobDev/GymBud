@@ -90,7 +90,7 @@ class ExerciseDetailView: ItemView {
         )
 
         val transaction = fragmentManager.beginTransaction()
-        transaction.add(R.id.youtubePlayer, youTubePlayerFragment).commit()
+        transaction.add(R.id.youtubePlayerPlaceholder, youTubePlayerFragment).commit()
     }
 
 
@@ -108,9 +108,16 @@ class ExerciseDetailView: ItemView {
         targetMuscleBinding.text.text = item.targetMuscle.toString()
         notesBinding.text.text = item.notes
 
-        videoId = "eIq5CB9JfKE" // todo retrieve from Exercise DB
+        if (item.videoTutorial != "") {
+            youtubePlayerBinding.noVideoText.visibility = View.GONE
+            youtubePlayerBinding.youtubePlayerPlaceholder.visibility = View.VISIBLE
 
-        prepareYoutubePlayer()
+            videoId = item.videoTutorial
+            prepareYoutubePlayer()
+        } else {
+            youtubePlayerBinding.noVideoText.visibility = View.VISIBLE
+            youtubePlayerBinding.youtubePlayerPlaceholder.visibility = View.GONE
+        }
     }
 
 

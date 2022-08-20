@@ -116,7 +116,8 @@ class ItemRepository(
             ItemIdentifierGenerator.generateId(),
             content.name,
             content.targetMuscle,
-            content.description
+            content.description,
+            content.videoTutorial
         )
     }
 
@@ -192,7 +193,8 @@ class ItemRepository(
             id,
             content.name,
             content.targetMuscle,
-            content.description
+            content.description,
+            content.videoTutorial
         )
     }
 

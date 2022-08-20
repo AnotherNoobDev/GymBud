@@ -15,6 +15,7 @@ import com.example.gymbud.databinding.LayoutEditDropdownFieldBinding
 import com.example.gymbud.databinding.LayoutEditTextFieldBinding
 import com.example.gymbud.model.*
 import com.example.gymbud.ui.viewmodel.ItemViewModel
+import com.example.gymbud.utility.YoutubeHelper
 
 
 private const val TAG = "ExerciseEV"
@@ -35,35 +36,45 @@ class ExerciseEditView(
     private var _notesBinding: LayoutEditTextFieldBinding? = null
     private val notesBinding get() = _notesBinding!!
 
+    private var _videoTutorialBinding: LayoutEditTextFieldBinding? = null
+    private val videoTutorialBinding get() = _videoTutorialBinding!!
+
+
     override fun inflate(inflater: LayoutInflater): List<View> {
         _titleBinding = LayoutDetailNameBinding.inflate(inflater)
-        _nameBinding = LayoutEditTextFieldBinding.inflate(inflater)
-        _targetMuscleBinding = LayoutEditDropdownFieldBinding.inflate(inflater)
-        _notesBinding = LayoutEditTextFieldBinding.inflate(inflater)
 
+        _nameBinding = LayoutEditTextFieldBinding.inflate(inflater)
         nameBinding.label.hint = context.getString(R.string.item_name)
         nameBinding.input.setOnClickListener {
             nameBinding.label.error = null
         }
 
+        _targetMuscleBinding = LayoutEditDropdownFieldBinding.inflate(inflater)
         targetMuscleBinding.label.setStartIconDrawable(R.drawable.ic_target_muscle_24)
-
-        notesBinding.label.setStartIconDrawable(R.drawable.ic_notes_24)
-        notesBinding.label.hint = context.getString(R.string.item_notes)
-        notesBinding.input.inputType = InputType.TYPE_CLASS_TEXT.or(InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-
         targetMuscleBinding.label.hint = context.getString(R.string.target_muscle)
 
         val muscleGroups = MuscleGroup.values()
         val targetMuscleAdapter = ArrayAdapter(context, R.layout.dropdown_list_item, muscleGroups)
         targetMuscleBinding.input.setAdapter(targetMuscleAdapter)
 
+        _notesBinding = LayoutEditTextFieldBinding.inflate(inflater)
+        notesBinding.label.setStartIconDrawable(R.drawable.ic_notes_24)
+        notesBinding.label.hint = context.getString(R.string.item_notes)
+        notesBinding.input.inputType = InputType.TYPE_CLASS_TEXT.or(InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+
+        _videoTutorialBinding = LayoutEditTextFieldBinding.inflate(inflater)
+        videoTutorialBinding.label.setStartIconDrawable(R.drawable.ic_video_player_24)
+        videoTutorialBinding.label.hint = context.getString(R.string.item_video_tutorial)
+        videoTutorialBinding.input.setOnClickListener {
+            videoTutorialBinding.label.error = null
+        }
 
         return listOf(
             titleBinding.root,
             nameBinding.root,
             targetMuscleBinding.root,
-            notesBinding.root
+            notesBinding.root,
+            videoTutorialBinding.root
         )
     }
 
@@ -86,6 +97,7 @@ class ExerciseEditView(
         nameBinding.input.setText(item.name,  TextView.BufferType.SPANNABLE)
         targetMuscleBinding.input.setText(item.targetMuscle.toString(), false)
         notesBinding.input.setText(item.notes, TextView.BufferType.SPANNABLE)
+        videoTutorialBinding.input.setText(YoutubeHelper.videoIdToURL(item.videoTutorial),TextView.BufferType.SPANNABLE)
     }
 
 
@@ -96,24 +108,43 @@ class ExerciseEditView(
 
 
     override fun getContent(): ItemContent? {
-        if (!validateInput()) {
+        if (!validateName()) {
             return null
         }
+
+        val videoId = validateAndRetrieveVideoIdFromURL(videoTutorialBinding.input.text.toString())
+            ?: return null
 
         return ExerciseContent(
             nameBinding.input.text.toString(),
             notesBinding.input.text.toString(),
-            MuscleGroup.valueOf(targetMuscleBinding.input.text.toString())
+            MuscleGroup.valueOf(targetMuscleBinding.input.text.toString()),
+            videoId
         )
     }
 
 
-    private fun validateInput(): Boolean {
+    private fun validateName(): Boolean {
         if (nameBinding.input.text.isNullOrEmpty()) {
             nameBinding.label.error = context.getString(R.string.item_name_err)
             return false
         }
 
         return true
+    }
+
+
+    private fun validateAndRetrieveVideoIdFromURL(url: String): String? {
+        if (url == "") {
+            return ""
+        }
+
+        val videoId = YoutubeHelper.getVideoIdFromURL(url)
+
+        if (videoId == null) {
+            videoTutorialBinding.label.error = "Failed to interpret as YouTube link."
+        }
+
+        return videoId
     }
 }
