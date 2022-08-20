@@ -3,6 +3,7 @@ package com.example.gymbud.ui.viewbuilder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.gymbud.R
 import com.example.gymbud.databinding.LayoutDetailNameBinding
@@ -31,6 +32,10 @@ class RestPeriodDetailView: ItemView {
             nameBinding.root,
             targetRestRangeBinding.root
         )
+    }
+
+
+    override fun performTransactions(fragmentManager: FragmentManager) {
     }
 
 

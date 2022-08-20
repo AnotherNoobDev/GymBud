@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.gymbud.R
 import com.example.gymbud.databinding.LayoutEditRangeSliderBinding
@@ -44,6 +45,10 @@ class RestPeriodEditView(
             nameBinding.root,
             restRangeBinding.root
         )
+    }
+
+
+    override fun performTransactions(fragmentManager: FragmentManager) {
     }
 
 

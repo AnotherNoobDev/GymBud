@@ -3,12 +3,18 @@ package com.example.gymbud.ui.viewbuilder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
+import com.example.gymbud.AppConfig
 import com.example.gymbud.R
 import com.example.gymbud.databinding.*
 import com.example.gymbud.model.Exercise
 import com.example.gymbud.model.Item
 import com.example.gymbud.ui.viewmodel.ItemViewModel
+import com.google.android.youtube.player.YouTubeInitializationResult
+import com.google.android.youtube.player.YouTubePlayer
+import com.google.android.youtube.player.YouTubePlayerSupportFragmentX
+
 
 private const val TAG = "ExerciseDV"
 
@@ -23,25 +29,70 @@ class ExerciseDetailView: ItemView {
     private var _notesBinding: LayoutDetailTextFieldBinding? = null
     private val notesBinding get() = _notesBinding!!
 
+    private var _youtubePlayerBinding: LayoutYoutubePlayerBinding? = null
+    private val youtubePlayerBinding get() = _youtubePlayerBinding!!
+
+    private var youtubePlayer: YouTubePlayer? = null
+    private var videoId: String? = null
+
 
     override fun inflate(inflater: LayoutInflater): List<View> {
         _nameBinding = LayoutDetailNameBinding.inflate(inflater)
-        _targetMuscleBinding = LayoutDetailTextFieldBinding.inflate(inflater)
-        _notesBinding = LayoutDetailTextFieldBinding.inflate(inflater)
 
+        _targetMuscleBinding = LayoutDetailTextFieldBinding.inflate(inflater)
         targetMuscleBinding.icon.setImageResource(R.drawable.ic_target_muscle_24)
+
+        val divider1 = LayoutDetailDividerBinding.inflate(inflater).root
+
+        _notesBinding = LayoutDetailTextFieldBinding.inflate(inflater)
         notesBinding.icon.setImageResource(R.drawable.ic_notes_24)
         notesBinding.text.isSingleLine = false
 
-        val divider1 = LayoutDetailDividerBinding.inflate(inflater).root
+        val divider2 = LayoutDetailDividerBinding.inflate(inflater).root
+
+        _youtubePlayerBinding = LayoutYoutubePlayerBinding.inflate(inflater)
+
 
         return listOf(
             nameBinding.root,
             targetMuscleBinding.root,
             divider1,
-            notesBinding.root
+            notesBinding.root,
+            divider2,
+            youtubePlayerBinding.root
         )
     }
+
+
+    override fun performTransactions(fragmentManager: FragmentManager) {
+        val youTubePlayerFragment = YouTubePlayerSupportFragmentX.newInstance()
+
+        youTubePlayerFragment.initialize(
+            AppConfig.youtubeApiKey,
+            object : YouTubePlayer.OnInitializedListener {
+
+                override fun onInitializationSuccess(
+                    provider: YouTubePlayer.Provider,
+                    player: YouTubePlayer, b: Boolean
+                ) {
+                    youtubePlayer = player
+
+                    prepareYoutubePlayer()
+                }
+
+                override fun onInitializationFailure(
+                    provider: YouTubePlayer.Provider,
+                    youTubeInitializationResult: YouTubeInitializationResult
+                ) {
+                    Log.e(TAG, "Failed to initialize YoutubePlayer")
+                }
+            }
+        )
+
+        val transaction = fragmentManager.beginTransaction()
+        transaction.add(R.id.youtubePlayer, youTubePlayerFragment).commit()
+    }
+
 
     override fun populate(
         lifecycle: LifecycleCoroutineScope,
@@ -56,5 +107,18 @@ class ExerciseDetailView: ItemView {
         nameBinding.name.text = item.name
         targetMuscleBinding.text.text = item.targetMuscle.toString()
         notesBinding.text.text = item.notes
+
+        videoId = "eIq5CB9JfKE" // todo retrieve from Exercise DB
+
+        prepareYoutubePlayer()
+    }
+
+
+    private fun prepareYoutubePlayer() {
+        if (youtubePlayer == null || videoId == null) {
+            return
+        }
+
+        youtubePlayer!!.cueVideo(videoId!!)
     }
 }

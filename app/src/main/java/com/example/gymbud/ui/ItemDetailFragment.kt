@@ -52,8 +52,11 @@ class ItemDetailFragment : Fragment() {
             binding.detailLayout.addView(it)
         }
 
+        itemView.performTransactions(childFragmentManager)
+
         return binding.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

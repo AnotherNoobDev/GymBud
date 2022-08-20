@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.gymbud.databinding.FragmentItemListBinding
 import com.example.gymbud.databinding.LayoutDetailDividerBinding
@@ -54,6 +55,10 @@ class WorkoutTemplateDetailView(
             divider1,
             setListBinding.root
         )
+    }
+
+
+    override fun performTransactions(fragmentManager: FragmentManager) {
     }
 
 

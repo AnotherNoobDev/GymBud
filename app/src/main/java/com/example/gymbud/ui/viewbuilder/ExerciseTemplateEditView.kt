@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.gymbud.R
 import com.example.gymbud.databinding.LayoutEditDropdownFieldBinding
@@ -51,6 +52,10 @@ class ExerciseTemplateEditView(
             exerciseBinding.root,
             repRangeBinding.root
         )
+    }
+
+
+    override fun performTransactions(fragmentManager: FragmentManager) {
     }
 
 

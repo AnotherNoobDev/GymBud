@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.gymbud.R
 import com.example.gymbud.databinding.*
@@ -212,6 +213,10 @@ class WorkoutTemplateEditView(
             ItemType.SET_TEMPLATE -> intensityBinding.root.visibility = View.VISIBLE
             else -> intensityBinding.root.visibility = View.GONE
         }
+    }
+
+
+    override fun performTransactions(fragmentManager: FragmentManager) {
     }
 
 

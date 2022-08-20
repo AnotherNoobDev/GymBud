@@ -54,6 +54,8 @@ class ItemEditFragment : Fragment() {
             binding.editFieldsLayout.addView(it)
         }
 
+        itemView.performTransactions(childFragmentManager)
+
         return binding.root
     }
 

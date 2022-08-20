@@ -2,6 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.gymbud">
 
+    <!-- YOUTUBE PLAYER -->
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
+    <queries>
+        <intent>
+            <action android:name="com.google.android.youtube.api.service.START" />
+        </intent>
+    </queries>
+    <!-- YOUTUBE PLAYER -->
+
     <application
         android:name = ".BaseApplication"
         android:allowBackup="true"
