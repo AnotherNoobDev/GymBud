@@ -77,6 +77,9 @@ class ExerciseDetailView: ItemView {
                 ) {
                     youtubePlayer = player
 
+                    // todo allow fullscreen after we are capable of handling orientation changes
+                    youtubePlayer!!.setShowFullscreenButton(false)
+
                     prepareYoutubePlayer()
                 }
 
