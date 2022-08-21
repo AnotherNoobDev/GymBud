@@ -8,10 +8,13 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.gymbud.R
+import com.example.gymbud.databinding.LayoutDetailNameBinding
 import com.example.gymbud.databinding.LayoutEditRangeSliderBinding
 import com.example.gymbud.databinding.LayoutEditTextFieldBinding
 import com.example.gymbud.model.*
 import com.example.gymbud.ui.viewmodel.ItemViewModel
+import com.example.gymbud.utility.TimeFormatter
+import kotlin.math.roundToLong
 
 
 private const val TAG = "RestPeriodEV"
@@ -20,6 +23,9 @@ private const val TAG = "RestPeriodEV"
 class RestPeriodEditView(
     private val context: Context
 ): EditItemView {
+    private var _titleBinding: LayoutDetailNameBinding? = null
+    private val titleBinding get() = _titleBinding!!
+
     private var _nameBinding: LayoutEditTextFieldBinding? = null
     private val nameBinding get() = _nameBinding!!
 
@@ -28,20 +34,27 @@ class RestPeriodEditView(
 
 
     override fun inflate(inflater: LayoutInflater): List<View> {
-        _nameBinding = LayoutEditTextFieldBinding.inflate(inflater)
-        _restRangeBinding = LayoutEditRangeSliderBinding.inflate(inflater)
+        _titleBinding = LayoutDetailNameBinding.inflate(inflater)
 
+        _nameBinding = LayoutEditTextFieldBinding.inflate(inflater)
         nameBinding.label.hint = context.getString(R.string.item_name)
         nameBinding.input.setOnClickListener {
             nameBinding.label.error = null
         }
 
-
-        restRangeBinding.label.text = "Rest (in seconds)"
+        _restRangeBinding = LayoutEditRangeSliderBinding.inflate(inflater)
+        restRangeBinding.label.text = "Rest (mm:ss)"
         restRangeBinding.input.valueFrom = 0.0f
         restRangeBinding.input.valueTo = 60.0f * 10 // longer than 10 minutes doesn't make sense, or?
+        restRangeBinding.input.values = mutableListOf(
+            60.0f,
+            120.0f
+        )
+        restRangeBinding.input.stepSize = 10.0f
+        restRangeBinding.input.setLabelFormatter { TimeFormatter.getFormattedTimeMMSS(it.roundToLong()) }
 
         return listOf(
+            titleBinding.root,
             nameBinding.root,
             restRangeBinding.root
         )
@@ -62,6 +75,7 @@ class RestPeriodEditView(
             return
         }
 
+        titleBinding.name.text="Modify Rest Period"
         nameBinding.input.setText(item.name,  TextView.BufferType.SPANNABLE)
         restRangeBinding.input.values = mutableListOf(
             item.targetRestPeriodSec.first.toFloat(),
@@ -71,6 +85,7 @@ class RestPeriodEditView(
 
 
     override fun populateForNewItem(lifecycle: LifecycleCoroutineScope, viewModel: ItemViewModel) {
+        titleBinding.name.text="Add Rest Period"
         restRangeBinding.input.values = mutableListOf(60.0f, 120.0f)
     }
 

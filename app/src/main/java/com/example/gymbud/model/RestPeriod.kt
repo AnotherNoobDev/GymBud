@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.gymbud.data.ItemIdentifierGenerator
+import com.example.gymbud.utility.TimeFormatter
 
 @Entity(tableName = "rest_period")
 data class RestPeriod(
@@ -14,9 +15,9 @@ data class RestPeriod(
 
     fun getTargetRestPeriodAsString(): String {
         return if (targetRestPeriodSec.first == targetRestPeriodSec.last) {
-            targetRestPeriodSec.first.toString() + " sec"
+            TimeFormatter.getFormattedTimeMMSS(targetRestPeriodSec.first.toLong())
         } else {
-            "$targetRestPeriodSec sec"
+            "${TimeFormatter.getFormattedTimeMMSS(targetRestPeriodSec.first.toLong())} .. ${TimeFormatter.getFormattedTimeMMSS(targetRestPeriodSec.last.toLong())}"
         }
     }
 
