@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.gymbud.R
+import com.example.gymbud.databinding.LayoutDetailNameBinding
 import com.example.gymbud.databinding.LayoutEditDropdownFieldBinding
 import com.example.gymbud.databinding.LayoutEditRangeSliderBinding
 import com.example.gymbud.databinding.LayoutEditTextFieldBinding
@@ -23,6 +24,9 @@ class ExerciseTemplateEditView(
     private val context: Context
 ): EditItemView {
 
+    private var _titleBinding: LayoutDetailNameBinding? = null
+    private val titleBinding get() = _titleBinding!!
+
     private var _nameBinding: LayoutEditTextFieldBinding? = null
     private val nameBinding get() = _nameBinding!!
 
@@ -35,19 +39,22 @@ class ExerciseTemplateEditView(
     private var exercises: List<Item>? = null
 
     override fun inflate(inflater: LayoutInflater): List<View> {
-        _nameBinding = LayoutEditTextFieldBinding.inflate(inflater)
-        _exerciseBinding = LayoutEditDropdownFieldBinding.inflate(inflater)
-        _repRangeBinding = LayoutEditRangeSliderBinding.inflate(inflater)
+        _titleBinding = LayoutDetailNameBinding.inflate(inflater)
 
+        _nameBinding = LayoutEditTextFieldBinding.inflate(inflater)
         nameBinding.label.hint = context.getString(R.string.item_name)
         nameBinding.input.setOnClickListener {
             nameBinding.label.error = null
         }
 
+        _exerciseBinding = LayoutEditDropdownFieldBinding.inflate(inflater)
         exerciseBinding.label.setStartIconDrawable(R.drawable.ic_equipment_24)
         exerciseBinding.label.hint = context.getString(R.string.exercise)
 
+        _repRangeBinding = LayoutEditRangeSliderBinding.inflate(inflater)
+
         return listOf(
+            titleBinding.root,
             nameBinding.root,
             exerciseBinding.root,
             repRangeBinding.root
@@ -69,10 +76,11 @@ class ExerciseTemplateEditView(
             return
         }
 
+        titleBinding.name.text="Modify Exercise Template"
         nameBinding.input.setText(item.name,  TextView.BufferType.SPANNABLE)
         exerciseBinding.input.setText(item.exercise.name, false)
         exerciseBinding.input.isEnabled = false
-        repRangeBinding.input.values = mutableListOf<Float>(
+        repRangeBinding.input.values = mutableListOf(
             item.targetRepRange.first.toFloat(),
             item.targetRepRange.last.toFloat(),
         )
@@ -80,6 +88,8 @@ class ExerciseTemplateEditView(
 
 
     override fun populateForNewItem(lifecycle: LifecycleCoroutineScope, viewModel: ItemViewModel) {
+        titleBinding.name.text="Add Exercise Template"
+
         lifecycle.launch {
             viewModel.getItemsByType(ItemType.EXERCISE).collect {
                 exercises = it
