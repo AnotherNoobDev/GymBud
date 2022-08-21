@@ -30,13 +30,15 @@ class ExerciseTemplateDetailView(
 
     override fun inflate(inflater: LayoutInflater): List<View> {
         _nameBinding = LayoutDetailNameBinding.inflate(inflater)
-        _exerciseBinding = LayoutDetailTextFieldBinding.inflate(inflater)
-        _targetRepRangeBinding = LayoutDetailTextFieldBinding.inflate(inflater)
 
+        _exerciseBinding = LayoutDetailTextFieldBinding.inflate(inflater)
         exerciseBinding.icon.setImageResource(R.drawable.ic_equipment_24)
-        targetRepRangeBinding.icon.setImageResource(R.drawable.ic_range_24)
+        exerciseBinding.iconNavigateTo.visibility = View.VISIBLE
 
         val divider1 = LayoutDetailDividerBinding.inflate(inflater).root
+
+        _targetRepRangeBinding = LayoutDetailTextFieldBinding.inflate(inflater)
+        targetRepRangeBinding.icon.setImageResource(R.drawable.ic_range_24)
 
         return listOf(
             nameBinding.root,
@@ -66,14 +68,12 @@ class ExerciseTemplateDetailView(
 
 
     fun populate(item: ExerciseTemplate) {
-
-
         exerciseTemplate = item
 
         nameBinding.name.text = item.name
 
         exerciseBinding.text.text = item.exercise.name
-        exerciseBinding.text.setOnClickListener {
+        exerciseBinding.container.setOnClickListener {
             onDetailsCallback?.let { it1 -> it1(exerciseTemplate!!.exercise.id, ItemType.EXERCISE) }
         }
 

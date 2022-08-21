@@ -3,7 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:clickable="true"
+    android:id="@+id/container">
 
     <ImageView
         android:id="@+id/icon"
@@ -21,5 +24,18 @@
         android:paddingTop="16dp"
         android:textAppearance="?attr/textAppearanceBody2"
         tools:text="Text" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ImageView
+        android:id="@+id/icon_navigate_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone"
+        android:src="@drawable/ic_next_24" />
 
 </LinearLayout>
