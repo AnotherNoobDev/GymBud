@@ -9,6 +9,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.gymbud.R
 import com.example.gymbud.databinding.*
 import com.example.gymbud.model.*
@@ -46,6 +47,8 @@ class SetTemplateEditView(
     // the exercises(+rest periods) in the set
     private var setTemplateEditableItems: MutableList<Item> = mutableListOf()
     private val exerciseListAdapter = SetTemplateRecyclerViewAdapter(Functionality.Edit)
+    private val exerciseListDragDrop by lazy { ItemTouchHelper(RecyclerViewDragDrop()) }
+
 
     // available exercise templates to chose from
     private var exerciseTemplates: List<Item>? = null
@@ -111,6 +114,8 @@ class SetTemplateEditView(
 
         exerciseListBinding.addItemFab.isVisible  = false
         exerciseListBinding.recyclerView.adapter = exerciseListAdapter
+
+        exerciseListDragDrop.attachToRecyclerView(exerciseListBinding.recyclerView)
 
         return exerciseListBinding.root
     }
