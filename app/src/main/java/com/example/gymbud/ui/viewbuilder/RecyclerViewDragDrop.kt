@@ -4,6 +4,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
 
+interface RecyclerViewAdapterWithDragDrop {
+    fun moveItem(from: Int, to: Int)
+}
+
+
 class RecyclerViewDragDrop:
     ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END, 0) {
     override fun onMove(
@@ -12,10 +17,12 @@ class RecyclerViewDragDrop:
         target: RecyclerView.ViewHolder
     ): Boolean {
         val adapter = recyclerView.adapter
-        val from = viewHolder.bindingAdapterPosition
-        val to = target.bindingAdapterPosition
-        //adapter.moveItem(from, to)
-        adapter?.notifyItemMoved(from, to)
+        val from = viewHolder.absoluteAdapterPosition
+        val to = target.absoluteAdapterPosition
+
+        if (adapter is RecyclerViewAdapterWithDragDrop) {
+            adapter.moveItem(from, to)
+        }
 
         return true
     }

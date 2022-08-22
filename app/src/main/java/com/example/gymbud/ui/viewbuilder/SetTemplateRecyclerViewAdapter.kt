@@ -18,7 +18,7 @@ import com.google.android.material.button.MaterialButton
 
 class SetTemplateRecyclerViewAdapter(
     private val functionality: Functionality
-) : ListAdapter<Item, SetTemplateRecyclerViewAdapter.ViewHolder>(DiffCallback){
+) : ListAdapter<Item, SetTemplateRecyclerViewAdapter.ViewHolder>(DiffCallback), RecyclerViewAdapterWithDragDrop {
 
     private var onItemClicked: ((Item, Int) -> Unit)? = null
     fun setOnItemClickedCallback(callback: (Item, Int) -> Unit) {
@@ -176,5 +176,14 @@ class SetTemplateRecyclerViewAdapter(
         holder.setOnViewHolderClickedCallback { absPosition ->
             onItemClicked?.let { it(item, absPosition) }
         }
+    }
+
+
+    override fun moveItem(from: Int, to: Int) {
+        val newList = currentList.toMutableList()
+        val item = newList.removeAt(from)
+        newList.add(to, item)
+
+        submitList(newList)
     }
 }

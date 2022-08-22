@@ -45,7 +45,6 @@ class SetTemplateEditView(
     private var addingItemOfType = ItemType.EXERCISE_TEMPLATE
 
     // the exercises(+rest periods) in the set
-    private var setTemplateEditableItems: MutableList<Item> = mutableListOf()
     private val exerciseListAdapter = SetTemplateRecyclerViewAdapter(Functionality.Edit)
     private val exerciseListDragDrop by lazy { ItemTouchHelper(RecyclerViewDragDrop()) }
 
@@ -60,10 +59,11 @@ class SetTemplateEditView(
 
     init {
         exerciseListAdapter.setOnItemClickedCallback { item, position ->
-            assert(exerciseListAdapter.currentList.size == setTemplateEditableItems.size)
-            val removed = setTemplateEditableItems.removeAt(position)
-            assert(item.id == removed.id)
-            exerciseListAdapter.submitList(setTemplateEditableItems.toList())
+            val newList = exerciseListAdapter.currentList.toMutableList()
+            val removed = newList.removeAt(position)
+            assert(removed.id == item.id)
+
+            exerciseListAdapter.submitList(newList)
         }
 
         addExerciseTemplateButton.setIconResource(R.drawable.ic_add_24)
@@ -141,6 +141,8 @@ class SetTemplateEditView(
             confirmBtn.text = context.getString(R.string.bnt_add)
 
             confirmBtn.setOnClickListener {
+                nameBinding.label.error = null
+
                 setAddItemSectionVisibility(false)
 
                 val name = itemSelectionBinding.input.text.toString()
@@ -160,8 +162,9 @@ class SetTemplateEditView(
                     return@setOnClickListener
                 }
 
-                setTemplateEditableItems.add(item)
-                exerciseListAdapter.submitList(setTemplateEditableItems.toList())
+                val newList = exerciseListAdapter.currentList.toMutableList()
+                newList.add(item)
+                exerciseListAdapter.submitList(newList)
             }
 
             cancelBtn.text = context.getString(R.string.btn_cancel)
@@ -215,8 +218,7 @@ class SetTemplateEditView(
 
     override fun populateForNewItem(lifecycle: LifecycleCoroutineScope, viewModel: ItemViewModel) {
         titleBinding.name.text = "Add Set Template"
-        setTemplateEditableItems = mutableListOf()
-        exerciseListAdapter.submitList(setTemplateEditableItems.toList())
+        exerciseListAdapter.submitList(mutableListOf())
 
         populateItemsThatCanBeAdded(lifecycle, viewModel)
     }
@@ -235,8 +237,7 @@ class SetTemplateEditView(
 
         nameBinding.input.setText(item.name)
 
-        setTemplateEditableItems = item.items.toMutableList()
-        exerciseListAdapter.submitList(setTemplateEditableItems.toList())
+        exerciseListAdapter.submitList(item.items.toMutableList())
 
         populateItemsThatCanBeAdded(lifecycle, viewModel)
     }
@@ -277,7 +278,7 @@ class SetTemplateEditView(
         }
 
         val name = nameBinding.input.text.toString()
-        val setItems = setTemplateEditableItems.toList()
+        val setItems = exerciseListAdapter.currentList.toList()
 
         return SetTemplateContent(
             name,
@@ -291,7 +292,7 @@ class SetTemplateEditView(
             return false
         }
 
-        if (setTemplateEditableItems.size == 0) {
+        if (exerciseListAdapter.currentList.size == 0) {
             nameBinding.label.error = "Set needs at least one item"
             return false
         }
