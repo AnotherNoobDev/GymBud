@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -119,15 +118,8 @@ class WorkoutTemplateEditView(
         _addItemBinding = FragmentItemEditBinding.inflate(inflater)
 
         addItemBinding.apply {
-            // move buttons closer
-            val constraintSet = ConstraintSet()
-            constraintSet.clone(layout)
-            constraintSet.connect(buttonsLayout.id, ConstraintSet.TOP, editFieldsLayout.id, ConstraintSet.BOTTOM)
-            constraintSet.applyTo(layout)
-
             editFieldsLayout.addView(itemSelectionBinding.root)
             editFieldsLayout.addView(intensityBinding.root)
-
 
             confirmBtn.text = context.getString(R.string.bnt_add)
 

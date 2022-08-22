@@ -5,7 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
-import androidx.constraintlayout.widget.ConstraintSet
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -81,7 +81,7 @@ class SetTemplateEditView(
 
 
     override fun inflate(inflater: LayoutInflater): List<View> {
-        return listOf(
+        val views = listOf(
             inflateTitle(inflater),
             inflateName(inflater),
             inflateExerciseList(inflater),
@@ -89,14 +89,21 @@ class SetTemplateEditView(
             inflateAddItem(inflater),
             addExerciseTemplateButton,
             addRestPeriodButton,
+            LayoutDetailDividerBinding.inflate(inflater).root
         )
+
+        setupLayoutParams(views)
+
+        return views
     }
+
 
     private fun inflateTitle(inflater: LayoutInflater): View {
         _titleBinding = LayoutDetailNameBinding.inflate(inflater)
 
         return titleBinding.root
     }
+
 
     private fun inflateName(inflater: LayoutInflater): View {
         _nameBinding = LayoutEditTextFieldBinding.inflate(inflater)
@@ -109,6 +116,7 @@ class SetTemplateEditView(
         return nameBinding.root
     }
 
+
     private fun inflateExerciseList(inflater: LayoutInflater): View {
         _exerciseListBinding = FragmentItemListBinding.inflate(inflater)
 
@@ -120,6 +128,7 @@ class SetTemplateEditView(
         return exerciseListBinding.root
     }
 
+
     private fun inflateAddItem(inflater: LayoutInflater): View {
         _itemSelectionBinding = LayoutEditDropdownFieldBinding.inflate(inflater)
 
@@ -130,13 +139,15 @@ class SetTemplateEditView(
         _addItemBinding = FragmentItemEditBinding.inflate(inflater)
 
         addItemBinding.apply {
-            // move buttons closer
-            val constraintSet = ConstraintSet()
-            constraintSet.clone(layout)
-            constraintSet.connect(buttonsLayout.id, ConstraintSet.TOP, editFieldsLayout.id, ConstraintSet.BOTTOM)
-            constraintSet.applyTo(layout)
+            layout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
             editFieldsLayout.addView(itemSelectionBinding.root)
+
+            editFieldsLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.0f)
+
+            val newButtonsLayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.0f)
+            newButtonsLayoutParams.setMargins(0, 0, 0, 0)
+            buttonsLayout.layoutParams = newButtonsLayoutParams
 
             confirmBtn.text = context.getString(R.string.bnt_add)
 
@@ -164,7 +175,10 @@ class SetTemplateEditView(
 
                 val newList = exerciseListAdapter.currentList.toMutableList()
                 newList.add(item)
-                exerciseListAdapter.submitList(newList)
+                exerciseListAdapter.submitList(newList) {
+                    // make sure last item added is in view
+                    exerciseListBinding.recyclerView.scrollToPosition(exerciseListAdapter.itemCount - 1)
+                }
             }
 
             cancelBtn.text = context.getString(R.string.btn_cancel)
@@ -204,11 +218,47 @@ class SetTemplateEditView(
         itemSelectionBinding.input.setText(restPeriods?.get(0)?.name ?: "", false) // todo all these ? look kinda funky xd
     }
 
-    private fun setAddItemSectionVisibility(visible: Boolean) {
-        addItemBinding.root.isVisible = visible
-        addExerciseTemplateButton.isVisible = !visible
-        addRestPeriodButton.isVisible = !visible
 
+    private fun setAddItemSectionVisibility(visible: Boolean) {
+        addItemBinding.root.visibility = if (visible) View.VISIBLE else View.GONE
+        addExerciseTemplateButton.visibility = if (visible) View.GONE else View.VISIBLE
+        addRestPeriodButton.visibility = if (visible) View.GONE else View.VISIBLE
+    }
+
+
+    private fun setupLayoutParams(views: List<View>) {
+        // TODO this also overwrites margins, etc .. doesn't matter now but might cause bugs later.. can we do better?
+        views.forEach {
+            val params = it.layoutParams
+            if (params == null) {
+                it.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.0f)
+            } else {
+                it.layoutParams = LinearLayout.LayoutParams(params.width, params.height, 0.0f)
+            }
+
+        }
+
+        //  dirty hardcoded values to get section sizes to match...
+        addExerciseTemplateButton.layoutParams = run {
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            layoutParams.setMargins(0, 55, 0, 55)
+            layoutParams
+        }
+
+        addRestPeriodButton.layoutParams = run {
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            layoutParams.setMargins(0, 0, 0, 55)
+            layoutParams
+        }
+
+        val params = exerciseListBinding.root.layoutParams
+        exerciseListBinding.root.layoutParams = LinearLayout.LayoutParams(params.width, params.height, 1.0f)
     }
 
 
@@ -222,6 +272,7 @@ class SetTemplateEditView(
 
         populateItemsThatCanBeAdded(lifecycle, viewModel)
     }
+
 
     override fun populate(
         lifecycle: LifecycleCoroutineScope,
@@ -241,6 +292,7 @@ class SetTemplateEditView(
 
         populateItemsThatCanBeAdded(lifecycle, viewModel)
     }
+
 
     private fun populateItemsThatCanBeAdded(
         lifecycle: LifecycleCoroutineScope,
@@ -285,6 +337,7 @@ class SetTemplateEditView(
             setItems
         )
     }
+
 
     private fun validateInput(): Boolean {
         if (nameBinding.input.text.isNullOrEmpty()) {
