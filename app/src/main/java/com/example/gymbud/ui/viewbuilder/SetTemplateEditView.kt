@@ -23,6 +23,8 @@ private const val TAG = "SetTemplateEV"
 class SetTemplateEditView(
     private val context: Context
 ): EditItemView {
+    private var _titleBinding: LayoutDetailNameBinding? = null
+    private val titleBinding get() = _titleBinding!!
 
     private var _nameBinding: LayoutEditTextFieldBinding? = null
     private val nameBinding get() = _nameBinding!!
@@ -54,10 +56,11 @@ class SetTemplateEditView(
     private var restPeriodsSelectionAdapter: ArrayAdapter<String> = ArrayAdapter(context, R.layout.dropdown_list_item, listOf())
 
     init {
-        exerciseListAdapter.setOnItemClickedCallback { item ->
-            if(setTemplateEditableItems.remove(item)) {
-                exerciseListAdapter.submitList(setTemplateEditableItems.toList())
-            }
+        exerciseListAdapter.setOnItemClickedCallback { item, position ->
+            assert(exerciseListAdapter.currentList.size == setTemplateEditableItems.size)
+            val removed = setTemplateEditableItems.removeAt(position)
+            assert(item.id == removed.id)
+            exerciseListAdapter.submitList(setTemplateEditableItems.toList())
         }
 
         addExerciseTemplateButton.setIconResource(R.drawable.ic_add_24)
@@ -76,6 +79,7 @@ class SetTemplateEditView(
 
     override fun inflate(inflater: LayoutInflater): List<View> {
         return listOf(
+            inflateTitle(inflater),
             inflateName(inflater),
             inflateExerciseList(inflater),
             LayoutDetailDividerBinding.inflate(inflater).root,
@@ -83,6 +87,12 @@ class SetTemplateEditView(
             addExerciseTemplateButton,
             addRestPeriodButton,
         )
+    }
+
+    private fun inflateTitle(inflater: LayoutInflater): View {
+        _titleBinding = LayoutDetailNameBinding.inflate(inflater)
+
+        return titleBinding.root
     }
 
     private fun inflateName(inflater: LayoutInflater): View {
@@ -199,6 +209,7 @@ class SetTemplateEditView(
 
 
     override fun populateForNewItem(lifecycle: LifecycleCoroutineScope, viewModel: ItemViewModel) {
+        titleBinding.name.text = "Add Set Template"
         setTemplateEditableItems = mutableListOf()
         exerciseListAdapter.submitList(setTemplateEditableItems.toList())
 
@@ -214,6 +225,8 @@ class SetTemplateEditView(
             Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not a set template!")
             return
         }
+
+        titleBinding.name.text = "Modify Set Template"
 
         nameBinding.input.setText(item.name)
 

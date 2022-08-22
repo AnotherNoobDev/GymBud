@@ -1,9 +1,9 @@
 package com.example.gymbud.ui.viewbuilder
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gymbud.model.Item
@@ -20,21 +20,21 @@ class SetTemplateRecyclerViewAdapter(
     private val functionality: Functionality
 ) : ListAdapter<Item, SetTemplateRecyclerViewAdapter.ViewHolder>(DiffCallback){
 
-    private var onItemClicked: ((Item) -> Unit)? = null
-    fun setOnItemClickedCallback(callback: (Item) -> Unit) {
+    private var onItemClicked: ((Item, Int) -> Unit)? = null
+    fun setOnItemClickedCallback(callback: (Item, Int) -> Unit) {
         onItemClicked = callback
     }
 
-    abstract inner class ViewHolder(protected val rootView: RelativeLayout, inflater: LayoutInflater) : RecyclerView.ViewHolder(rootView) {
-        protected val exerciseTemplateView = ExerciseTemplateDetailView()
-        protected val restPeriodLabelBinding = LayoutDetailTextFieldBinding.inflate(inflater)
 
-        protected var onClickedCallback: (() -> Unit)? = null
+    abstract inner class ViewHolder(protected val rootView: RelativeLayout, inflater: LayoutInflater) : RecyclerView.ViewHolder(rootView) {
+        protected val exerciseTemplateBinding = LayoutDetailTextFieldBinding.inflate(inflater)
+        protected val restPeriodBinding = LayoutDetailTextFieldBinding.inflate(inflater)
+
+        protected var onViewHolderClicked: ((Int) -> Unit)? = null
 
         init {
-            exerciseTemplateView.inflate(inflater)
-
-            restPeriodLabelBinding.icon.setImageResource(R.drawable.ic_timer_24)
+            exerciseTemplateBinding.icon.setImageResource(R.drawable.ic_equipment_24)
+            restPeriodBinding.icon.setImageResource(R.drawable.ic_timer_24)
         }
 
         fun populate(item: Item) {
@@ -51,73 +51,39 @@ class SetTemplateRecyclerViewAdapter(
 
         protected abstract fun populateForRestPeriod(restPeriod: RestPeriod)
 
-        fun setOnClickListener(onClicked: () -> Unit) {
-            onClickedCallback = onClicked
+        fun setOnViewHolderClickedCallback(onClicked: (absPosition: Int) -> Unit) {
+            onViewHolderClicked = onClicked
         }
 
         private fun clear() {
             rootView.removeAllViews()
         }
-
-
     }
+
 
     inner class DetailViewHolder(
         rootView: RelativeLayout,
         inflater: LayoutInflater
     ): ViewHolder(rootView, inflater) {
-        private val restPeriodValueBinding = LayoutDetailTextFieldBinding.inflate(inflater)
 
         init {
-            exerciseTemplateView.targetRepRangeBinding.icon.isVisible = false
-
-            restPeriodLabelBinding.text.setText(R.string.rest_period_input_label)
-
-            restPeriodValueBinding.icon.isVisible = false
+            exerciseTemplateBinding.iconNavigateTo.visibility = View.VISIBLE
         }
 
         override fun populateForExerciseTemplate(exerciseTemplate: ExerciseTemplate) {
-            rootView.addView(exerciseTemplateView.exerciseBinding.root)
-            rootView.addView(exerciseTemplateView.targetRepRangeBinding.root)
+            rootView.addView(this.exerciseTemplateBinding.root)
 
-            exerciseTemplateView.exerciseBinding.root.apply {
-                val params = layoutParams as RelativeLayout.LayoutParams
-                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-                layoutParams = params
-
-                setOnClickListener {
-                    if (onClickedCallback != null) {
-                        onClickedCallback?.let { it1 -> it1() }
-                    }
-                }
+            this.exerciseTemplateBinding.container.setOnClickListener {
+                onViewHolderClicked?.let { it1 -> it1(this.absoluteAdapterPosition) }
             }
 
-            exerciseTemplateView.targetRepRangeBinding.root.apply {
-                val params = layoutParams as RelativeLayout.LayoutParams
-                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-                layoutParams = params
-            }
-
-            exerciseTemplateView.populate(exerciseTemplate)
+            this.exerciseTemplateBinding.text.text = "${exerciseTemplate.exercise.name} (${exerciseTemplate.targetRepRange} reps)"
         }
 
         override fun populateForRestPeriod(restPeriod: RestPeriod) {
-            rootView.addView(restPeriodLabelBinding.root)
-            rootView.addView(restPeriodValueBinding.root)
+            rootView.addView(restPeriodBinding.root)
 
-            restPeriodLabelBinding.root.apply {
-                val params = layoutParams as RelativeLayout.LayoutParams
-                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-                layoutParams = params
-            }
-
-            restPeriodValueBinding.root.apply {
-                val params = layoutParams as RelativeLayout.LayoutParams
-                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-                layoutParams = params
-            }
-
-            restPeriodValueBinding.text.text = restPeriod.getTargetRestPeriodAsString()
+            restPeriodBinding.text.text = restPeriod.name
         }
     }
 
@@ -134,29 +100,23 @@ class SetTemplateRecyclerViewAdapter(
         }
 
         override fun populateForExerciseTemplate(exerciseTemplate: ExerciseTemplate) {
-            rootView.addView(exerciseTemplateView.exerciseBinding.root)
+            rootView.addView(this.exerciseTemplateBinding.root)
 
-            exerciseTemplateView.exerciseBinding.root.apply {
-                val params = layoutParams as RelativeLayout.LayoutParams
-                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-                layoutParams = params
-            }
-
-            exerciseTemplateView.populate(exerciseTemplate)
+            this.exerciseTemplateBinding.text.text = "${exerciseTemplate.exercise.name} (${exerciseTemplate.targetRepRange} reps)"
 
             populateWithRemoveButton()
         }
 
         override fun populateForRestPeriod(restPeriod: RestPeriod) {
-            rootView.addView(restPeriodLabelBinding.root)
+            rootView.addView(restPeriodBinding.root)
 
-            restPeriodLabelBinding.root.apply {
+            restPeriodBinding.root.apply {
                 val params = layoutParams as RelativeLayout.LayoutParams
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
                 layoutParams = params
             }
 
-            restPeriodLabelBinding.text.text = restPeriod.name
+            restPeriodBinding.text.text = restPeriod.name
 
             populateWithRemoveButton()
         }
@@ -171,7 +131,7 @@ class SetTemplateRecyclerViewAdapter(
             }
 
             removeItemButton.button.setOnClickListener {
-                onClickedCallback?.let { it1 -> it1() }
+                onViewHolderClicked?.let { it1 -> it1(this.absoluteAdapterPosition) }
             }
         }
     }
@@ -183,9 +143,11 @@ class SetTemplateRecyclerViewAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
-            // todo implement operator == (also for derived Item!) so that we can do oldItem == newItem
-            return oldItem.id == newItem.id &&
-                    oldItem.name == newItem.name
+            return if (oldItem is ExerciseTemplate && newItem is ExerciseTemplate && oldItem == newItem) {
+                true
+            } else {
+                oldItem is RestPeriod && newItem is RestPeriod && oldItem == newItem
+            }
         }
     }
 
@@ -211,8 +173,8 @@ class SetTemplateRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.populate(item)
-        holder.setOnClickListener {
-            onItemClicked?.let { it(item) }
+        holder.setOnViewHolderClickedCallback { absPosition ->
+            onItemClicked?.let { it(item, absPosition) }
         }
     }
 }

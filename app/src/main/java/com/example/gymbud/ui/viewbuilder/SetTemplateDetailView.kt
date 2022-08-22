@@ -28,9 +28,9 @@ class SetTemplateDetailView(
     private val exerciseListAdapter = SetTemplateRecyclerViewAdapter(Functionality.Detail)
 
     init {
-        exerciseListAdapter.setOnItemClickedCallback {
-            if (it is ExerciseTemplate) {
-                onDetailsCallback(it.id, ItemType.EXERCISE_TEMPLATE)
+        exerciseListAdapter.setOnItemClickedCallback { item, _ ->
+            if (item is ExerciseTemplate) {
+                onDetailsCallback(item.id, ItemType.EXERCISE_TEMPLATE)
             }
         }
     }
@@ -38,12 +38,12 @@ class SetTemplateDetailView(
 
     override fun inflate(inflater: LayoutInflater): List<View> {
         _nameBinding = LayoutDetailNameBinding.inflate(inflater)
-        _exerciseListBinding = FragmentItemListBinding.inflate(inflater)
-
-        exerciseListBinding.addItemFab.isVisible  = false
-        exerciseListBinding.recyclerView.adapter = exerciseListAdapter
 
         val divider1 = LayoutDetailDividerBinding.inflate(inflater).root
+
+        _exerciseListBinding = FragmentItemListBinding.inflate(inflater)
+        exerciseListBinding.addItemFab.isVisible  = false
+        exerciseListBinding.recyclerView.adapter = exerciseListAdapter
 
         return listOf(
             nameBinding.root,
