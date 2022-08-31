@@ -127,6 +127,7 @@ class SetTemplateRecyclerViewAdapter(
             removeItemButton.root.apply {
                 val params = layoutParams as RelativeLayout.LayoutParams
                 params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+                params.addRule(RelativeLayout.CENTER_VERTICAL)
                 layoutParams = params
             }
 
