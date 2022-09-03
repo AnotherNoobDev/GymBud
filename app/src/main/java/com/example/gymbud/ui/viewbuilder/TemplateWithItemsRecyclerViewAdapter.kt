@@ -242,7 +242,8 @@ class TemplateWithItemsRecyclerViewAdapter(
             }
 
             removeItemButton.button.setOnClickListener {
-                onViewHolderClicked?.let { it1 -> it1(this.absoluteAdapterPosition) }
+                currentList.removeAt(this.absoluteAdapterPosition)
+                notifyItemRemoved(this.absoluteAdapterPosition)
             }
         }
     }

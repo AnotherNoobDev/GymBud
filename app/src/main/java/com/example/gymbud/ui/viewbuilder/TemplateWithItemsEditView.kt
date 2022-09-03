@@ -67,14 +67,6 @@ class TemplateWithItemsEditView(
             templateType == ItemType.PROGRAM_TEMPLATE
         )
 
-        itemListAdapter.setOnItemClickedCallback { item, position ->
-            val newList = itemListAdapter.currentList.toMutableList()
-            val removed = newList.removeAt(position)
-            assert(removed.id == item.id)
-
-            itemListAdapter.submitList(newList)
-        }
-
         addTemplateItemButton.setIconResource(R.drawable.ic_add_24)
         addTemplateItemButton.text = templateTypeToDisplayStr(getTemplateItemType())
         addTemplateItemButton.setOnClickListener {
