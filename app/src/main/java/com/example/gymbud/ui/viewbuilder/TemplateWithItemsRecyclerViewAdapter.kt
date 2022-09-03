@@ -291,7 +291,12 @@ class TemplateWithItemsRecyclerViewAdapter(
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
-            return oldItem.id == newItem.id
+
+            return if (oldItem is TaggedItem && newItem is TaggedItem) {
+                oldItem == newItem
+            } else {
+                oldItem.id == newItem.id
+            }
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -301,7 +306,9 @@ class TemplateWithItemsRecyclerViewAdapter(
         }
 
         private fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
-            return if (oldItem is ExerciseTemplate && newItem is ExerciseTemplate && oldItem == newItem) {
+            return if (oldItem is TaggedItem && newItem is TaggedItem && oldItem == newItem) {
+                true
+            } else if (oldItem is ExerciseTemplate && newItem is ExerciseTemplate && oldItem == newItem) {
                 true
             } else if (oldItem is SetTemplate && newItem is SetTemplate && oldItem == newItem) {
                 true
@@ -309,7 +316,7 @@ class TemplateWithItemsRecyclerViewAdapter(
                 true
             } else if (oldItem is ProgramTemplate && newItem is ProgramTemplate && oldItem == newItem) {
                 true
-            }  else {
+            } else {
                 oldItem is RestPeriod && newItem is RestPeriod && oldItem == newItem
             }
         }
