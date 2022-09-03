@@ -220,10 +220,9 @@ class TemplateWithItemsEditView(
     private fun updateItemListAdapter(item: Item) {
         val newList = itemListAdapter.currentList.toMutableList()
         newList.add(item)
-        itemListAdapter.submitList(newList) {
-            // make sure last item added is in view
-            itemListBinding.recyclerView.scrollToPosition(itemListAdapter.itemCount - 1)
-        }
+        itemListAdapter.submitList(newList)
+        // make sure last item added is in view
+        itemListBinding.recyclerView.scrollToPosition(itemListAdapter.itemCount - 1)
     }
 
 

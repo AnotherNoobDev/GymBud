@@ -1,7 +1,6 @@
 package com.example.gymbud.ui.viewbuilder
 
 import android.content.Context
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -9,27 +8,32 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.ListAdapter
 import com.example.gymbud.R
 import com.example.gymbud.databinding.LayoutDetailTextFieldBinding
 import com.example.gymbud.databinding.LayoutEditListItemButtonBinding
 import com.example.gymbud.model.*
 import com.google.android.material.button.MaterialButton
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 private const val  MAX_ITEM_LENGTH_EMS = 12
 
-private const val TAG = "TemplateWithItemsRVA"
+//private const val TAG = "TemplateWithItemsRVA"
 
 
 class TemplateWithItemsRecyclerViewAdapter(
     context: Context,
     private val functionality: Functionality
-) : ListAdapter<Item, TemplateWithItemsRecyclerViewAdapter.ViewHolder>(DiffCallback), RecyclerViewAdapterWithDragDrop {
+) : RecyclerView.Adapter<TemplateWithItemsRecyclerViewAdapter.ViewHolder>(), RecyclerViewAdapterWithDragDrop {
+
+    val currentList = mutableListOf<Item>()
+    private val diffCallback = DiffCallback(currentList, ArrayList())
 
     private val colorWarmup: Int
     private val colorWorking: Int
     private val colorDefault: Int
+
 
     init {
         val theme = context.theme
@@ -218,8 +222,9 @@ class TemplateWithItemsRecyclerViewAdapter(
             rootView.addView(itemBinding.root)
 
             itemBinding.apply {
-                icon.setImageResource(R.drawable.ic_timer_24)
                 text.text = restPeriod.name
+                text.setTextColor(getColorForSetIntensity(""))
+                icon.setImageResource(R.drawable.ic_timer_24)
             }
 
             populateWithRemoveButton()
@@ -238,27 +243,6 @@ class TemplateWithItemsRecyclerViewAdapter(
 
             removeItemButton.button.setOnClickListener {
                 onViewHolderClicked?.let { it1 -> it1(this.absoluteAdapterPosition) }
-            }
-        }
-    }
-
-
-    companion object DiffCallback: DiffUtil.ItemCallback<Item>() {
-        override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
-            return if (oldItem is ExerciseTemplate && newItem is ExerciseTemplate && oldItem == newItem) {
-                true
-            } else if (oldItem is SetTemplate && newItem is SetTemplate && oldItem == newItem) {
-                true
-            } else if (oldItem is WorkoutTemplate && newItem is WorkoutTemplate && oldItem == newItem) {
-                true
-            } else if (oldItem is ProgramTemplate && newItem is ProgramTemplate && oldItem == newItem) {
-                true
-            }  else {
-                oldItem is RestPeriod && newItem is RestPeriod && oldItem == newItem
             }
         }
     }
@@ -283,7 +267,7 @@ class TemplateWithItemsRecyclerViewAdapter(
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)
+        val item = currentList[position]
         holder.populate(item)
         holder.setOnViewHolderClickedCallback { absPosition ->
             onItemClicked?.let { it(item, absPosition) }
@@ -291,34 +275,64 @@ class TemplateWithItemsRecyclerViewAdapter(
     }
 
 
+    inner class DiffCallback(
+        private val oldList: List<Item>,
+        var newList: List<Item>
+    ) : DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int {
+            return oldList.size
+        }
+
+        override fun getNewListSize(): Int {
+            return newList.size
+        }
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+            return areContentsTheSame(oldItem, newItem)
+        }
+
+        private fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
+            return if (oldItem is ExerciseTemplate && newItem is ExerciseTemplate && oldItem == newItem) {
+                true
+            } else if (oldItem is SetTemplate && newItem is SetTemplate && oldItem == newItem) {
+                true
+            } else if (oldItem is WorkoutTemplate && newItem is WorkoutTemplate && oldItem == newItem) {
+                true
+            } else if (oldItem is ProgramTemplate && newItem is ProgramTemplate && oldItem == newItem) {
+                true
+            }  else {
+                oldItem is RestPeriod && newItem is RestPeriod && oldItem == newItem
+            }
+        }
+    }
+
+
+    fun submitList(updatedList: List<Item>) {
+        diffCallback.newList = updatedList
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+        currentList.clear()
+        currentList.addAll(updatedList)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+
+    override fun getItemCount(): Int {
+        return currentList.size
+    }
+
+
     override fun moveItem(from: Int, to: Int) {
-        Log.i(TAG, "-- move from $from to $to --")
-
-        if (from == 0 && to == 2) {
-            Log.i(TAG, "wtf")
-        }
-
-        val newList = currentList.toMutableList()
-        Log.i(TAG, "before:")
-        newList.forEach {
-            Log.i(TAG, "> ${it.name}(${it.id})")
-        }
-
-        val item = newList.removeAt(from)
-        newList.add(to, item)
-        Log.i(TAG, "after:")
-        newList.forEach {
-            Log.i(TAG, "> ${it.name}(${it.id})")
-        }
-
-        if (newList == currentList.toMutableList()) {
-            // workaround to ensure moved item is animated despite the list being the same
-            // can happen when we have the same item more than once in the list
-            Log.i(TAG, "move: notifyItemMoved")
-            notifyItemMoved(from, to)
-        } else {
-            Log.i(TAG, "move: submitList")
-            submitList(newList)
-        }
+        Collections.swap(currentList, from, to)
+        notifyItemMoved(from, to)
     }
 }
