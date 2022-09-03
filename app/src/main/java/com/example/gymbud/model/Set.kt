@@ -18,8 +18,14 @@ class SetTemplate(
         ItemType.REST_PERIOD
     )
 
+
     override fun getSupportedItemTypes(): List<ItemType> {
         return supportedItemTypes
+    }
+
+
+    override fun equals(other: Any?): Boolean {
+        return (other is SetTemplate) && other.id == this.id && other.name == this.name && other.items == this.items
     }
 }
 

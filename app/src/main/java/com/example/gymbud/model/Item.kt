@@ -76,6 +76,12 @@ class TaggedItem(
         return this
     }
 
+
+    override fun equals(other: Any?): Boolean {
+        return (other is TaggedItem) && this.item == other.item && this.tags == other.tags
+    }
+
+
     companion object {
         fun makeTagged(item: Item, cat: TagCategory? = null, vararg tags: String): TaggedItem {
             val tagged = TaggedItem(item)
