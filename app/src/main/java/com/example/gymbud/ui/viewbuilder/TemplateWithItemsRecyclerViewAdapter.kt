@@ -1,11 +1,13 @@
 package com.example.gymbud.ui.viewbuilder
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColor
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ListAdapter
@@ -24,9 +26,24 @@ class TemplateWithItemsRecyclerViewAdapter(
     private val functionality: Functionality
 ) : ListAdapter<Item, TemplateWithItemsRecyclerViewAdapter.ViewHolder>(DiffCallback), RecyclerViewAdapterWithDragDrop {
 
-    private val colorWarmup = ContextCompat.getColor(context, R.color.cyber_yellow)
-    private val colorWorking = ContextCompat.getColor(context, R.color.celadon_blue)
-    private val colorDefault = ContextCompat.getColor(context, R.color.dutch_white)
+    private val colorWarmup: Int
+    private val colorWorking: Int
+    private val colorDefault: Int
+
+    init {
+        val theme = context.theme
+        val themeVal = TypedValue()
+
+        theme.resolveAttribute(R.attr.intensityWarmupColor, themeVal, true)
+        colorWarmup = themeVal.data
+
+        theme.resolveAttribute(R.attr.intensityWorkingColor, themeVal, true)
+        colorWorking = themeVal.data
+
+        theme.resolveAttribute(R.attr.intensityDefaultColor, themeVal, true)
+        colorDefault = themeVal.data
+    }
+
 
     private var onItemClicked: ((Item, Int) -> Unit)? = null
     fun setOnItemClickedCallback(callback: (Item, Int) -> Unit) {

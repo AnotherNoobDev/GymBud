@@ -2,4 +2,8 @@
 <resources>
     <attr name="personalBestBackgroundColor" format="reference|color" />
     <attr name="personalBestTextColor" format="reference|color" />
+
+    <attr name="intensityWarmupColor" format="reference|color" />
+    <attr name="intensityWorkingColor" format="reference|color" />
+    <attr name="intensityDefaultColor" format="reference|color" />
 </resources>
