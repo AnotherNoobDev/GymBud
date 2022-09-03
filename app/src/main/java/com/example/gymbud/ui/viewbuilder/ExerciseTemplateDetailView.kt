@@ -15,16 +15,16 @@ import com.example.gymbud.ui.viewmodel.ItemViewModel
 private const val TAG = "ExerciseTemplateDVB"
 
 class ExerciseTemplateDetailView(
-    private val onDetailsCallback: ((ItemIdentifier, ItemType) -> Unit)? = null
+    private val onDetailsCallback: ((Item) -> Unit)? = null
 ): ItemView {
     private var _nameBinding: LayoutDetailNameBinding? = null
-    val nameBinding get() = _nameBinding!!
+    private val nameBinding get() = _nameBinding!!
 
     private var _exerciseBinding: LayoutDetailTextFieldBinding? = null
-    val exerciseBinding get() = _exerciseBinding!!
+    private val exerciseBinding get() = _exerciseBinding!!
 
     private var _targetRepRangeBinding: LayoutDetailTextFieldBinding? = null
-    val targetRepRangeBinding get() = _targetRepRangeBinding!!
+    private val targetRepRangeBinding get() = _targetRepRangeBinding!!
 
     private var exerciseTemplate: ExerciseTemplate? = null
 
@@ -74,7 +74,7 @@ class ExerciseTemplateDetailView(
 
         exerciseBinding.text.text = item.exercise.name
         exerciseBinding.container.setOnClickListener {
-            onDetailsCallback?.let { it1 -> it1(exerciseTemplate!!.exercise.id, ItemType.EXERCISE) }
+            onDetailsCallback?.let { it1 -> it1(exerciseTemplate!!.exercise) }
         }
 
         targetRepRangeBinding.text.text = item.targetRepRange.toString() + " reps"

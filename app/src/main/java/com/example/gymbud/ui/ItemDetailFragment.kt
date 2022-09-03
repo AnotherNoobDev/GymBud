@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.databinding.FragmentItemDetailBinding
+import com.example.gymbud.model.getItemType
 import com.example.gymbud.ui.viewbuilder.ItemView
 import com.example.gymbud.ui.viewbuilder.ItemViewFactory
 import com.example.gymbud.ui.viewmodel.ItemViewModel
@@ -43,7 +44,10 @@ class ItemDetailFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentItemDetailBinding.inflate(inflater, container, false)
-        _itemView = ItemViewFactory.create(navigationArgs.type, requireContext()) { itemId, itemType ->
+        _itemView = ItemViewFactory.create(navigationArgs.type, requireContext()) { item ->
+            val itemId = item.id
+            val itemType = getItemType(item)
+
             val action = ItemDetailFragmentDirections.actionItemDetailFragmentSelf(itemId, itemType)
             findNavController().navigate(action)
         }
