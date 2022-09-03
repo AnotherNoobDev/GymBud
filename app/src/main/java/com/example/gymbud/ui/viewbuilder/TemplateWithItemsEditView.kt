@@ -140,6 +140,9 @@ class TemplateWithItemsEditView(
     private fun inflateItemList(inflater: LayoutInflater): View {
         _itemListBinding = FragmentItemListBinding.inflate(inflater)
 
+        itemListBinding.root.setPadding(0,0,0,0)
+        itemListBinding.title.root.visibility = View.GONE
+        itemListBinding.titleDivider.visibility = View.GONE
         itemListBinding.addItemFab.isVisible  = false
         itemListBinding.recyclerView.adapter = itemListAdapter
 

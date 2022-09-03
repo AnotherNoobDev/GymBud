@@ -2,12 +2,12 @@ package com.example.gymbud.ui
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.RelativeLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-
-import com.example.gymbud.databinding.FragmentItemBinding
+import com.example.gymbud.databinding.LayoutDetailTextFieldBinding
 import com.example.gymbud.model.Item
 import com.example.gymbud.model.ItemIdentifier
 
@@ -16,11 +16,18 @@ class ItemListRecyclerViewAdapter(
     private val onItemClicked: (ItemIdentifier) -> Unit,
 ) : ListAdapter<Item, ItemListRecyclerViewAdapter.ViewHolder>(DiffCallback){
 
-    inner class ViewHolder(binding: FragmentItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        val contentView: TextView = binding.content
+    inner class ViewHolder(rootView: RelativeLayout, inflater: LayoutInflater) : RecyclerView.ViewHolder(rootView) {
+        val itemBinding = LayoutDetailTextFieldBinding.inflate(inflater)
+
+        init {
+            itemBinding.icon.visibility = View.GONE
+            itemBinding.iconNavigateTo.visibility = View.VISIBLE
+            rootView.addView(itemBinding.root)
+        }
+
 
         override fun toString(): String {
-            return super.toString() + " '" + contentView.text + "'"
+            return super.toString() + " '" + itemBinding.text + "'"
         }
     }
 
@@ -38,16 +45,16 @@ class ItemListRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return ViewHolder(
-            FragmentItemBinding.inflate(layoutInflater, parent, false)
-        )
+        val rootView = RelativeLayout(parent.context)
+
+        return ViewHolder(rootView, layoutInflater)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.contentView.text = item.name
+        holder.itemBinding.text.text = item.name
 
-        holder.contentView.setOnClickListener {
+        holder.itemBinding.root.setOnClickListener {
             onItemClicked(item.id)
         }
     }

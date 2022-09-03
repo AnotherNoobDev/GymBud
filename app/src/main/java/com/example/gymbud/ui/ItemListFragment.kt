@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.databinding.FragmentItemListBinding
+import com.example.gymbud.model.ItemType
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 import com.example.gymbud.ui.viewmodel.ItemViewModelFactory
 import kotlinx.coroutines.flow.collect
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 class ItemListFragment : Fragment() {
     private val navigationArgs: ItemListFragmentArgs by navArgs()
 
-    private val viewModel: ItemViewModel by activityViewModels() {
+    private val viewModel: ItemViewModel by activityViewModels {
         ItemViewModelFactory(
             (activity?.application as BaseApplication).itemRepository
         )
@@ -67,9 +68,18 @@ class ItemListFragment : Fragment() {
 
 
         binding.apply {
+            title.name.text = when (navigationArgs.itemType) {
+                ItemType.EXERCISE -> "Exercises"
+                ItemType.EXERCISE_TEMPLATE -> "Exercise Templates"
+                ItemType.REST_PERIOD -> "Rest Periods"
+                ItemType.SET_TEMPLATE -> "Set Templates"
+                ItemType.WORKOUT_TEMPLATE -> "Workout Templates"
+                ItemType.PROGRAM_TEMPLATE -> "Programs"
+                ItemType.UNKNOWN -> ""
+            }
+
             recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.adapter = adapter
-            recyclerView.setHasFixedSize(true)
 
             addItemFab.setOnClickListener {
                 val action = ItemListFragmentDirections.actionItemListFragmentToItemEditFragment(type=navigationArgs.itemType)
