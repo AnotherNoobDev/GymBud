@@ -1,5 +1,6 @@
 package com.example.gymbud
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -37,6 +38,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // note: lock orientation because UI/UX are lacking when in landscape at the moment
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.app_bar))
