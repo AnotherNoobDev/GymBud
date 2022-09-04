@@ -100,7 +100,7 @@ class DashboardFragment : Fragment() {
         }
 
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Select Active Program")
+            .setTitle("Select Active Program Day")
             .setSingleChoiceItems(programDaysByName.toTypedArray(), checkedItem) { _, which ->
                 checkedItem = which
             }
