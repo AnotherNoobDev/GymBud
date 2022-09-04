@@ -37,7 +37,6 @@ class ItemListRecyclerViewAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
-            // todo implement operator == (also for derived Item!) so that we can do oldItem == newItem
             return oldItem.id == newItem.id &&
                     oldItem.name == newItem.name
         }
