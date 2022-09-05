@@ -15,7 +15,10 @@ open class WorkoutSessionItem private constructor(val type: WorkoutSessionItemTy
         val exerciseTemplate: ExerciseTemplate,
         val tags: Tags?,
         private var previousSession: ExerciseSession?,
-    ): WorkoutSessionItem(WorkoutSessionItemType.Exercise, exerciseTemplate.exercise.name) {
+    ): WorkoutSessionItem(
+        WorkoutSessionItemType.Exercise,
+        "${exerciseTemplate.exercise.name} (${tags?.get(TagCategory.Intensity)?.first() ?: ""})") {
+
         private var _actualResistance = 0.0 // in KG
         val actualResistance get() = _actualResistance
 
