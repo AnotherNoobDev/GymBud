@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gymbud.databinding.LayoutDetailExerciseSessionBinding
+import com.example.gymbud.model.TagCategory
 import com.example.gymbud.model.WeightUnit
 import com.example.gymbud.model.WorkoutSessionItem
 import com.example.gymbud.model.convertKGtoLB
@@ -46,7 +47,13 @@ class SessionExerciseListRecyclerViewAdapter:
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.exerciseLabel.text = item.getShortName()
+        val intensity = item.tags?.get(TagCategory.Intensity)?.first() ?: ""
+        if (intensity == "") {
+            holder.exerciseLabel.text = item.getShortName()
+        } else {
+            holder.exerciseLabel.text = "${item.getShortName()} ($intensity)"
+        }
+
 
         val exerciseValueStr = "${item.actualReps} x " + when(displayWeightUnit) {
             WeightUnit.KG-> String.format("%.2f kg", item.actualResistance)
