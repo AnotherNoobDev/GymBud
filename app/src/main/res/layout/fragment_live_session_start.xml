@@ -67,7 +67,6 @@
                     android:id="@+id/previous_session_recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
                     app:layoutManager="LinearLayoutManager"
                     tools:listitem="@layout/layout_detail_exercise_session" />
 
