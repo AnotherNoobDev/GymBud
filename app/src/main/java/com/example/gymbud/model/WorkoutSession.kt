@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.room.*
 import com.example.gymbud.data.ItemIdentifierGenerator
+import java.lang.Exception
 import java.text.SimpleDateFormat
 
 import java.util.*
@@ -95,18 +96,29 @@ class WorkoutSession(
             return
         }
 
-        // todo very simplistic at the moment.. assume a 1-to-1 between session items
+        // a previous session must always be built using the current Workout Template
+        // so the new session and previous session should always have the same items
         if (sessionItemsBuilder.size != previousSession.items.size) {
-            Log.w(TAG, "Can't add previous session history: Session length (no. items) has changed from previous session!")
-            return
+            val msg = "Previous session length (no. items) doesn't match current session length!"
+            Log.e(TAG, msg)
+            throw Exception(msg)
         }
 
 
         sessionItemsBuilder.zip(previousSession.items).forEach { (current, prev) ->
-            if (current is WorkoutSessionItem.ExerciseSession &&
-                prev is WorkoutSessionItem.ExerciseSession &&
-                current.getShortName() == prev.getShortName()
-            ) {
+            if (current is WorkoutSessionItem.ExerciseSession) {
+                if (prev !is WorkoutSessionItem.ExerciseSession) {
+                    val msg = "WorkoutSessionItem type mismatch between previous session and current session"
+                    Log.e(TAG, msg)
+                    throw Exception(msg)
+                }
+
+                if (current.getShortName() != prev.getShortName()) {
+                    val msg = "WorkoutSessionItem name mismatch between previous session and current session"
+                    Log.e(TAG, msg)
+                    throw Exception(msg)
+                }
+
                 current.setPreviousSession(prev)
             }
         }
@@ -244,6 +256,13 @@ class WorkoutSession(
 
 
     companion object {
+        /*
+        private fun restoreExerciseSessionFromRecord(exerciseSession: WorkoutSessionItem.ExerciseSession, exerciseRecords: List<ExerciseSessionRecord>): WorkoutSessionItem.ExerciseSession {
+
+        }
+         */
+
+
         fun fromRecord(record: WorkoutSessionRecord, template: WorkoutTemplate, exerciseRecords: List<ExerciseSessionRecord>): WorkoutSession {
             // workout session
             val session = WorkoutSession(template, record.programTemplateId, null)
@@ -252,23 +271,80 @@ class WorkoutSession(
             session.durationMs = record.durationMs
             session.notes = record.notes
 
-            // workout session items
-            var at = 0
+            // the session item list is built according to the current template, but does not yet contain previous exercise records
+            // we restore them next, but we must be careful since the previous records could have been generated from an older version of the workout template
+
+            // group records by template --> robustness to changing Set order within Workout
+            val exerciseRecordsByTemplate = exerciseRecords.groupByTo(mutableMapOf()) { it.exerciseTemplateId }
+
             val restoredItems = mutableListOf<WorkoutSessionItem>()
+
             session.items.forEach {
                 when (it) {
-                    is WorkoutSessionItem.RestPeriodSession -> restoredItems.add(it)
+                    is WorkoutSessionItem.RestPeriodSession -> restoredItems.add(it) // no history for rest periods --> use as-is
                     is WorkoutSessionItem.ExerciseSession -> {
-                        restoredItems.add(WorkoutSessionItem.ExerciseSession.fromRecord(exerciseRecords[at++], it.exerciseTemplate))
+                        var historyFound = false
+
+                        val currentIntensity = (it.tags?.get(TagCategory.Intensity)?.first() ?: "")
+                        when (currentIntensity) {
+                            SetIntensity.Warmup.toString() -> {
+                                // use atRecord only if it has intensity warmup or "", otherwise use as-is
+                                val atExerciseRecord = exerciseRecordsByTemplate[it.exerciseTemplate.id]?.first()
+                                if (atExerciseRecord != null) {
+                                    val atExerciseRecordIntensity = (atExerciseRecord.tags?.get(TagCategory.Intensity)?.first() ?: "")
+
+                                    if (atExerciseRecordIntensity == SetIntensity.Warmup.toString() || atExerciseRecordIntensity == "") {
+                                        restoredItems.add(WorkoutSessionItem.ExerciseSession.fromRecord(atExerciseRecord, it.exerciseTemplate))
+                                        exerciseRecordsByTemplate[it.exerciseTemplate.id]?.removeAt(0)
+
+                                        historyFound = true
+                                    }
+                                }
+                            }
+                            SetIntensity.Working.toString() -> {
+                                // drop atRecord and get next until  we find one with intensity working or "", otherwise use as-is
+                                while (exerciseRecordsByTemplate[it.exerciseTemplate.id]?.isNotEmpty() == true) {
+                                    val atExerciseRecord = exerciseRecordsByTemplate[it.exerciseTemplate.id]!!.first()
+                                    val atExerciseRecordIntensity = (atExerciseRecord.tags?.get(TagCategory.Intensity)?.first() ?: "")
+
+                                    if (atExerciseRecordIntensity == SetIntensity.Warmup.toString()) {
+                                        exerciseRecordsByTemplate[it.exerciseTemplate.id]?.removeAt(0)
+                                        continue
+                                    }
+
+                                    restoredItems.add(WorkoutSessionItem.ExerciseSession.fromRecord(atExerciseRecord, it.exerciseTemplate))
+                                    exerciseRecordsByTemplate[it.exerciseTemplate.id]?.removeAt(0)
+
+                                    historyFound = true
+                                    break
+                                }
+                            }
+                            else -> {
+                                // use atRecord if available, or use as-is
+                                val atExerciseRecord = exerciseRecordsByTemplate[it.exerciseTemplate.id]?.first()
+                                if (atExerciseRecord != null) {
+                                    restoredItems.add(WorkoutSessionItem.ExerciseSession.fromRecord(atExerciseRecord, it.exerciseTemplate))
+                                    exerciseRecordsByTemplate[it.exerciseTemplate.id]?.removeAt(0)
+
+                                    historyFound = true
+                                }
+                            }
+                        }
+
+                        if (!historyFound) {
+                            // we didn't find any history for the exercise --> use as-is
+                            restoredItems.add(it)
+                        }
                     }
                 }
             }
+
+            // finally swap items from  Workout template with restored items
             session.items = restoredItems
             session.atItem = restoredItems.size - 1
 
             return session
         }
-
     }
 }
 

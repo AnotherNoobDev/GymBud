@@ -31,6 +31,13 @@ class LiveSessionViewModel(
     }
 
 
+    fun cancel() {
+        _previousSession.value = null
+        _workoutSession = null
+        _state.value = WorkoutSessionState.NotReady
+    }
+
+
     fun start() {
         workoutSession.start()
         _state.value = WorkoutSessionState.Started

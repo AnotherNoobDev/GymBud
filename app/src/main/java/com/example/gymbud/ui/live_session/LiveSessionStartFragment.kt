@@ -65,7 +65,6 @@ class LiveSessionStartFragment : Fragment() {
         }
 
         binding.continueBtn.setOnClickListener {
-
             val action = when(liveSessionViewModel.getNextItemType()) {
                 WorkoutSessionItemType.Exercise ->
                     LiveSessionStartFragmentDirections.actionLiveSessionStartFragmentToLiveSessionExerciseFragment()
@@ -114,5 +113,11 @@ class LiveSessionStartFragment : Fragment() {
                 }
             }
         }
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        liveSessionViewModel.cancel()
     }
 }
