@@ -256,13 +256,6 @@ class WorkoutSession(
 
 
     companion object {
-        /*
-        private fun restoreExerciseSessionFromRecord(exerciseSession: WorkoutSessionItem.ExerciseSession, exerciseRecords: List<ExerciseSessionRecord>): WorkoutSessionItem.ExerciseSession {
-
-        }
-         */
-
-
         fun fromRecord(record: WorkoutSessionRecord, template: WorkoutTemplate, exerciseRecords: List<ExerciseSessionRecord>): WorkoutSession {
             // workout session
             val session = WorkoutSession(template, record.programTemplateId, null)
@@ -274,68 +267,15 @@ class WorkoutSession(
             // the session item list is built according to the current template, but does not yet contain previous exercise records
             // we restore them next, but we must be careful since the previous records could have been generated from an older version of the workout template
 
+            val restoredItems = mutableListOf<WorkoutSessionItem>()
+
             // group records by template --> robustness to changing Set order within Workout
             val exerciseRecordsByTemplate = exerciseRecords.groupByTo(mutableMapOf()) { it.exerciseTemplateId }
-
-            val restoredItems = mutableListOf<WorkoutSessionItem>()
 
             session.items.forEach {
                 when (it) {
                     is WorkoutSessionItem.RestPeriodSession -> restoredItems.add(it) // no history for rest periods --> use as-is
-                    is WorkoutSessionItem.ExerciseSession -> {
-                        var historyFound = false
-
-                        val currentIntensity = (it.tags?.get(TagCategory.Intensity)?.first() ?: "")
-                        when (currentIntensity) {
-                            SetIntensity.Warmup.toString() -> {
-                                // use atRecord only if it has intensity warmup or "", otherwise use as-is
-                                val atExerciseRecord = exerciseRecordsByTemplate[it.exerciseTemplate.id]?.first()
-                                if (atExerciseRecord != null) {
-                                    val atExerciseRecordIntensity = (atExerciseRecord.tags?.get(TagCategory.Intensity)?.first() ?: "")
-
-                                    if (atExerciseRecordIntensity == SetIntensity.Warmup.toString() || atExerciseRecordIntensity == "") {
-                                        restoredItems.add(WorkoutSessionItem.ExerciseSession.fromRecord(atExerciseRecord, it.exerciseTemplate))
-                                        exerciseRecordsByTemplate[it.exerciseTemplate.id]?.removeAt(0)
-
-                                        historyFound = true
-                                    }
-                                }
-                            }
-                            SetIntensity.Working.toString() -> {
-                                // drop atRecord and get next until  we find one with intensity working or "", otherwise use as-is
-                                while (exerciseRecordsByTemplate[it.exerciseTemplate.id]?.isNotEmpty() == true) {
-                                    val atExerciseRecord = exerciseRecordsByTemplate[it.exerciseTemplate.id]!!.first()
-                                    val atExerciseRecordIntensity = (atExerciseRecord.tags?.get(TagCategory.Intensity)?.first() ?: "")
-
-                                    if (atExerciseRecordIntensity == SetIntensity.Warmup.toString()) {
-                                        exerciseRecordsByTemplate[it.exerciseTemplate.id]?.removeAt(0)
-                                        continue
-                                    }
-
-                                    restoredItems.add(WorkoutSessionItem.ExerciseSession.fromRecord(atExerciseRecord, it.exerciseTemplate))
-                                    exerciseRecordsByTemplate[it.exerciseTemplate.id]?.removeAt(0)
-
-                                    historyFound = true
-                                    break
-                                }
-                            }
-                            else -> {
-                                // use atRecord if available, or use as-is
-                                val atExerciseRecord = exerciseRecordsByTemplate[it.exerciseTemplate.id]?.first()
-                                if (atExerciseRecord != null) {
-                                    restoredItems.add(WorkoutSessionItem.ExerciseSession.fromRecord(atExerciseRecord, it.exerciseTemplate))
-                                    exerciseRecordsByTemplate[it.exerciseTemplate.id]?.removeAt(0)
-
-                                    historyFound = true
-                                }
-                            }
-                        }
-
-                        if (!historyFound) {
-                            // we didn't find any history for the exercise --> use as-is
-                            restoredItems.add(it)
-                        }
-                    }
+                    is WorkoutSessionItem.ExerciseSession -> restoredItems.add(restoreExerciseSessionFromRecord(it, exerciseRecordsByTemplate))
                 }
             }
 
@@ -344,6 +284,67 @@ class WorkoutSession(
             session.atItem = restoredItems.size - 1
 
             return session
+        }
+
+
+        private fun restoreExerciseSessionFromRecord(
+            exerciseSession: WorkoutSessionItem.ExerciseSession,
+            exerciseRecordsByTemplate: MutableMap<ItemIdentifier, MutableList<ExerciseSessionRecord>>
+        ): WorkoutSessionItem.ExerciseSession {
+
+            val exerciseRecordsForTemplate = exerciseRecordsByTemplate[exerciseSession.exerciseTemplate.id]?: return exerciseSession
+            if (exerciseRecordsForTemplate.isEmpty()) return exerciseSession
+
+            val exerciseRecordToUse =  when ((exerciseSession.tags?.get(TagCategory.Intensity)?.first() ?: "")) {
+                SetIntensity.Warmup.toString() -> {
+                    // use atRecord only if it has intensity warmup or "", otherwise use as-is
+                    val atExerciseRecord = exerciseRecordsForTemplate.first()
+                    val atExerciseRecordIntensity = (atExerciseRecord.tags?.get(TagCategory.Intensity)?.first() ?: "")
+
+                    if (atExerciseRecordIntensity == SetIntensity.Warmup.toString() || atExerciseRecordIntensity == "") {
+                        atExerciseRecord
+                    } else {
+                        null
+                    }
+                }
+
+                SetIntensity.Working.toString() -> {
+                    // drop atRecord and get next until  we find one with intensity working or "", otherwise use as-is
+                    var historyFound = false
+
+                    while (exerciseRecordsForTemplate.isNotEmpty()) {
+                        val atExerciseRecord = exerciseRecordsForTemplate.first()
+                        val atExerciseRecordIntensity = (atExerciseRecord.tags?.get(TagCategory.Intensity)?.first() ?: "")
+
+                        if (atExerciseRecordIntensity == SetIntensity.Warmup.toString()) {
+                            exerciseRecordsForTemplate.removeAt(0)
+                            continue
+                        }
+
+                        historyFound = true
+                        break
+                    }
+
+                    if (historyFound) {
+                        exerciseRecordsForTemplate.first()
+                    } else {
+                        null
+                    }
+                }
+
+                else -> {
+                    // use atRecord if available, or use as-is
+                    exerciseRecordsForTemplate.first()
+                }
+            }
+
+            return if (exerciseRecordToUse != null) {
+                exerciseRecordsForTemplate.removeAt(0)
+                WorkoutSessionItem.ExerciseSession.fromRecord(exerciseRecordToUse, exerciseSession.exerciseTemplate)
+            } else {
+                // we didn't find any history for the exercise --> use as-is
+                exerciseSession
+            }
         }
     }
 }
