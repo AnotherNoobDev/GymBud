@@ -43,6 +43,9 @@ class LiveSessionStartFragment : Fragment() {
 
     private val previousSessionAdapter = SessionExerciseListRecyclerViewAdapter()
 
+    private var sessionStarted = false
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -76,6 +79,8 @@ class LiveSessionStartFragment : Fragment() {
 
             if (action != null) {
                 liveSessionViewModel.start()
+                sessionStarted = true
+
                 findNavController().navigate(action)
             }
         }
@@ -118,6 +123,9 @@ class LiveSessionStartFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        liveSessionViewModel.cancel()
+
+        if (!sessionStarted) {
+            liveSessionViewModel.cancel()
+        }
     }
 }

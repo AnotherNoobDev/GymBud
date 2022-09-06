@@ -73,7 +73,7 @@ class LiveSessionRestFragment : Fragment() {
         targetRestPeriod = restPeriodSession.getTargetRestPeriod()
 
         binding.apply {
-            restLabel.text = "Rest ${restPeriodSession.getTargetRestPeriodAsStr()}"
+            restValue.text = restPeriodSession.getTargetRestPeriodAsStr()
 
             if (liveSessionViewModel.hasNextItem()) {
                 nextItemHint.text = liveSessionViewModel.getNextItemHint()
