@@ -1,12 +1,14 @@
 package com.example.gymbud.ui.live_session
 
 import android.annotation.SuppressLint
+import android.graphics.Rect
 import android.os.Bundle
-import android.text.InputType
-import androidx.fragment.app.Fragment
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -40,7 +42,62 @@ class LiveSessionExerciseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLiveSessionExerciseBinding.inflate(inflater, container, false)
+
+        setKeyboardVisibilityListener();
+
         return binding.root
+    }
+
+
+    private fun setKeyboardVisibilityListener() {
+        val parentView = binding.root
+        parentView.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+            private var alreadyVisible = false
+            private val defaultKeyboardHeightDP = 100
+            private val estimatedKeyboardDP = defaultKeyboardHeightDP + 48
+            private val rect: Rect = Rect()
+
+            override fun onGlobalLayout() {
+                val estimatedKeyboardHeight = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    estimatedKeyboardDP.toFloat(),
+                    parentView.resources.displayMetrics
+                ).toInt()
+
+                parentView.getWindowVisibleDisplayFrame(rect)
+
+                val heightDiff: Int = parentView.rootView.height - (rect.bottom - rect.top)
+                val isVisible = heightDiff >= estimatedKeyboardHeight
+                if (isVisible == alreadyVisible) {
+                    return
+                }
+
+                alreadyVisible = isVisible
+                onKeyboardVisibilityChanged(isVisible)
+            }
+        })
+    }
+
+
+    private fun onKeyboardVisibilityChanged(visible: Boolean) {
+        if (visible) {
+            // when keyboard is visible
+            binding.apply {
+                // hide previous session section
+                previousSession.visibility = View.GONE
+
+                // and make title smaller
+                exerciseLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, exerciseLabel.textSize / 1.5f)
+                exerciseTags.setTextSize(TypedValue.COMPLEX_UNIT_PX, exerciseTags.textSize / 1.5f)
+            }
+        } else {
+            binding.apply {
+                previousSession.visibility = View.VISIBLE
+
+                exerciseLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, exerciseLabel.textSize * 1.5f)
+                exerciseTags.setTextSize(TypedValue.COMPLEX_UNIT_PX, exerciseTags.textSize * 1.5f)
+            }
+        }
     }
 
 
@@ -78,7 +135,8 @@ class LiveSessionExerciseFragment : Fragment() {
                 resistanceLabel.error = null
             }
 
-            resistanceValue.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+            // TODO using different keyboard types messes up the layout...
+            // resistanceValue.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
 
             if (liveSessionViewModel.hasNextItem()) {
                 nextItemHint.text = liveSessionViewModel.getNextItemHint()
