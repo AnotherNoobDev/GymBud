@@ -43,7 +43,7 @@ class LiveSessionExerciseFragment : Fragment() {
     ): View {
         _binding = FragmentLiveSessionExerciseBinding.inflate(inflater, container, false)
 
-        setKeyboardVisibilityListener();
+        setKeyboardVisibilityListener()
 
         return binding.root
     }
@@ -127,11 +127,11 @@ class LiveSessionExerciseFragment : Fragment() {
 
             previousNotes.text = exerciseSession.getPreviousNotes()?: "No notes..."
 
-            repsLabel.setOnClickListener {
+            repsValue.setOnClickListener {
                 repsLabel.error = null
             }
 
-            resistanceLabel.setOnClickListener {
+            resistanceValue.setOnClickListener {
                 resistanceLabel.error = null
             }
 
@@ -190,20 +190,20 @@ class LiveSessionExerciseFragment : Fragment() {
             return false
         }
 
-        val inputResistanceStr = binding.resistanceValue.text.toString()
-        if (inputResistanceStr.isEmpty()) {
+        val inputResistance = binding.resistanceValue.text.toString().toDoubleOrNull()
+        if (inputResistance == null) {
             binding.resistanceLabel.error = "Please enter resistance"
             return false
         }
 
-        val inputResistanceNumber = when (displayWeightUnit) {
-            WeightUnit.KG -> inputResistanceStr.toDouble()
-            WeightUnit.LB -> convertLBtoKG(inputResistanceStr.toDouble())
+        val inputResistanceKG = when (displayWeightUnit) {
+            WeightUnit.KG -> inputResistance
+            WeightUnit.LB -> convertLBtoKG(inputResistance)
         }
 
         val inputNotes = binding.notesInput.text.toString()
 
-        exerciseSession.complete(inputReps, inputResistanceNumber, inputNotes)
+        exerciseSession.complete(inputReps, inputResistanceKG, inputNotes)
 
 
         return true
