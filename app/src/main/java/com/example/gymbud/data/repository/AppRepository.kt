@@ -31,6 +31,8 @@ class AppRepository(private val context: Context) {
 
     private val weightUnitKey = stringPreferencesKey("weight_unit")
 
+    private val liveSessionKeepScreenOnKey = booleanPreferencesKey("live_session_keep_screen_on")
+
 
     suspend fun reset() {
         updateLastUsedItemIdentifier(ItemIdentifierGenerator.NO_ID)
@@ -113,6 +115,20 @@ class AppRepository(private val context: Context) {
         }
 
 
+    val liveSessionKeepScreenOn: Flow<Boolean> = context.dataStore.data
+        .catch {
+            if (it is IOException) {
+                it.printStackTrace()
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[liveSessionKeepScreenOnKey]?: true
+        }
+
+
     suspend fun updateLastUsedItemIdentifier(id: ItemIdentifier) {
         context.dataStore.edit { preferences ->
             preferences[lastItemIdentifierKey] = id
@@ -145,6 +161,13 @@ class AppRepository(private val context: Context) {
     suspend fun updateWeightUnit(unit: WeightUnit) {
         context.dataStore.edit { preferences ->
             preferences[weightUnitKey] = unit.toString()
+        }
+    }
+
+
+    suspend fun updateLiveSessionKeepScreenOn(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[liveSessionKeepScreenOnKey] = enabled
         }
     }
 }

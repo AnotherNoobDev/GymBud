@@ -58,6 +58,13 @@ class SettingsFragment : Fragment() {
 
         appRepository = (activity?.application as BaseApplication).appRepository
 
+        setupWeightUnitDisplay(appRepository)
+        setupKeepScreenOnDuringWorkout(appRepository)
+        setupDevDisplay(appRepository)
+    }
+
+
+    private fun setupWeightUnitDisplay(appRepository: AppRepository) {
         binding.apply {
             viewLifecycleOwner.lifecycleScope.launch {
                 appRepository.weightUnit.collect {
@@ -83,7 +90,31 @@ class SettingsFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
 
+
+    private fun setupKeepScreenOnDuringWorkout(appRepository: AppRepository) {
+        binding.apply {
+            viewLifecycleOwner.lifecycleScope.launch {
+                appRepository.liveSessionKeepScreenOn.collect {
+                    liveSessionKeepScreenOnSwitch.isChecked = it
+                }
+            }
+
+            liveSessionKeepScreenOnSwitch.setOnClickListener {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        appRepository.updateLiveSessionKeepScreenOn(liveSessionKeepScreenOnSwitch.isChecked)
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun setupDevDisplay(appRepository: AppRepository) {
+        binding.apply {
             resetDbButton.setOnClickListener {
                 viewLifecycleOwner.lifecycleScope.launch {
                     withContext(Dispatchers.IO) {

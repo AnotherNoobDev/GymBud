@@ -117,6 +117,12 @@ class LiveSessionExerciseFragment : Fragment() {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            appRepository.liveSessionKeepScreenOn.collect {
+                binding.root.keepScreenOn = it
+            }
+        }
+
         binding.apply {
             exerciseLabel.text = exerciseSession.getShortName()
 

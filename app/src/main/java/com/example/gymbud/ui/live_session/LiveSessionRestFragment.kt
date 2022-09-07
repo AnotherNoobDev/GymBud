@@ -11,21 +11,27 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.R
+import com.example.gymbud.data.repository.AppRepository
 import com.example.gymbud.databinding.FragmentLiveSessionRestBinding
 import com.example.gymbud.model.WorkoutSessionItem
 import com.example.gymbud.model.WorkoutSessionItemType
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModel
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModelFactory
 import com.example.gymbud.utility.TimeFormatter
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 class LiveSessionRestFragment : Fragment() {
     private val liveSessionViewModel: LiveSessionViewModel by activityViewModels {
         LiveSessionViewModelFactory((activity?.application as BaseApplication).sessionRepository)
     }
+
+    private lateinit var appRepository: AppRepository
 
     private var _binding: FragmentLiveSessionRestBinding? = null
     private val binding get() = _binding!!
@@ -71,6 +77,14 @@ class LiveSessionRestFragment : Fragment() {
 
         val restPeriodSession = liveSessionViewModel.getCurrentItem() as WorkoutSessionItem.RestPeriodSession
         targetRestPeriod = restPeriodSession.getTargetRestPeriod()
+
+        appRepository = (activity?.application as BaseApplication).appRepository
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            appRepository.liveSessionKeepScreenOn.collect {
+                binding.root.keepScreenOn = it
+            }
+        }
 
         binding.apply {
             restValue.text = restPeriodSession.getTargetRestPeriodAsStr()
