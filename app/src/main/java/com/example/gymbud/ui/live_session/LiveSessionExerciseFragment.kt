@@ -83,19 +83,19 @@ class LiveSessionExerciseFragment : Fragment() {
         if (visible) {
             // when keyboard is visible
             binding.apply {
+                // hide title
+                exerciseLabel.visibility = View.GONE
+                exerciseTags.visibility = View.GONE
+
                 // hide previous session section
                 previousSession.visibility = View.GONE
-
-                // and make title smaller
-                exerciseLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, exerciseLabel.textSize / 1.5f)
-                exerciseTags.setTextSize(TypedValue.COMPLEX_UNIT_PX, exerciseTags.textSize / 1.5f)
             }
         } else {
             binding.apply {
-                previousSession.visibility = View.VISIBLE
+                exerciseLabel.visibility = View.VISIBLE
+                exerciseTags.visibility = View.VISIBLE
 
-                exerciseLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, exerciseLabel.textSize * 1.5f)
-                exerciseTags.setTextSize(TypedValue.COMPLEX_UNIT_PX, exerciseTags.textSize * 1.5f)
+                previousSession.visibility = View.VISIBLE
             }
         }
     }
