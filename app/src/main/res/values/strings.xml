@@ -30,12 +30,9 @@
     <string name="settings">Settings</string>
 
     <!-- live session -->
-    <string name="next">Next</string>
+    <string name="next">Next &gt;&gt;</string>
+    <string name="previous">&lt;&lt; Prev</string>
     <string name="no_history_for_workout">No history for this workout</string>
     <string name="workout_session_duration"><b><u>Duration</u></b>.</string>
     <string name="workout_session_results"><b><u>Results</u></b>.</string>
-
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -153,24 +153,17 @@ class WorkoutSession(
 
         startTime = Date(Date().time - other.durationMs)
 
-        // proceed to fromItem
-        val restartFromItemAt = if (fromItem >= 0) {
-            fromItem
-        } else {
-            // use last completed item
-            var lastCompleted = 0
-            other.items.forEachIndexed { at, item ->
-                if (item is WorkoutSessionItem.ExerciseSession && item.isCompleted) {
-                    if (at > lastCompleted) {
-                        lastCompleted = at
-                    }
+        // fill items with data from partial session
+        var lastCompleted = 0
+        other.items.forEachIndexed { at, item ->
+            if (item is WorkoutSessionItem.ExerciseSession && item.isCompleted) {
+                if (at > lastCompleted) {
+                    lastCompleted = at
                 }
             }
-
-            lastCompleted
         }
 
-        for (at in 0 until restartFromItemAt) {
+        for (at in 0..lastCompleted) {
             val item = items[at]
             if (item is WorkoutSessionItem.ExerciseSession) {
                 assert(other.items[at] is WorkoutSessionItem.ExerciseSession)
@@ -180,7 +173,15 @@ class WorkoutSession(
             }
         }
 
-        atItem = restartFromItemAt
+        // set current item
+        atItem = if (fromItem >= 0) {
+            fromItem
+        } else {
+            // go to last completed item
+            lastCompleted
+        }
+
+        assert(atItem >= 0 && atItem < items.size)
 
         state = WorkoutSessionState.Started
     }
@@ -195,6 +196,29 @@ class WorkoutSession(
 
     fun getCurrentItemIndex(): Int {
         return atItem
+    }
+
+
+    fun hasPreviousItem(): Boolean {
+        assert(state != WorkoutSessionState.NotReady)
+
+        return (getPreviousItem() != null)
+    }
+
+
+    fun getPreviousItemType(): WorkoutSessionItemType? {
+        assert(state != WorkoutSessionState.NotReady)
+
+        return getPreviousItem()?.type
+    }
+
+
+    private fun getPreviousItem(): WorkoutSessionItem? {
+        return if (atItem > 0) {
+            items[atItem - 1]
+        } else {
+            null
+        }
     }
 
 
@@ -223,6 +247,15 @@ class WorkoutSession(
             items[atItem + 1].type
         } else {
             null
+        }
+    }
+
+
+    fun goBack() {
+        assert(state == WorkoutSessionState.Started)
+
+        if (atItem > 0) {
+            atItem--
         }
     }
 

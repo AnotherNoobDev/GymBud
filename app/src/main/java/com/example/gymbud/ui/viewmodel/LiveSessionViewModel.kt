@@ -79,6 +79,16 @@ class LiveSessionViewModel(
     }
 
 
+    fun hasPreviousItem(): Boolean {
+        return workoutSession.hasPreviousItem()
+    }
+
+
+    fun getPreviousItemType(): WorkoutSessionItemType? {
+        return workoutSession.getPreviousItemType()
+    }
+
+
     fun hasNextItem(): Boolean {
         return workoutSession.hasNextItem()
     }
@@ -111,6 +121,12 @@ class LiveSessionViewModel(
 
     fun getRestTimerStartTime(): Long {
         return restTimerStartTime
+    }
+
+
+    fun goBack() {
+        updateRestTimerStartTime(-1)
+        workoutSession.goBack()
     }
 
 

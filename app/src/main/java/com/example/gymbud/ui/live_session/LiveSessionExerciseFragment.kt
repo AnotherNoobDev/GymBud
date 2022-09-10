@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -144,6 +145,14 @@ class LiveSessionExerciseFragment : Fragment() {
             // TODO using different keyboard types messes up the layout...
             // resistanceValue.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
 
+            if (liveSessionViewModel.hasPreviousItem()) {
+                previousBtn.setOnClickListener {
+                    goBackInSession()
+                }
+            } else {
+                previousBtn.visibility = View.GONE
+            }
+
             if (liveSessionViewModel.hasNextItem()) {
                 nextItemHint.text = liveSessionViewModel.getNextItemHint()
                 continueBtn.setOnClickListener {
@@ -183,6 +192,21 @@ class LiveSessionExerciseFragment : Fragment() {
                     resistanceLabel.hint = "Resistance (lb)"
                 }
             }
+
+            if (exerciseSession.isCompleted) {
+                repsValue.setText(exerciseSession.actualReps.toString(), TextView.BufferType.SPANNABLE)
+
+                when(u) {
+                    WeightUnit.KG -> {
+                        resistanceValue.setText(exerciseSession.actualResistance.toString(), TextView.BufferType.SPANNABLE)
+                    }
+                    WeightUnit.LB -> {
+                        resistanceValue.setText(convertKGtoLB(exerciseSession.actualResistance).toString(), TextView.BufferType.SPANNABLE)
+                    }
+                }
+
+                notesInput.setText(exerciseSession.notes, TextView.BufferType.SPANNABLE)
+            }
         }
 
         displayWeightUnit = u
@@ -213,6 +237,23 @@ class LiveSessionExerciseFragment : Fragment() {
 
 
         return true
+    }
+
+
+    private fun goBackInSession() {
+        val action = when (liveSessionViewModel.getPreviousItemType()) {
+            WorkoutSessionItemType.Exercise ->
+                LiveSessionExerciseFragmentDirections.actionLiveSessionExerciseFragmentSelf()
+            WorkoutSessionItemType.Rest ->
+                LiveSessionExerciseFragmentDirections.actionLiveSessionExerciseFragmentToLiveSessionRestFragment()
+            else ->
+                null
+        }
+
+        if (action != null) {
+            liveSessionViewModel.goBack()
+            findNavController().navigate(action)
+        }
     }
 
 

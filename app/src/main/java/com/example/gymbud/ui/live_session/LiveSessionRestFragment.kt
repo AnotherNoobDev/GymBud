@@ -89,6 +89,14 @@ class LiveSessionRestFragment : Fragment() {
         binding.apply {
             restValue.text = restPeriodSession.getTargetRestPeriodAsStr()
 
+            if (liveSessionViewModel.hasPreviousItem()) {
+                previousBtn.setOnClickListener {
+                    goBackInSession()
+                }
+            } else {
+                previousBtn.visibility = View.GONE
+            }
+
             if (liveSessionViewModel.hasNextItem()) {
                 nextItemHint.text = liveSessionViewModel.getNextItemHint()
                 continueBtn.setOnClickListener {
@@ -135,6 +143,23 @@ class LiveSessionRestFragment : Fragment() {
                 (targetRestPeriod.first <= elapsedTimeSec) && (elapsedTimeSec < targetRestPeriod.last) -> colorRecommendedRest
                 else -> colorExceededRest
             }
+        }
+    }
+
+
+    private fun goBackInSession() {
+        val action = when (liveSessionViewModel.getPreviousItemType()) {
+            WorkoutSessionItemType.Exercise ->
+                LiveSessionRestFragmentDirections.actionLiveSessionRestFragmentToLiveSessionExerciseFragment()
+            WorkoutSessionItemType.Rest ->
+                LiveSessionRestFragmentDirections.actionLiveSessionRestFragmentSelf()
+            else ->
+                null
+        }
+
+        if (action != null) {
+            liveSessionViewModel.goBack()
+            findNavController().navigate(action)
         }
     }
 
