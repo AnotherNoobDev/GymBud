@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.model.ItemIdentifier
+import com.example.gymbud.model.PartialWorkoutSessionRecord
 import com.example.gymbud.model.WeightUnit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -33,12 +34,17 @@ class AppRepository(private val context: Context) {
 
     private val liveSessionKeepScreenOnKey = booleanPreferencesKey("live_session_keep_screen_on")
 
+    private val partialWorkoutSessionIdKey = longPreferencesKey("partial_workout_session_id")
+    private val partialWorkoutSessionAtItemKey = intPreferencesKey("partial_workout_session_at_item")
+    private val partialWorkoutSessionRestTimerStart = longPreferencesKey("partial_workout_session_rest_timer_start")
 
     suspend fun reset() {
         updateLastUsedItemIdentifier(ItemIdentifierGenerator.NO_ID)
         ItemIdentifierGenerator.reset() // todo is this ok here.. or where to put it?
 
         updateActiveProgramAndProgramDay(ItemIdentifierGenerator.NO_ID, ItemIdentifierGenerator.NO_ID)
+
+        clearPartialWorkoutSessionInfo()
     }
 
 
@@ -129,6 +135,24 @@ class AppRepository(private val context: Context) {
         }
 
 
+    val partialWorkoutSessionRecord: Flow<PartialWorkoutSessionRecord> = context.dataStore.data
+        .catch {
+            if (it is IOException) {
+                it.printStackTrace()
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            PartialWorkoutSessionRecord(
+                preferences[partialWorkoutSessionIdKey] ?: ItemIdentifierGenerator.NO_ID,
+                preferences[partialWorkoutSessionAtItemKey] ?: -1,
+                preferences[partialWorkoutSessionRestTimerStart]?: 0
+            )
+        }
+
+
     suspend fun updateLastUsedItemIdentifier(id: ItemIdentifier) {
         context.dataStore.edit { preferences ->
             preferences[lastItemIdentifierKey] = id
@@ -168,6 +192,24 @@ class AppRepository(private val context: Context) {
     suspend fun updateLiveSessionKeepScreenOn(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[liveSessionKeepScreenOnKey] = enabled
+        }
+    }
+
+
+    suspend fun savePartialWorkoutSessionInfo(session: PartialWorkoutSessionRecord) {
+        context.dataStore.edit { preferences ->
+            preferences[partialWorkoutSessionIdKey] = session.workoutSessionId
+            preferences[partialWorkoutSessionAtItemKey]= session.atItem
+            preferences[partialWorkoutSessionRestTimerStart] = session.restTimerStartMs
+        }
+    }
+
+
+    suspend fun clearPartialWorkoutSessionInfo() {
+        context.dataStore.edit { preferences ->
+            preferences[partialWorkoutSessionIdKey] = ItemIdentifierGenerator.NO_ID
+            preferences[partialWorkoutSessionAtItemKey]= -1
+            preferences[partialWorkoutSessionRestTimerStart] = 0
         }
     }
 }

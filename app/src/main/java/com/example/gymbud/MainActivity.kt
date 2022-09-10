@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
@@ -17,13 +18,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.gymbud.data.ItemIdentifierGenerator
+import com.example.gymbud.model.PartialWorkoutSessionRecord
+import com.example.gymbud.model.WorkoutSessionItemType
 import com.example.gymbud.model.WorkoutSessionState
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModel
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+
+private const val PARTIAL_WORKOUT_SESSION_TAG = "partial_workout_session"
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +39,8 @@ class MainActivity : AppCompatActivity() {
     private val liveSessionViewModel: LiveSessionViewModel by viewModels {
         LiveSessionViewModelFactory((application as BaseApplication).sessionRepository)
     }
+
+    private var workoutSessionState: WorkoutSessionState = WorkoutSessionState.NotReady
 
     private var disableBackNavigation = false
 
@@ -73,6 +82,8 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun onLiveSessionStateChanged(state: WorkoutSessionState) {
+        workoutSessionState = state
+
         presentBottomNavigation(state)
         presentActionBar(state)
         adjustNavigationControls(state)
@@ -152,6 +163,61 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (!disableBackNavigation) {
             super.onBackPressed()
+        }
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+
+        // ensure LiveSession survives app close
+        if (workoutSessionState == WorkoutSessionState.Started) {
+            lifecycleScope.launch {
+                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session")
+                // persist partial workout session
+                val atItem = liveSessionViewModel.getCurrentItemIndex()
+                val restTimerStartTime = liveSessionViewModel.getRestTimerStartTime()
+
+                liveSessionViewModel.finish()
+                val workoutSessionId = liveSessionViewModel.saveSession("")
+
+                // update app repository with partial workout session id
+                (application as BaseApplication).appRepository.savePartialWorkoutSessionInfo(
+                    PartialWorkoutSessionRecord(workoutSessionId, atItem, restTimerStartTime)
+                )
+
+                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Session saved")
+            }
+        }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+
+        // restore LiveSession
+        lifecycleScope.launch {
+            // we are done if no partialWorkoutSession was persisted
+            val partialWorkoutSession = (application as BaseApplication).appRepository.partialWorkoutSessionRecord.first()
+
+            Log.d(PARTIAL_WORKOUT_SESSION_TAG, "onResume: $partialWorkoutSession")
+
+            if (partialWorkoutSession.workoutSessionId == ItemIdentifierGenerator.NO_ID) {
+                return@launch
+            }
+
+            lifecycleScope.launch {
+                liveSessionViewModel.restore(partialWorkoutSession)
+                (application as BaseApplication).appRepository.clearPartialWorkoutSessionInfo()
+
+                // navigate to current workout item
+                when (liveSessionViewModel.getCurrentItemType()) {
+                    WorkoutSessionItemType.Exercise ->
+                        navController.navigate(R.id.liveSessionExerciseFragment)
+                    WorkoutSessionItemType.Rest ->
+                        navController.navigate(R.id.liveSessionRestFragment)
+                }
+            }
         }
     }
 }

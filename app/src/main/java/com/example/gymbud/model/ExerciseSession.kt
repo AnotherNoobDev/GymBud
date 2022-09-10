@@ -42,7 +42,6 @@ open class WorkoutSessionItem private constructor(val type: WorkoutSessionItemTy
         }
 
 
-
         fun getPreviousResistance(): Double? {
             return previousSession?._actualResistance
         }
@@ -103,6 +102,8 @@ open class WorkoutSessionItem private constructor(val type: WorkoutSessionItemTy
                 session._actualResistance =  record.resistance
                 session._actualReps =  record.reps
                 session._notes = record.notes
+
+                session._isCompleted = true
 
                 return session
             }

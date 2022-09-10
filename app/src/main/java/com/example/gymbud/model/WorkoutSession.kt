@@ -20,10 +20,9 @@ enum class WorkoutSessionState {
 }
 
 
-// todo Session needs to survive changing apps, accidental close, etc..
 class WorkoutSession(
-    private val workoutTemplate: WorkoutTemplate,
-    private val programTemplateId: ItemIdentifier,
+    val workoutTemplate: WorkoutTemplate,
+    val programTemplateId: ItemIdentifier,
     previousSession: WorkoutSession?
 ) {
     @SuppressLint("SimpleDateFormat")
@@ -145,10 +144,57 @@ class WorkoutSession(
     }
 
 
+    /**
+     * Use this to continue a partial session from where it left off
+     */
+    fun restart(other: WorkoutSession, fromItem: Int) {
+        assert (state == WorkoutSessionState.Ready)
+        assert (items.size == other.items.size)
+
+        startTime = Date(Date().time - other.durationMs)
+
+        // proceed to fromItem
+        val restartFromItemAt = if (fromItem >= 0) {
+            fromItem
+        } else {
+            // use last completed item
+            var lastCompleted = 0
+            other.items.forEachIndexed { at, item ->
+                if (item is WorkoutSessionItem.ExerciseSession && item.isCompleted) {
+                    if (at > lastCompleted) {
+                        lastCompleted = at
+                    }
+                }
+            }
+
+            lastCompleted
+        }
+
+        for (at in 0 until restartFromItemAt) {
+            val item = items[at]
+            if (item is WorkoutSessionItem.ExerciseSession) {
+                assert(other.items[at] is WorkoutSessionItem.ExerciseSession)
+                val otherItem = other.items[at] as WorkoutSessionItem.ExerciseSession
+
+                item.complete(otherItem.actualReps, otherItem.actualResistance, otherItem.notes)
+            }
+        }
+
+        atItem = restartFromItemAt
+
+        state = WorkoutSessionState.Started
+    }
+
+
     fun getCurrentItem(): WorkoutSessionItem {
         assert(state == WorkoutSessionState.Started)
 
         return items[atItem]
+    }
+
+
+    fun getCurrentItemIndex(): Int {
+        return atItem
     }
 
 
@@ -374,4 +420,11 @@ data class DayOfTheMonth(
     val day: Int,
     val workoutSessionsId: ItemIdentifier,
     val workoutSessionName: String
+)
+
+
+data class PartialWorkoutSessionRecord (
+    val workoutSessionId: ItemIdentifier,
+    val atItem: Int,
+    val restTimerStartMs: Long
 )

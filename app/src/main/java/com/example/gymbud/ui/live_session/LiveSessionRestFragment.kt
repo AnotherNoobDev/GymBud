@@ -107,7 +107,12 @@ class LiveSessionRestFragment : Fragment() {
 
 
     private fun startTimer() {
-        startTime = System.currentTimeMillis()
+        if (liveSessionViewModel.getRestTimerStartTime() > 0) {
+            startTime = liveSessionViewModel.getRestTimerStartTime()
+        } else {
+            startTime = System.currentTimeMillis()
+            liveSessionViewModel.updateRestTimerStartTime(startTime)
+        }
 
         timerHandler = Handler(Looper.getMainLooper())
         timerStatusChecker.run()
