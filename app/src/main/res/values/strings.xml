@@ -23,8 +23,10 @@
     <!-- bottom navigation -->
     <string name="templates">Templates</string>
     <string name="dashboard">Dashboard</string>
-    <string name="end_live_session">End Session</string>
     <string name="stats">Stats</string>
+    <string name="live_session_map">Session Overview</string>
+    <string name="live_session_current_item">To Current</string>
+    <string name="live_session_end">End Session</string>
 
     <!-- app bar -->
     <string name="settings">Settings</string>

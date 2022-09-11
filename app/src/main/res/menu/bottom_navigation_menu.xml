@@ -11,14 +11,33 @@
         android:icon="@drawable/ic_dashboard_24"
         android:title="@string/dashboard"/>
     <item
-        android:id="@id/liveSessionEndFragment"
-        android:enabled="true"
-        android:icon="@drawable/ic_end_session_24"
-        android:title="@string/end_live_session"
-        android:visible="false"/>
-    <item
         android:id="@id/statsFragment"
         android:enabled="true"
         android:icon="@drawable/ic_stats_24"
         android:title="@string/stats"/>
+
+    <!--item
+        android:id="@+id/liveSessionMap"
+        android:enabled="true"
+        android:icon="@drawable/ic_live_session_map"
+        android:title="@string/live_session_map"
+        android:visible="false"/>
+    <item
+        android:id="@+id/liveSessionCurrentItem"
+        android:enabled="true"
+        android:icon="@drawable/ic_live_session_current_item_24"
+        android:title="@string/live_session_current_item"
+        android:visible="false"/-->
+    <item
+        android:id="@+id/liveSessionDummy"
+        android:enabled="true"
+        android:icon="@drawable/ic_clear_24"
+        android:title="THis is a dummy. Should never be visible"
+        android:visible="false"/>
+    <item
+        android:id="@id/liveSessionEndFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_end_session_24"
+        android:title="@string/live_session_end"
+        android:visible="false"/>
 </menu>

@@ -36,6 +36,7 @@ class WorkoutSession(
 
     private var items: List<WorkoutSessionItem>
     private var atItem: Int = -1
+    private var atItemProgressionIndex: Int = -1
 
 
     init {
@@ -139,6 +140,7 @@ class WorkoutSession(
 
         startTime = Date()
         atItem = 0
+        atItemProgressionIndex = atItem
 
         state = WorkoutSessionState.Started
     }
@@ -183,6 +185,8 @@ class WorkoutSession(
 
         assert(atItem >= 0 && atItem < items.size)
 
+        atItemProgressionIndex = atItem
+
         state = WorkoutSessionState.Started
     }
 
@@ -196,6 +200,11 @@ class WorkoutSession(
 
     fun getCurrentItemIndex(): Int {
         return atItem
+    }
+
+
+    fun getProgressedToItemIndex(): Int {
+        return atItemProgressionIndex
     }
 
 
@@ -266,6 +275,30 @@ class WorkoutSession(
         if (atItem < items.size) {
             atItem++
         }
+
+        if (atItem > atItemProgressionIndex) {
+            atItemProgressionIndex = atItem
+        }
+    }
+
+
+    fun resume() {
+        atItem = atItemProgressionIndex
+    }
+
+
+    fun goToItem(itemIndex: Int) {
+        if (itemIndex < 0) {
+            atItem = 0
+            return
+        }
+
+        if (itemIndex > atItemProgressionIndex) {
+            atItem = atItemProgressionIndex
+            return
+        }
+
+        atItem = itemIndex
     }
 
 
@@ -334,6 +367,11 @@ class WorkoutSession(
     }
 
 
+    fun getItems(): List<WorkoutSessionItem> {
+        return items
+    }
+
+
     companion object {
         fun fromRecord(record: WorkoutSessionRecord, template: WorkoutTemplate, exerciseRecords: List<ExerciseSessionRecord>): WorkoutSession {
             // workout session
@@ -361,6 +399,7 @@ class WorkoutSession(
             // finally swap items from  Workout template with restored items
             session.items = restoredItems
             session.atItem = restoredItems.size - 1
+            session.atItemProgressionIndex = session.atItem
 
             return session
         }

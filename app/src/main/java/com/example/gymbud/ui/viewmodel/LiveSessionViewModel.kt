@@ -74,6 +74,11 @@ class LiveSessionViewModel(
     }
 
 
+    fun getItems(): List<WorkoutSessionItem> {
+        return workoutSession.getItems()
+    }
+
+
     fun getCurrentItem(): WorkoutSessionItem {
         return workoutSession.getCurrentItem()
     }
@@ -114,6 +119,11 @@ class LiveSessionViewModel(
     }
 
 
+    fun getProgressedToItemIndex(): Int {
+        return workoutSession.getProgressedToItemIndex()
+    }
+
+
     fun updateRestTimerStartTime(startTime: Long) {
         restTimerStartTime = startTime
     }
@@ -133,6 +143,18 @@ class LiveSessionViewModel(
     fun proceed() {
         updateRestTimerStartTime(-1)
         workoutSession.proceed()
+    }
+
+
+    fun resume() {
+        updateRestTimerStartTime(-1)
+        workoutSession.resume()
+    }
+
+
+    fun goToItem(itemIndex: Int) {
+        updateRestTimerStartTime(-1)
+        workoutSession.goToItem(itemIndex)
     }
 
 

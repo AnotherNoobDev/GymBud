@@ -21,5 +21,9 @@
         <item name="intensityWarmupColor">@color/cyber_yellow</item>
         <item name="intensityWorkingColor">@color/illuminating_emerald</item>
         <item name="intensityDefaultColor">?attr/colorOnPrimary</item>
+
+        <item name="liveSessionOverviewVisitedItemColor">?attr/colorOnPrimary</item>
+        <item name="liveSessionOverviewCurrentItemColor">@color/illuminating_emerald</item>
+        <item name="liveSessionOverviewNotVisitedItemColor">@color/battleship_grey</item>
     </style>
 </resources>

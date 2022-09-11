@@ -6,4 +6,8 @@
     <attr name="intensityWarmupColor" format="reference|color" />
     <attr name="intensityWorkingColor" format="reference|color" />
     <attr name="intensityDefaultColor" format="reference|color" />
+
+    <attr name="liveSessionOverviewVisitedItemColor" format="reference|color" />
+    <attr name="liveSessionOverviewCurrentItemColor" format="reference|color" />
+    <attr name="liveSessionOverviewNotVisitedItemColor" format="reference|color" />
 </resources>
