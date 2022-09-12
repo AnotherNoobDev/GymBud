@@ -199,6 +199,12 @@ class LiveSessionViewModel(
 
         return workoutSessionRecordId
     }
+
+
+    fun discardSession() {
+        _workoutSession = null
+        _state.value = WorkoutSessionState.NotReady
+    }
 }
 
 

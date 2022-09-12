@@ -66,7 +66,8 @@ class LiveSessionEndFragment : Fragment() {
 
             if (results.isEmpty()) {
                 notesInput.isEnabled = false
-                continueBtn.text = "Exit"
+                continueBtn.visibility = View.GONE
+                discardBtn.text = "Exit"
             }
 
             continueBtn.setOnClickListener {
@@ -75,6 +76,12 @@ class LiveSessionEndFragment : Fragment() {
                     val action = LiveSessionEndFragmentDirections.actionLiveSessionEndFragmentToDashboardFragment()
                     findNavController().navigate(action)
                 }
+            }
+
+            discardBtn.setOnClickListener {
+                liveSessionViewModel.discardSession()
+                val action = LiveSessionEndFragmentDirections.actionLiveSessionEndFragmentToDashboardFragment()
+                findNavController().navigate(action)
             }
         }
     }
