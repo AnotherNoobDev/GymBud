@@ -1,13 +1,10 @@
 package com.example.gymbud.ui.live_session
 
 import android.annotation.SuppressLint
-import android.graphics.Rect
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -19,6 +16,7 @@ import com.example.gymbud.databinding.FragmentLiveSessionExerciseBinding
 import com.example.gymbud.model.*
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModel
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModelFactory
+import com.example.gymbud.utility.SoftKeyboardVisibilityListener
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -37,6 +35,8 @@ class LiveSessionExerciseFragment : Fragment() {
 
     private var displayWeightUnit: WeightUnit = WeightUnit.KG
 
+    private lateinit var keyboardVisibilityListener: SoftKeyboardVisibilityListener
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,39 +44,13 @@ class LiveSessionExerciseFragment : Fragment() {
     ): View {
         _binding = FragmentLiveSessionExerciseBinding.inflate(inflater, container, false)
 
-        setKeyboardVisibilityListener()
+        keyboardVisibilityListener = SoftKeyboardVisibilityListener(binding.root) {
+            onKeyboardVisibilityChanged(it)
+        }
+
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener(keyboardVisibilityListener)
 
         return binding.root
-    }
-
-
-    private fun setKeyboardVisibilityListener() {
-        val parentView = binding.root
-        parentView.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
-            private var alreadyVisible = false
-            private val defaultKeyboardHeightDP = 100
-            private val estimatedKeyboardDP = defaultKeyboardHeightDP + 48
-            private val rect: Rect = Rect()
-
-            override fun onGlobalLayout() {
-                val estimatedKeyboardHeight = TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    estimatedKeyboardDP.toFloat(),
-                    parentView.resources.displayMetrics
-                ).toInt()
-
-                parentView.getWindowVisibleDisplayFrame(rect)
-
-                val heightDiff: Int = parentView.rootView.height - (rect.bottom - rect.top)
-                val isVisible = heightDiff >= estimatedKeyboardHeight
-                if (isVisible == alreadyVisible) {
-                    return
-                }
-
-                alreadyVisible = isVisible
-                onKeyboardVisibilityChanged(isVisible)
-            }
-        })
     }
 
 
@@ -285,5 +259,11 @@ class LiveSessionExerciseFragment : Fragment() {
 
         val action = LiveSessionExerciseFragmentDirections.actionLiveSessionExerciseFragmentToLiveSessionEndFragment()
         findNavController().navigate(action)
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.root.viewTreeObserver.removeOnGlobalLayoutListener(keyboardVisibilityListener)
     }
 }

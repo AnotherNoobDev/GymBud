@@ -21,13 +21,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/results_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/session_completed_label">
+        app:layout_constraintTop_toBottomOf="@id/session_completed_label"
+        app:layout_constraintBottom_toTopOf="@id/notes_label">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -65,6 +67,7 @@
                 android:layout_marginTop="10dp"
                 android:scrollbars="vertical"
                 app:layoutManager="LinearLayoutManager"
+                tools:itemCount="20"
                 tools:listitem="@layout/layout_detail_exercise_session" />
         </LinearLayout>
     </ScrollView>
@@ -78,7 +81,7 @@
         app:layout_constraintBottom_toTopOf="@+id/continue_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2"
+        app:layout_constraintTop_toBottomOf="@id/results_container"
         tools:hint="Notes">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -86,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
-            android:maxLines="10" />
+            android:maxLines="2" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

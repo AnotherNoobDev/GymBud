@@ -15,6 +15,7 @@ import com.example.gymbud.databinding.FragmentLiveSessionEndBinding
 import com.example.gymbud.ui.SessionExerciseListRecyclerViewAdapter
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModel
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModelFactory
+import com.example.gymbud.utility.SoftKeyboardVisibilityListener
 import com.example.gymbud.utility.TimeFormatter
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -32,6 +33,8 @@ class LiveSessionEndFragment : Fragment() {
 
     private val sessionResultsAdapter = SessionExerciseListRecyclerViewAdapter()
 
+    private lateinit var keyboardVisibilityListener: SoftKeyboardVisibilityListener
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,9 +43,27 @@ class LiveSessionEndFragment : Fragment() {
         liveSessionViewModel.finish()
 
         _binding = FragmentLiveSessionEndBinding.inflate(inflater, container, false)
+
+        keyboardVisibilityListener = SoftKeyboardVisibilityListener(binding.root) {
+            onKeyboardVisibilityChanged(it)
+        }
+
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener(keyboardVisibilityListener)
+
         binding.resultsRecyclerView.adapter = sessionResultsAdapter
 
         return binding.root
+    }
+
+
+    private fun onKeyboardVisibilityChanged(visible: Boolean) {
+        if (visible) {
+            binding.resultsContainer.visibility = View.GONE
+            binding.notesInput.maxLines = 10
+        } else {
+            binding.resultsContainer.visibility = View.VISIBLE
+            binding.notesInput.maxLines = 2
+        }
     }
 
 
@@ -84,5 +105,11 @@ class LiveSessionEndFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.root.viewTreeObserver.removeOnGlobalLayoutListener(keyboardVisibilityListener)
     }
 }
