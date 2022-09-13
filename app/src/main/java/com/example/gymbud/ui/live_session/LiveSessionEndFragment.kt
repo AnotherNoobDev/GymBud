@@ -86,7 +86,9 @@ class LiveSessionEndFragment : Fragment() {
             durationValue.text = TimeFormatter.getFormattedTimeHHMMSS(liveSessionViewModel.getDuration() / 1000)
 
             if (results.isEmpty()) {
-                notesInput.isEnabled = false
+                sessionCompletedLabel.text = "\n\n\n\n That was a short one.. \n\n\n\n We won't record it :)"
+                resultsContainer.visibility = View.GONE
+                notesInput.visibility = View.GONE
                 continueBtn.visibility = View.GONE
                 discardBtn.text = "Exit"
             }
