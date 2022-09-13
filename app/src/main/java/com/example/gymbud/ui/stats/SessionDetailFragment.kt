@@ -35,7 +35,7 @@ class SessionDetailFragment : Fragment() {
     private var _binding: FragmentSessionDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val sessionAdapter = SessionExerciseListRecyclerViewAdapter()
+    private val sessionAdapter = SessionExerciseListRecyclerViewAdapter(false)
 
 
     override fun onCreateView(

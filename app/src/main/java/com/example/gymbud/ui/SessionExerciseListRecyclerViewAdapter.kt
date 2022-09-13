@@ -1,18 +1,19 @@
 package com.example.gymbud.ui
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.ListAdapter
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.gymbud.R
 import com.example.gymbud.databinding.LayoutDetailExerciseSessionBinding
-import com.example.gymbud.model.TagCategory
-import com.example.gymbud.model.WeightUnit
-import com.example.gymbud.model.WorkoutSessionItem
-import com.example.gymbud.model.convertKGtoLB
+import com.example.gymbud.model.*
+import kotlin.math.abs
 
-class SessionExerciseListRecyclerViewAdapter:
+class SessionExerciseListRecyclerViewAdapter (private val showProgression: Boolean):
     ListAdapter<WorkoutSessionItem.ExerciseSession, SessionExerciseListRecyclerViewAdapter.ViewHolder>(DiffCallback) {
 
     var displayWeightUnit: WeightUnit = WeightUnit.KG
@@ -21,6 +22,9 @@ class SessionExerciseListRecyclerViewAdapter:
     inner class ViewHolder(binding: LayoutDetailExerciseSessionBinding) : RecyclerView.ViewHolder(binding.root) {
         val exerciseLabel: TextView = binding.exerciseLabel
         val exerciseValue: TextView = binding.exerciseValue
+        val exerciseProgression: ImageView = binding.progressionIcon
+        val exercisePrevValue: TextView = binding.exercisePrevValue
+        val exercisePrevLabel: TextView = binding.exercisePrevLabel
     }
 
 
@@ -54,12 +58,45 @@ class SessionExerciseListRecyclerViewAdapter:
             holder.exerciseLabel.text = "${item.getShortName()} ($intensity)"
         }
 
+        holder.exerciseValue.text = getExerciseValueStr(item.actualReps, item.actualResistance)
 
-        val exerciseValueStr = "${item.actualReps} x " + when(displayWeightUnit) {
-            WeightUnit.KG-> String.format("%.2f kg", item.actualResistance)
-            WeightUnit.LB-> String.format("%.2f lb", convertKGtoLB(item.actualResistance))
+        val prevReps = item.getPreviousReps()
+        val prevResistance = item.getPreviousResistance()
+
+        val displayProgression = showProgression && prevReps != null && prevResistance != null
+
+        if (displayProgression) {
+            holder.exerciseProgression.visibility = View.VISIBLE
+            holder.exercisePrevValue.visibility = View.VISIBLE
+            holder.exercisePrevLabel.visibility = View.VISIBLE
+
+            holder.exercisePrevValue.text = getExerciseValueStr(prevReps!!, prevResistance!!)
+
+            val prev1RM = calculateOneRepMax(prevReps, prevResistance)
+            val today1RM = calculateOneRepMax(item.actualReps, item.actualResistance)
+            when {
+                today1RM > prev1RM -> {
+                    holder.exerciseProgression.setImageResource(R.drawable.ic_arrow_upward_24)
+                }
+                abs(today1RM - prev1RM) < 0.1 -> {
+                    holder.exerciseProgression.setImageResource(R.drawable.ic_remove_24)
+                }
+                else -> {
+                    holder.exerciseProgression.setImageResource(R.drawable.ic_arrow_downward_24)
+                }
+            }
+        } else {
+            holder.exerciseProgression.visibility = View.GONE
+            holder.exercisePrevValue.visibility = View.GONE
+            holder.exercisePrevLabel.visibility = View.GONE
         }
+    }
 
-        holder.exerciseValue.text = exerciseValueStr
+
+    private fun getExerciseValueStr(reps: Int, resistance: Double): String {
+        return "$reps x " + when(displayWeightUnit) {
+            WeightUnit.KG-> String.format("%.2f kg", resistance)
+            WeightUnit.LB-> String.format("%.2f lb", convertKGtoLB(resistance))
+        }
     }
 }

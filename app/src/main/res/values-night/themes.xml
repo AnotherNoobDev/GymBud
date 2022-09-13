@@ -30,5 +30,7 @@
         <item name="liveSessionOverviewVisitedItemColor">?attr/colorOnPrimary</item>
         <item name="liveSessionOverviewCurrentItemColor">@color/illuminating_emerald</item>
         <item name="liveSessionOverviewNotVisitedItemColor">@color/battleship_grey</item>
+
+        <item name="prevResultColor">@color/battleship_grey</item>
     </style>
 </resources>
