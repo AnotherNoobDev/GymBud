@@ -1,13 +1,25 @@
 package com.example.gymbud.utility
 
+import android.annotation.SuppressLint
+import java.lang.Exception
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-// todo check code for other places that do time formatting and unify here
+@SuppressLint("SimpleDateFormat")
 object TimeFormatter {
-    private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.US)
-    private val shortDateFormatDDMM = SimpleDateFormat("dd.MM", Locale.US)
+    // won't update if user changes locale while app is running, but that's fine for now :)
+    @SuppressLint("ConstantLocale")
+    private val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault())
+
+    private val shortDateFormat: SimpleDateFormat = try {
+        val datePattern =(dateFormat as SimpleDateFormat).toPattern().replace("y", "").trim { it < 'A' || it > 'z' }
+        SimpleDateFormat(datePattern)
+    } catch (_: Exception) {
+        SimpleDateFormat("dd.mm")
+    }
+
 
     fun getFormattedTimeMMSS(elapsedSec: Long): String {
         val minutes = elapsedSec / 60
@@ -28,11 +40,11 @@ object TimeFormatter {
 
 
     fun getFormattedDateDDMMYYYY(date: Date): String {
-        return dateFormat.format(date)
+        return dateFormat.format(date, )
     }
 
 
     fun getFormattedDateDDMM(date: Date): String {
-        return shortDateFormatDDMM.format(date)
+        return shortDateFormat.format(date)
     }
 }

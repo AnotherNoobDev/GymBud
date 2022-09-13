@@ -36,6 +36,7 @@ class StatsSessionCalendarFragment : Fragment() {
 
     private val calendar = Calendar.getInstance()
 
+    // we always want it formatted like this, regardless of device locale
     private val monthYearDateFormat = SimpleDateFormat("MMMM yyyy", Locale.US)
 
 

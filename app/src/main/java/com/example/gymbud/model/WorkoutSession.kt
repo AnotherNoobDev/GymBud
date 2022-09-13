@@ -1,11 +1,9 @@
 package com.example.gymbud.model
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.room.*
 import com.example.gymbud.data.ItemIdentifierGenerator
 import java.lang.Exception
-import java.text.SimpleDateFormat
 
 import java.util.*
 
@@ -25,8 +23,6 @@ class WorkoutSession(
     val programTemplateId: ItemIdentifier,
     previousSession: WorkoutSession?
 ) {
-    @SuppressLint("SimpleDateFormat")
-    private val todayStr = SimpleDateFormat("dd-MM-yyyy").format(Date())
     private lateinit var startTime: Date
     private var durationMs: Long = 0
 
@@ -82,7 +78,7 @@ class WorkoutSession(
     private fun addExerciseTemplateToSession(sessionItemsBuilder: MutableList<WorkoutSessionItem>, exerciseTemplate: ExerciseTemplate, tags: Tags?) {
         sessionItemsBuilder.add(
             WorkoutSessionItem.ExerciseSession(
-                exerciseTemplate.name + todayStr,
+                exerciseTemplate.name,
                 exerciseTemplate,
                 tags,
                 null
@@ -339,7 +335,7 @@ class WorkoutSession(
         return Pair(
             WorkoutSessionRecord(
                 workoutSessionId,
-                workoutTemplate.name + todayStr,
+                workoutTemplate.name,
                 workoutTemplate.id,
                 programTemplateId,
                 startTime.time,

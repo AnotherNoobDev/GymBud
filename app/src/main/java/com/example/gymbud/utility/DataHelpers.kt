@@ -222,7 +222,7 @@ private fun addExerciseTemplateToSession(sessionRecordBuilder: SessionRecordBuil
     sessionRecordBuilder.add(
         ExerciseSessionRecord(
             ItemIdentifierGenerator.generateId(),
-            "${exerciseTemplate.name}_${sessionRecordBuilder.calendar.time.time}",
+            exerciseTemplate.name,
             exerciseTemplate.id,
             sessionRecordBuilder.getSessionId(),
             resistance,
