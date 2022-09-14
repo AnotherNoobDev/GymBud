@@ -41,7 +41,7 @@ class LiveSessionStartFragment : Fragment() {
     private var _binding: FragmentLiveSessionStartBinding? = null
     private val binding get() = _binding!!
 
-    private val previousSessionAdapter = SessionExerciseListRecyclerViewAdapter(false)
+    private val previousSessionAdapter = SessionExerciseListRecyclerViewAdapter(showProgression = false, showNotes = true)
 
     private var sessionStarted = false
 

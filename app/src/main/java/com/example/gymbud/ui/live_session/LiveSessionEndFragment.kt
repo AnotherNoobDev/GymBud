@@ -31,7 +31,7 @@ class LiveSessionEndFragment : Fragment() {
     private var _binding: FragmentLiveSessionEndBinding? = null
     private val binding get() = _binding!!
 
-    private val sessionResultsAdapter = SessionExerciseListRecyclerViewAdapter(true)
+    private val sessionResultsAdapter = SessionExerciseListRecyclerViewAdapter(showProgression = true, showNotes = false)
 
     private lateinit var keyboardVisibilityListener: SoftKeyboardVisibilityListener
 

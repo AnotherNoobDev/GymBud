@@ -13,7 +13,7 @@ import com.example.gymbud.databinding.LayoutDetailExerciseSessionBinding
 import com.example.gymbud.model.*
 import kotlin.math.abs
 
-class SessionExerciseListRecyclerViewAdapter (private val showProgression: Boolean):
+class SessionExerciseListRecyclerViewAdapter (private val showProgression: Boolean, private val showNotes: Boolean):
     ListAdapter<WorkoutSessionItem.ExerciseSession, SessionExerciseListRecyclerViewAdapter.ViewHolder>(DiffCallback) {
 
     var displayWeightUnit: WeightUnit = WeightUnit.KG
@@ -25,6 +25,7 @@ class SessionExerciseListRecyclerViewAdapter (private val showProgression: Boole
         val exerciseProgression: ImageView = binding.progressionIcon
         val exercisePrevValue: TextView = binding.exercisePrevValue
         val exercisePrevLabel: TextView = binding.exercisePrevLabel
+        val notes: TextView = binding.notes
     }
 
 
@@ -36,7 +37,8 @@ class SessionExerciseListRecyclerViewAdapter (private val showProgression: Boole
         override fun areContentsTheSame(oldItem: WorkoutSessionItem.ExerciseSession, newItem: WorkoutSessionItem.ExerciseSession): Boolean {
             return oldItem.getShortName() == newItem.getShortName() &&
                     oldItem.actualResistance == newItem.actualResistance &&
-                    oldItem.actualReps == newItem.actualReps
+                    oldItem.actualReps == newItem.actualReps &&
+                    oldItem.notes == newItem.notes
         }
     }
 
@@ -89,6 +91,15 @@ class SessionExerciseListRecyclerViewAdapter (private val showProgression: Boole
             holder.exerciseProgression.visibility = View.GONE
             holder.exercisePrevValue.visibility = View.GONE
             holder.exercisePrevLabel.visibility = View.GONE
+        }
+
+        val displayNotes = showNotes && !displayProgression && item.notes.isNotEmpty()
+
+        if (displayNotes) {
+            holder.notes.visibility = View.VISIBLE
+            holder.notes.text = item.notes
+        } else {
+            holder.notes.visibility = View.GONE
         }
     }
 

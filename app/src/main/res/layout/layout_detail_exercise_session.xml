@@ -16,6 +16,16 @@
         android:maxEms="10" />
 
     <TextView
+        android:id="@+id/notes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="8dp"
+        tools:text="Notes here"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exercise_label" />
+
+    <TextView
         android:id="@+id/exercise_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
