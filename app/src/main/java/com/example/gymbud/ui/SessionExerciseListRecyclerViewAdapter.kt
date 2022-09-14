@@ -110,4 +110,10 @@ class SessionExerciseListRecyclerViewAdapter (private val showProgression: Boole
             WeightUnit.LB-> String.format("%.2f lb", convertKGtoLB(resistance))
         }
     }
+
+
+    override fun submitList(list: List<WorkoutSessionItem.ExerciseSession>?) {
+        // ignore exercises that don't have values
+        super.submitList(list?.filter { it.actualReps != 0 })
+    }
 }
