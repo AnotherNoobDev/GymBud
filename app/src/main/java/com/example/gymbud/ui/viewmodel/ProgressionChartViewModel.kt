@@ -88,9 +88,25 @@ class ProgressionChartViewModel(
         val timeSeries = mutableListOf<Number>()
         val resultEvalSeries = mutableListOf<Number>()
 
+        var lastAdded = Long.MAX_VALUE
+        val oneMonthMs = 30L * 24 * 60 * 60 * 1000
+
+        // points are in date descending order
         exerciseProgression.points.forEach {
-            timeSeries.add(it.dateMs)
-            resultEvalSeries.add((exerciseEvaluator(it).toDouble() * 100.0).roundToInt() / 100.0) // 2 decimal places
+            var addPoint = false
+            if (timeWindow == TimeWindowLength.Year) {
+                if (lastAdded - it.dateMs >= oneMonthMs) {
+                    addPoint = true
+                }
+            } else {
+                addPoint = true
+            }
+
+            if (addPoint) {
+                lastAdded = it.dateMs
+                timeSeries.add(it.dateMs)
+                resultEvalSeries.add((exerciseEvaluator(it).toDouble() * 100.0).roundToInt() / 100.0) // 2 decimal places
+            }
         }
 
         return Pair(timeSeries, resultEvalSeries)

@@ -1,7 +1,5 @@
 package com.example.gymbud.ui.stats
 
-import android.graphics.Color
-import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -243,10 +241,11 @@ class ExerciseProgressionFragment : Fragment() {
             time.first()
         }
 
-        binding.progressionPlot.setDomainBoundaries(addDays(upperBound.toLong(), -timeWindowInDays), upperBound,  BoundaryMode.FIXED)
+        binding.progressionPlot.apply {
+            setDomainBoundaries(addDays(upperBound.toLong(), -timeWindowInDays), upperBound,  BoundaryMode.FIXED)
+            setRangeBoundaries(results.minOf { it.toDouble() }, results.maxOf { it.toDouble() }, BoundaryMode.FIXED)
 
-        binding.progressionPlot.setRangeBoundaries(results.minOf { it.toDouble() }, results.maxOf { it.toDouble() }, BoundaryMode.FIXED)
-
-        binding.progressionPlot.redraw()
+            redraw()
+        }
     }
 }
