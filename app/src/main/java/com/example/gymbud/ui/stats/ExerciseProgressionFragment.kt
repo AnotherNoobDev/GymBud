@@ -119,6 +119,9 @@ class ExerciseProgressionFragment : Fragment() {
             progressionPlot.graph.rangeGridLinePaint = null
             progressionPlot.graph.domainGridLinePaint = null
 
+            // Y labels
+            progressionPlot.rangeStepValue = 5.0
+
             // pan todo figure out settings that give best user experience
             //chartPan = PanZoom.attach(binding.progressionPlot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.SCALE)
             chartPan = PanZoom.attach(binding.progressionPlot)
