@@ -109,6 +109,8 @@ class ExerciseProgressionFragment : Fragment() {
                 }
             }
 
+            progressionPlot.legend.isVisible = false
+
             // pan todo figure out settings that give best user experience
             //chartPan = PanZoom.attach(binding.progressionPlot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.SCALE)
             chartPan = PanZoom.attach(binding.progressionPlot)
