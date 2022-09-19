@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.gymbud.data.repository.ExerciseRepository
 import com.example.gymbud.model.*
 import kotlinx.coroutines.flow.first
+import kotlin.math.roundToInt
 
 
 enum class ExerciseResultEvaluator {
@@ -89,7 +90,7 @@ class ProgressionChartViewModel(
 
         exerciseProgression.points.forEach {
             timeSeries.add(it.dateMs)
-            resultEvalSeries.add(exerciseEvaluator(it))
+            resultEvalSeries.add((exerciseEvaluator(it).toDouble() * 100.0).roundToInt() / 100.0) // 2 decimal places
         }
 
         return Pair(timeSeries, resultEvalSeries)
