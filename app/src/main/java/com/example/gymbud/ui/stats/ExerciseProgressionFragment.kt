@@ -1,5 +1,7 @@
 package com.example.gymbud.ui.stats
 
+import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -87,6 +89,7 @@ class ExerciseProgressionFragment : Fragment() {
 
         // line style
         seriesFormatter = LineAndPointFormatter(requireContext(), R.xml.exercise_progression_chart_formatter)
+        seriesFormatter.pointLabelFormatter.vOffset = -30f
 
         binding.apply {
             progressionPlot.clear()
@@ -109,7 +112,12 @@ class ExerciseProgressionFragment : Fragment() {
                 }
             }
 
+            // hide legend
             progressionPlot.legend.isVisible = false
+
+            // hide grid lines
+            progressionPlot.graph.rangeGridLinePaint = null
+            progressionPlot.graph.domainGridLinePaint = null
 
             // pan todo figure out settings that give best user experience
             //chartPan = PanZoom.attach(binding.progressionPlot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.SCALE)
