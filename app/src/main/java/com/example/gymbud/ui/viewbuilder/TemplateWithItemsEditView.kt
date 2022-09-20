@@ -227,7 +227,7 @@ class TemplateWithItemsEditView(
         itemSelectionBinding.label.hint = "Exercise"
 
         itemSelectionBinding.input.setAdapter(availableTemplatesSelectionAdapter)
-        itemSelectionBinding.input.setText(availableTemplates?.get(0)?.name ?: "", false) // todo all these ? look kinda funky xd
+        itemSelectionBinding.input.setText(availableTemplates?.get(0)?.name ?: "", false)
 
         intensityBinding.label.setStartIconDrawable(R.drawable.ic_intensity_24)
         intensityBinding.label.hint = "Intensity"
@@ -252,7 +252,7 @@ class TemplateWithItemsEditView(
         itemSelectionBinding.label.hint = "Rest"
 
         itemSelectionBinding.input.setAdapter(restPeriodsSelectionAdapter)
-        itemSelectionBinding.input.setText(restPeriods?.get(0)?.name ?: "", false) // todo all these ? look kinda funky xd
+        itemSelectionBinding.input.setText(restPeriods?.get(0)?.name ?: "", false)
     }
 
 

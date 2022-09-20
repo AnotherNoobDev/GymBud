@@ -63,8 +63,6 @@ class StatsSessionCalendarFragment : Fragment() {
             }
         }
 
-        // todo how to handle this regardless of where it happens on the fragment?
-        // todo check on actual device.. on emulator it feels bad.. maybe just replace with left right arrows next to name as an easy alternative
         binding.daysOfTheMonthRecyclerView.setOnTouchListener(onSwipeListener)
         binding.root.setOnTouchListener(onSwipeListener)
 

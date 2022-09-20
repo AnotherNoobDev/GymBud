@@ -9,7 +9,8 @@ import com.example.gymbud.model.ItemIdentifier
 import com.example.gymbud.model.ItemType
 import kotlinx.coroutines.flow.Flow
 
-// todo a better name for ItemViewModel is actually TemplateViewModel,or? :)
+
+
 class ItemViewModel(
     private val itemRepository: ItemRepository
 ): ViewModel() {

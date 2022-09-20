@@ -22,8 +22,6 @@ class ProgramTemplateRepository(
     private val workoutTemplateRepository: WorkoutTemplateRepository,
     private val restPeriodRepository: RestPeriodRepository
 ) {
-    // todo check if this is needed by other repositories with populate calls
-    // and how the rest of the application handles this
     val programTemplates: Flow<List<ProgramTemplate>> = programTemplateDao.getAll().map { programs ->
         programs.map {
             populateProgramTemplateItems(it)

@@ -120,7 +120,7 @@ class ItemEditFragment : Fragment() {
     }
 
 
-    // todo seems kinda duplicate with addExercise
+
     private fun updateItem() {
         val tempItem = itemView.getContent() ?: return
 
