@@ -31,6 +31,9 @@ import java.util.*
 import kotlin.math.roundToLong
 
 
+private const val CHART_RANGE_LIMIT_PADDING = 5.0 // weight
+
+
 class ExerciseProgressionFragment : Fragment() {
     private val navigationArgs: ExerciseProgressionFragmentArgs by navArgs()
 
@@ -120,9 +123,8 @@ class ExerciseProgressionFragment : Fragment() {
             // Y labels
             progressionPlot.rangeStepValue = 5.0
 
-            // pan todo figure out settings that give best user experience
-            //chartPan = PanZoom.attach(binding.progressionPlot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.SCALE)
-            chartPan = PanZoom.attach(binding.progressionPlot)
+            // pan and zoom
+            chartPan = PanZoom.attach(binding.progressionPlot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.NONE)
 
             exerciseInput.onItemClickListener =
                 AdapterView.OnItemClickListener { _, _, p2, _ ->
@@ -235,15 +237,30 @@ class ExerciseProgressionFragment : Fragment() {
         }
 
         val upperBound = if (timeWindowCenter > 0) {
-            // todo highlight pb
             addDays(timeWindowCenter, timeWindowInDays / 2)
         } else {
             time.first()
         }
 
+        val rangeMinValue = results.minOf { it.toDouble() } - CHART_RANGE_LIMIT_PADDING
+        val rangeMaxValue = results.maxOf { it.toDouble() } + CHART_RANGE_LIMIT_PADDING
+
         binding.progressionPlot.apply {
             setDomainBoundaries(addDays(upperBound.toLong(), -timeWindowInDays), upperBound,  BoundaryMode.FIXED)
-            setRangeBoundaries(results.minOf { it.toDouble() }, results.maxOf { it.toDouble() }, BoundaryMode.FIXED)
+            setRangeBoundaries(
+                rangeMinValue,
+                rangeMaxValue,
+                BoundaryMode.FIXED
+            )
+
+            // allow some space for horizontal panning
+            // for vertical we just use the range boundaries, since there is no vertical panning
+            outerLimits.set(
+                addDays(time.minOf { it.toLong() }, -timeWindowInDays / 7),
+                addDays(time.maxOf { it.toLong() }, timeWindowInDays / 7),
+                rangeMinValue,
+                rangeMaxValue
+            )
 
             redraw()
         }
