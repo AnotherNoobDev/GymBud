@@ -80,13 +80,13 @@ class DashboardFragment : Fragment() {
             .setSingleChoiceItems(programsByName.toTypedArray(), checkedItem) { _, which ->
                 checkedItem = which
             }
-            .setPositiveButton("Confirm") { _, _ ->
+            .setPositiveButton("Ok") { _, _ ->
                 viewLifecycleOwner.lifecycleScope.launch {
                     val newActiveProgram = programOptions!![checkedItem].first
                     dashboardViewModel.setActiveProgram(newActiveProgram)
                 }
             }
-            .setNegativeButton("Dismiss") {_,_ ->
+            .setNegativeButton("Cancel") {_,_ ->
             }
             .show()
     }
@@ -104,13 +104,13 @@ class DashboardFragment : Fragment() {
             .setSingleChoiceItems(programDaysByName.toTypedArray(), checkedItem) { _, which ->
                 checkedItem = which
             }
-            .setPositiveButton("Confirm") { _, _ ->
+            .setPositiveButton("Ok") { _, _ ->
                 viewLifecycleOwner.lifecycleScope.launch {
                     val newActiveProgramDay = programDayOptions!![checkedItem].first
                     dashboardViewModel.setActiveProgramDay(newActiveProgramDay)
                 }
             }
-            .setNegativeButton("Dismiss") {_,_ ->
+            .setNegativeButton("Cancel") {_,_ ->
             }
             .show()
     }

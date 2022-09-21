@@ -17,6 +17,7 @@ import com.example.gymbud.ui.SessionExerciseListRecyclerViewAdapter
 import com.example.gymbud.ui.viewmodel.StatsViewModel
 import com.example.gymbud.ui.viewmodel.StatsViewModelFactory
 import com.example.gymbud.utility.TimeFormatter
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -47,10 +48,17 @@ class SessionDetailFragment : Fragment() {
             resultsRecyclerView.adapter = sessionAdapter
 
             deleteBtn.setOnClickListener {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    statsViewModel.removeSession(navigationArgs.id)
-                    findNavController().navigateUp()
-                }
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Delete Workout Session?")
+                    .setPositiveButton("Ok") { _, _ ->
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            statsViewModel.removeSession(navigationArgs.id)
+                            findNavController().navigateUp()
+                        }
+                    }
+                    .setNegativeButton("Cancel") {_,_ ->
+                    }
+                    .show()
             }
         }
 

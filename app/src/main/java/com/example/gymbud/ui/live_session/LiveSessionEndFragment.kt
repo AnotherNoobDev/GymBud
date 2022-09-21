@@ -17,6 +17,7 @@ import com.example.gymbud.ui.viewmodel.LiveSessionViewModel
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModelFactory
 import com.example.gymbud.utility.SoftKeyboardVisibilityListener
 import com.example.gymbud.utility.TimeFormatter
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -34,6 +35,8 @@ class LiveSessionEndFragment : Fragment() {
     private val sessionResultsAdapter = SessionExerciseListRecyclerViewAdapter(showProgression = true, showNotes = false)
 
     private lateinit var keyboardVisibilityListener: SoftKeyboardVisibilityListener
+
+    private var needsUserConfirmationOnDiscard = true
 
 
     override fun onCreateView(
@@ -91,6 +94,8 @@ class LiveSessionEndFragment : Fragment() {
                 notesInput.visibility = View.GONE
                 continueBtn.visibility = View.GONE
                 discardBtn.text = "Exit"
+
+                needsUserConfirmationOnDiscard = false
             }
 
             continueBtn.setOnClickListener {
@@ -102,11 +107,27 @@ class LiveSessionEndFragment : Fragment() {
             }
 
             discardBtn.setOnClickListener {
-                liveSessionViewModel.discardSession()
-                val action = LiveSessionEndFragmentDirections.actionLiveSessionEndFragmentToDashboardFragment()
-                findNavController().navigate(action)
+                if (needsUserConfirmationOnDiscard) {
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("Discard Workout Session?")
+                        .setPositiveButton("Ok") { _, _ ->
+                            discardSession()
+                        }
+                        .setNegativeButton("Cancel") {_,_ ->
+                        }
+                        .show()
+                } else {
+                    discardSession()
+                }
             }
         }
+    }
+
+
+    private fun discardSession() {
+        liveSessionViewModel.discardSession()
+        val action = LiveSessionEndFragmentDirections.actionLiveSessionEndFragmentToDashboardFragment()
+        findNavController().navigate(action)
     }
 
 
