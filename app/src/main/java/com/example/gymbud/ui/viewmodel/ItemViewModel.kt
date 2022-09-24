@@ -31,6 +31,10 @@ class ItemViewModel(
         return itemRepository.getItem(id, type)
     }
 
+    suspend fun getDependantItems(id: ItemIdentifier, type: ItemType): List<String> {
+        return itemRepository.getDependantItems(id, type)
+    }
+
     suspend fun addItem(itemContent: ItemContent) {
         itemRepository.addItem(itemContent)
     }

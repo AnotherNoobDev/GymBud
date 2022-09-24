@@ -90,18 +90,24 @@ class ItemEditFragment : Fragment() {
 
             cancelBtn.visibility = View.VISIBLE
             cancelBtn.setOnClickListener {
-                val items = listOf("bla", "blup", "bleep", "bleep", "bleep", "blee77p", "bleep6", "bleep3", "bleep", "bleep45", "bleep775", "bleep456")
-                val message = items.joinToString("\n\n")
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val items = viewModel.getDependantItems(navigationArgs.id, navigationArgs.type)
+                    val message = "\n\n" + if (items.isNotEmpty()) {
+                         items.joinToString("\n\n")
+                    } else {
+                        "None."
+                    }
 
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("The templates below will also be affected. PROCEED?")
-                    .setMessage(message)
-                    .setPositiveButton("Ok") { _, _ ->
-                        removeItem()
-                    }
-                    .setNegativeButton("Cancel") {_,_ ->
-                    }
-                    .show()
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("The templates below will also be affected. PROCEED?")
+                        .setMessage(message)
+                        .setPositiveButton("Ok") { _, _ ->
+                            removeItem()
+                        }
+                        .setNegativeButton("Cancel") {_,_ ->
+                        }
+                        .show()
+                }
             }
         }
     }

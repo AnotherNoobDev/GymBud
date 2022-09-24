@@ -71,6 +71,11 @@ class SetTemplateRepository(
     }
 
 
+    suspend fun retrieveSetTemplatesByItem(id: ItemIdentifier): List<Item> {
+        return setTemplateDao.getByItem(id)
+    }
+
+
     suspend fun retrieveSetTemplates(ids: List<ItemIdentifier>): List<SetTemplate> {
         val templates = setTemplateDao.get(ids)
         templates.forEach {

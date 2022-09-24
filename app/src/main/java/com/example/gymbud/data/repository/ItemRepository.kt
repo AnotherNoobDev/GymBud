@@ -69,6 +69,89 @@ class ItemRepository(
     }
 
 
+    /*
+        returns list of dependants as strings of the form "Name (TemplateType)"
+     */
+    suspend fun getDependantItems(id: ItemIdentifier, type: ItemType): List<String> {
+        return when (type) {
+            ItemType.EXERCISE -> getExerciseDependantItems(id)
+            ItemType.EXERCISE_TEMPLATE -> getExerciseTemplateDependantItems(id)
+            ItemType.SET_TEMPLATE -> getSetTemplateDependantItems(id)
+            ItemType.WORKOUT_TEMPLATE -> getWorkoutTemplateDependantItems(id)
+            ItemType.PROGRAM_TEMPLATE -> listOf() // top level
+            ItemType.REST_PERIOD -> getRestPeriodDependantItems(id)
+            else -> listOf()
+        }
+    }
+
+
+    private suspend fun getWorkoutTemplateDependantItems(id: ItemIdentifier): List<String> {
+        // only program templates depend on workout templates
+        return programTemplateRepository.retrieveProgramTemplatesByItem(id).map {"${it.name} (Program Template)"}.distinct()
+    }
+
+
+    private suspend fun getSetTemplateDependantItems(id: ItemIdentifier): List<String> {
+        val dependants = mutableListOf<String>()
+
+        // direct dependants
+        val directDependants = workoutTemplateRepository.retrieveWorkoutTemplatesByItem(id)
+        dependants.addAll(directDependants.map{"${it.name} (Workout Template)"})
+
+        // dependants further down
+        directDependants.forEach {
+            dependants.addAll(getWorkoutTemplateDependantItems(it.id))
+        }
+
+        return dependants.distinct()
+    }
+
+
+    private suspend fun getExerciseTemplateDependantItems(id: ItemIdentifier): List<String> {
+        val dependants = mutableListOf<String>()
+
+        // direct dependants
+        val directDependants = setTemplateRepository.retrieveSetTemplatesByItem(id)
+        dependants.addAll(directDependants.map{"${it.name} (Set Template)"})
+
+        // dependants further down
+        directDependants.forEach {
+            dependants.addAll(getSetTemplateDependantItems(it.id))
+        }
+
+        return dependants.distinct()
+    }
+
+
+    private suspend fun getExerciseDependantItems(id: ItemIdentifier): List<String> {
+        val dependants = mutableListOf<String>()
+
+        // direct dependants
+        val directDependants = exerciseTemplateRepository.retrieveExerciseTemplatesByExercise(id)
+        dependants.addAll(directDependants.map{"${it.name} (Exercise Template)"})
+
+        // dependants further down
+        directDependants.forEach {
+            dependants.addAll(getExerciseTemplateDependantItems(it.id))
+        }
+
+        return dependants.distinct()
+    }
+
+
+    private suspend fun getRestPeriodDependantItems(id: ItemIdentifier): List<String> {
+        val dependants = mutableListOf<String>()
+
+        // a rest period can appear in Set Templates, Workout Templates and Program Templates
+        dependants.addAll(setTemplateRepository.retrieveSetTemplatesByItem(id).map{"${it.name} (Set Template)"})
+        dependants.addAll(workoutTemplateRepository.retrieveWorkoutTemplatesByItem(id).map{"${it.name} (Workout Template)"})
+        dependants.addAll(programTemplateRepository.retrieveProgramTemplatesByItem(id).map{"${it.name} (Program Template)"})
+
+        return dependants.distinct()
+    }
+
+
+
     //@OptIn(ExperimentalCoroutinesApi::class)
     @Suppress("UNUSED_PARAMETER")
     private fun findItemInAll(id: ItemIdentifier): Flow<Item?>  {

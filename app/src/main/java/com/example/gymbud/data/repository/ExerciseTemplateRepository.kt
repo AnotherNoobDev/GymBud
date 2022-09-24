@@ -56,6 +56,11 @@ class ExerciseTemplateRepository(
     }
 
 
+    suspend fun retrieveExerciseTemplatesByExercise(exerciseId: ItemIdentifier): List<Item> {
+        return exerciseTemplateDao.getByExercise(exerciseId)
+    }
+
+
     suspend fun retrieveExerciseTemplates(ids: List<ItemIdentifier>): List<ExerciseTemplate> {
         val templates = exerciseTemplateDao.get(ids)
         templates.forEach {

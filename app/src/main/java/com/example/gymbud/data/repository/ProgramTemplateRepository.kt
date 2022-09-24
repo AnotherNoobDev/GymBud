@@ -48,6 +48,11 @@ class ProgramTemplateRepository(
     }
 
 
+    suspend fun retrieveProgramTemplatesByItem(id: ItemIdentifier): List<Item> {
+        return programTemplateDao.getByItem(id)
+    }
+
+
     private suspend fun populateProgramTemplateItems(programTemplate: ProgramTemplate) {
         val programItems = programTemplateWithItemDao.getAll(programTemplate.id)
 

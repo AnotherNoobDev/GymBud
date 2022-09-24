@@ -23,6 +23,12 @@ interface ItemContent {
     var name: String
 }
 
+/* Needed by Room to return Item objects from query*/
+data class ItemFromDao(
+    override val id: ItemIdentifier,
+    override var name: String
+): Item
+
 
 fun getValidName(id: ItemIdentifier, name: String, items: List<Item>): String {
     return if (items.find { it.id != id && it.name.trim().lowercase() == name.trim().lowercase() } == null) {

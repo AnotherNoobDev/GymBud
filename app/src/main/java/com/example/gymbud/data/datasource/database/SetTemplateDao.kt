@@ -30,6 +30,11 @@ interface SetTemplateDao {
     @Query("SELECT * from set_template WHERE id IN (:ids)")
     suspend fun get(ids: List<ItemIdentifier>): List<SetTemplate>
 
+    @Query("SELECT set_template.id, set_template.name from set_template " +
+            "INNER JOIN set_template_item ON set_template.id=set_template_item.set_template_id  " +
+            "WHERE set_template_item.exercise_template_id = :id OR set_template_item.rest_period_id = :id")
+    suspend fun getByItem(id: ItemIdentifier): List<ItemFromDao>
+
     @Query("SELECT * from set_template ORDER BY name ASC")
     fun getAll(): Flow<List<SetTemplate>>
 }
