@@ -2,9 +2,12 @@ package com.example.gymbud.ui.live_session
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -116,8 +119,8 @@ class LiveSessionExerciseFragment : Fragment() {
                 resistanceLabel.error = null
             }
 
-            // TODO using different keyboard types messes up the layout...
-            // resistanceValue.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+            repsValue.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+            resistanceValue.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
 
             if (liveSessionViewModel.hasPreviousItem()) {
                 previousBtn.setOnClickListener {
@@ -261,6 +264,23 @@ class LiveSessionExerciseFragment : Fragment() {
         findNavController().navigate(action)
     }
 
+
+    override fun onStart() {
+        super.onStart()
+
+        // set keyboard mode to adjust resize to ensure all fields all visible on a single screen
+        Log.d("keyboard_mode", "adjust resize")
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+    }
+
+
+    override fun onStop() {
+        super.onStop()
+
+        // return keyboard mode to previous val
+        Log.d("keyboard_mode", "adjust nothing")
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

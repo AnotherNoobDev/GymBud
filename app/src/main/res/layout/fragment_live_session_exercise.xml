@@ -8,8 +8,7 @@
     android:layout_margin="16dp"
     android:padding="16dp"
     android:id="@+id/container"
-    tools:context=".ui.live_session.LiveSessionExerciseFragment"
-    android:windowSoftInputMode="adjustResize">
+    tools:context=".ui.live_session.LiveSessionExerciseFragment">
 
     <TextView
         android:id="@+id/exercise_label"

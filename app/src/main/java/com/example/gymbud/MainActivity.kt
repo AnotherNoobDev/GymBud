@@ -7,10 +7,7 @@ import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
@@ -61,6 +58,11 @@ class MainActivity : AppCompatActivity() {
         setupActionBar()
 
         setupNavigationBar()
+
+        // in general we are ok with the keyboard hiding parts of the screen
+        // and don't want any adjustment (resizing)
+        // Fragments that need adjustment will take care of it themselves
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
     }
 
 
