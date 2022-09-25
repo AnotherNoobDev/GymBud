@@ -238,7 +238,7 @@
                     android:textAlignment="center"
                     android:paddingTop="10dp"
                     android:textSize="10sp"
-                    android:text="Made by"
+                    android:text="Developed by"
                     android:background="?colorSurface" />
                 <TextView
                     android:layout_width="match_parent"
