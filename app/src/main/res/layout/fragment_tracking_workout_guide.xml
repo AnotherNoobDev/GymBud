@@ -55,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="With an Active Program selected, only the days in that respective program are show in 'Dashboard > Today'. With no Active Program selected ('None'), all available Workouts on the device will be shown."
+                    android:text="With an Active Program selected, only the days in that respective program are shown in 'Dashboard > Today'. With no Active Program selected ('None'), all available Workouts on the device will be shown."
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -103,7 +103,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="By default GymBud use KG for weight, but you can change to LB from 'Settings' (cogwheel icon). Here you also have the option to toggle keeping the screen on during a Workout (On by default)."
+                    android:text="By default GymBud uses KG for weight, but you can change to LB from 'Settings' (cogwheel icon). Here you also have the option to toggle keeping the screen on during a Workout (On by default)."
                     android:textSize="12sp" />
                 <TextView
                     android:layout_width="match_parent"

@@ -56,12 +56,14 @@
                     android:layout_marginTop="8dp"
                     android:text="A Workout is composed of Sets and Rest Periods."
                     android:textSize="12sp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="A Set is composed of Exercise Templates and Rest Periods. When adding Sets to a Workout, you can specify the intensity with which they are to be performed. This way you can distinguish between Warmup Sets and Working Sets."
                     android:textSize="12sp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
