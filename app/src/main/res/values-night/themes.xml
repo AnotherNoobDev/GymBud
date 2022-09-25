@@ -32,5 +32,7 @@
         <item name="liveSessionOverviewNotVisitedItemColor">@color/battleship_grey</item>
 
         <item name="prevResultColor">@color/battleship_grey</item>
+
+        <item name="linkGuideColor">@color/illuminating_emerald</item>
     </style>
 </resources>

@@ -116,7 +116,20 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.gymbud.ui.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_gettingStartedGuideFragment"
+            app:destination="@id/gettingStartedGuideFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_creatingProgramGuideFragment"
+            app:destination="@id/creatingProgramGuideFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_trackingWorkoutGuideFragment"
+            app:destination="@id/trackingWorkoutGuideFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_monitoringProgressGuideFragment"
+            app:destination="@id/monitoringProgressGuideFragment" />
+    </fragment>
     <fragment
         android:id="@+id/liveSessionStartFragment"
         android:name="com.example.gymbud.ui.live_session.LiveSessionStartFragment"
@@ -230,4 +243,34 @@
             app:argType="long"
             android:defaultValue="-1L" />
     </fragment>
+    <fragment
+        android:id="@+id/gettingStartedGuideFragment"
+        android:name="com.example.gymbud.ui.guides.GettingStartedGuideFragment"
+        android:label="fragment_getting_started_guide"
+        tools:layout="@layout/fragment_getting_started_guide" >
+        <action
+            android:id="@+id/action_gettingStartedGuideFragment_to_creatingProgramGuideFragment"
+            app:destination="@id/creatingProgramGuideFragment" />
+        <action
+            android:id="@+id/action_gettingStartedGuideFragment_to_trackingWorkoutGuideFragment"
+            app:destination="@id/trackingWorkoutGuideFragment" />
+        <action
+            android:id="@+id/action_gettingStartedGuideFragment_to_monitoringProgressGuideFragment"
+            app:destination="@id/monitoringProgressGuideFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/creatingProgramGuideFragment"
+        android:name="com.example.gymbud.ui.guides.CreatingProgramGuideFragment"
+        android:label="fragment_creating_program_guide"
+        tools:layout="@layout/fragment_creating_program_guide" />
+    <fragment
+        android:id="@+id/monitoringProgressGuideFragment"
+        android:name="com.example.gymbud.ui.guides.MonitoringProgressGuideFragment"
+        android:label="fragment_monitoring_progress_guide"
+        tools:layout="@layout/fragment_monitoring_progress_guide" />
+    <fragment
+        android:id="@+id/trackingWorkoutGuideFragment"
+        android:name="com.example.gymbud.ui.guides.TrackingWorkoutGuideFragment"
+        android:label="fragment_tracking_workout_guide"
+        tools:layout="@layout/fragment_tracking_workout_guide" />
 </navigation>

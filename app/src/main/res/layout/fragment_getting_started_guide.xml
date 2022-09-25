@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.guides.GettingStartedGuideFragment"
+    android:layout_margin="16dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <!-- title -->
+        <LinearLayout
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Welcome to"
+                android:textSize="12sp"
+                android:textAlignment="center"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="GYM"
+                    android:textAlignment="viewEnd"
+                    android:layout_weight="1"
+                    android:textColor="?attr/colorPrimaryVariant"
+                    android:fontFamily="@font/walter_turncoat_regular"
+                    android:textSize="50sp"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="BUD"
+                    android:textAlignment="viewStart"
+                    android:layout_weight="1"
+                    android:textColor="?attr/colorSecondary"
+                    android:fontFamily="@font/walter_turncoat_regular"
+                    android:textSize="50sp"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="your trusty companion,\n built on a simple concept that will help you along your fitness journey:"
+                android:textSize="14sp"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Plan.Track.Analyse."
+                android:textSize="22sp"
+                android:textAlignment="center"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_marginTop="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="A goal without a plan is just a wish."
+                android:textSize="16sp"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textStyle="italic"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Want to be able to squat a baby orca? Grow biceps twice the size of your head? Enter a room sideways because your shoulders are too wide? It's time to enter that program in GymBud and make it happen! \n\nDon't have a program? GymBud comes with a Strength Program and a Hypertrophy Program to get you started."
+                android:textSize="12sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\nFor more details, see "
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/templatesGuide"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    tools:text="\nCreating a Program."
+                    android:textColor="?attr/linkGuideColor"
+                    android:textSize="12sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="If you don't write it down, it never happened."
+                android:textSize="16sp"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textStyle="italic"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Now that you have a plan, it's time to take action! GymBud provides guidance, records your results and lets you add notes throughout the workout session. Your future self will be grateful!"
+                android:textSize="12sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\nFor more details, see "
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/liveSessionGuide"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="\nTracking your Workouts."
+                    android:textColor="?attr/linkGuideColor"
+                    android:textSize="12sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Practice does not make perfect.\nOnly perfect practice makes perfect."
+                android:textSize="16sp"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textStyle="italic"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="You have a plan, you're putting in the work and keeping track of what you're doing. Awesome!\n\nFrom time to time you need to have a look at your Stats to see how far you've come and to make informed decisions about where you're going. Or maybe you just want to boast with a screenshot of your PRs :) Either way, GymBud has you covered."
+                android:textSize="12sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\nFor more details, see "
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/statsGuide"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="\nMonitoring your progress."
+                    android:textColor="?attr/linkGuideColor"
+                    android:textSize="12sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

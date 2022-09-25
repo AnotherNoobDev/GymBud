@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.R
 import com.example.gymbud.data.repository.AppRepository
@@ -60,6 +61,7 @@ class SettingsFragment : Fragment() {
 
         setupWeightUnitDisplay(appRepository)
         setupKeepScreenOnDuringWorkout(appRepository)
+        setupGuides()
         setupDevDisplay(appRepository)
     }
 
@@ -108,6 +110,34 @@ class SettingsFragment : Fragment() {
                         appRepository.updateLiveSessionKeepScreenOn(liveSessionKeepScreenOnSwitch.isChecked)
                     }
                 }
+            }
+        }
+    }
+
+
+    private fun setupGuides() {
+        binding.apply {
+            overviewGuide.setOnClickListener {
+                val action = SettingsFragmentDirections.actionSettingsFragmentToGettingStartedGuideFragment()
+                findNavController().navigate(action)
+            }
+
+            templatesGuide.text = getString(R.string.templatesGuideLabel) + " >>"
+            templatesGuide.setOnClickListener {
+                val action = SettingsFragmentDirections.actionSettingsFragmentToCreatingProgramGuideFragment()
+                findNavController().navigate(action)
+            }
+
+            liveSessionGuide.text = getString(R.string.liveSessionGuideLabel) + " >>"
+            liveSessionGuide.setOnClickListener {
+                val action = SettingsFragmentDirections.actionSettingsFragmentToTrackingWorkoutGuideFragment()
+                findNavController().navigate(action)
+            }
+
+            statsGuide.text = getString(R.string.statsGuideLabel) + " >>"
+            statsGuide.setOnClickListener {
+                val action = SettingsFragmentDirections.actionSettingsFragmentToMonitoringProgressGuideFragment()
+                findNavController().navigate(action)
             }
         }
     }

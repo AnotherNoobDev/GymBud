@@ -12,4 +12,6 @@
     <attr name="liveSessionOverviewNotVisitedItemColor" format="reference|color" />
 
     <attr name="prevResultColor" format="reference|color" />
+
+    <attr name="linkGuideColor" format="reference|color"/>
 </resources>

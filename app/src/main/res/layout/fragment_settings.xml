@@ -107,6 +107,7 @@
                     android:background="?colorSurface"
                     android:paddingStart="10dp"/>
                 <TextView
+                    android:id="@+id/overviewGuide"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Getting started >>"
@@ -122,9 +123,10 @@
                     android:background="?android:attr/listDivider" />
 
                 <TextView
+                    android:id="@+id/templatesGuide"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Tracking your workouts >>"
+                    tools:text="Creating a Program >>"
                     android:textSize="16sp"
                     android:paddingStart="30dp"
                     android:layout_marginTop="10dp"
@@ -137,13 +139,71 @@
                     android:background="?android:attr/listDivider" />
 
                 <TextView
+                    android:id="@+id/liveSessionGuide"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Monitoring your progress >>"
+                    tools:text="Tracking your Workouts >>"
                     android:textSize="16sp"
                     android:paddingStart="30dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"/>
+
+                <View
+                    android:id="@+id/guides_divider_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
+
+                <TextView
+                    android:id="@+id/statsGuide"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Monitoring your progress >>"
+                    android:textSize="16sp"
+                    android:paddingStart="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="About"
+                    android:background="?colorSurface"
+                    android:paddingStart="10dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Contact: gymbud@gmail.com"
+                    android:textSize="16sp"
+                    android:paddingStart="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <View
+                    android:id="@+id/about_divider_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Version: 1.0.0-Beta"
+                    android:textSize="16sp"
+                    android:paddingStart="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"/>
+
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -163,6 +223,32 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Reset DB" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="60dp"
+                    android:textAlignment="center"
+                    android:paddingTop="10dp"
+                    android:textSize="10sp"
+                    android:text="Made by"
+                    android:background="?colorSurface" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:text="Georgian Besleaga"
+                    android:background="?colorSurface"
+                    android:paddingBottom="10dp"/>
             </LinearLayout>
 
 
