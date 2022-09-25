@@ -31,7 +31,7 @@ class TemplateWithItemsEditView(
     private var _nameBinding: LayoutEditTextFieldBinding? = null
     private val nameBinding get() = _nameBinding!!
 
-    private var _itemListBinding: FragmentItemListBinding? = null
+    private var _itemListBinding: FragmentBasicItemListBinding? = null
     private val itemListBinding get() = _itemListBinding!!
 
     private var addTemplateItemButton = MaterialButton(context)
@@ -130,12 +130,9 @@ class TemplateWithItemsEditView(
 
 
     private fun inflateItemList(inflater: LayoutInflater): View {
-        _itemListBinding = FragmentItemListBinding.inflate(inflater)
+        _itemListBinding = FragmentBasicItemListBinding.inflate(inflater)
 
         itemListBinding.root.setPadding(0,0,0,0)
-        itemListBinding.title.root.visibility = View.GONE
-        itemListBinding.titleDivider.visibility = View.GONE
-        itemListBinding.addItemFab.isVisible  = false
         itemListBinding.recyclerView.adapter = itemListAdapter
 
         itemListDragDrop.attachToRecyclerView(itemListBinding.recyclerView)

@@ -4,10 +4,9 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
-import com.example.gymbud.databinding.FragmentItemListBinding
+import com.example.gymbud.databinding.FragmentBasicItemListBinding
 import com.example.gymbud.databinding.LayoutDetailDividerBinding
 import com.example.gymbud.databinding.LayoutDetailNameBinding
 import com.example.gymbud.model.*
@@ -25,7 +24,7 @@ class TemplateWithItemsDetailView(
     private var _nameBinding: LayoutDetailNameBinding? = null
     private val nameBinding get() = _nameBinding!!
 
-    private var _itemListBinding: FragmentItemListBinding? = null
+    private var _itemListBinding: FragmentBasicItemListBinding? = null
     private val itemListBinding get() = _itemListBinding!!
 
     private val itemListAdapter =  TemplateWithItemsRecyclerViewAdapter(context, Functionality.Detail)
@@ -42,11 +41,8 @@ class TemplateWithItemsDetailView(
 
         val divider1 = LayoutDetailDividerBinding.inflate(inflater).root
 
-        _itemListBinding = FragmentItemListBinding.inflate(inflater)
+        _itemListBinding = FragmentBasicItemListBinding.inflate(inflater)
         itemListBinding.root.setPadding(0,0,0,0)
-        itemListBinding.title.root.visibility = View.GONE
-        itemListBinding.titleDivider.visibility = View.GONE
-        itemListBinding.addItemFab.isVisible  = false
         itemListBinding.recyclerView.adapter = itemListAdapter
 
         return listOf(
