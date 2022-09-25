@@ -38,18 +38,47 @@ class StartupFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // determine what startup screen we want to show
+        viewLifecycleOwner.lifecycleScope.launch {
+            val appRepo = (activity?.application as BaseApplication).appRepository
+            appRepo.firstTimeStart.collect { isFirstTimeStartup ->
+                if (isFirstTimeStartup) {
+                    onFirstTimeStartup()
+                } else {
+                    onReturningUserStartup()
+                }
+            }
+        }
+    }
+
+
+    private fun onFirstTimeStartup() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val appRepo = (activity?.application as BaseApplication).appRepository
+            appRepo.updateFirstTimeStart(false)
+
+            val action = StartupFragmentDirections.actionStartupFragmentToGettingStartedGuideFragment()
+            findNavController().navigate(action)
+        }
+    }
+
+
+    private fun onReturningUserStartup() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.hasData().collect { withData ->
                 if (withData) {
+                    // if we have some templates -> show Dashboard
                     val action = StartupFragmentDirections.actionStartupFragmentToDashboardFragment()
                     findNavController().navigate(action)
                 } else {
+                    // if we don't have any templates -> show Templates
                     val action = StartupFragmentDirections.actionStartupFragmentToTemplatesFragment()
                     binding.root.findNavController().navigate(action)
                 }
             }
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

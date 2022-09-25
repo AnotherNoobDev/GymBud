@@ -21,6 +21,9 @@ private val Context.dataStore : DataStore<Preferences> by preferencesDataStore(n
 
 
 class AppRepository(private val context: Context) {
+    // app started for the first time
+    private val firstTimeStartKey = booleanPreferencesKey("first_time_start")
+
     // the last used ItemIdentifier in the app
     private val lastItemIdentifierKey = longPreferencesKey("last_item_identifier")
 
@@ -39,6 +42,8 @@ class AppRepository(private val context: Context) {
     private val partialWorkoutSessionRestTimerStart = longPreferencesKey("partial_workout_session_rest_timer_start")
 
     suspend fun reset() {
+        updateFirstTimeStart(true)
+
         updateLastUsedItemIdentifier(ItemIdentifierGenerator.NO_ID)
         ItemIdentifierGenerator.reset() // todo is this ok here.. or where to put it?
 
@@ -153,6 +158,20 @@ class AppRepository(private val context: Context) {
         }
 
 
+    val firstTimeStart: Flow<Boolean> = context.dataStore.data
+        .catch {
+            if (it is IOException) {
+                it.printStackTrace()
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[firstTimeStartKey]?: true
+        }
+
+
     suspend fun updateLastUsedItemIdentifier(id: ItemIdentifier) {
         context.dataStore.edit { preferences ->
             preferences[lastItemIdentifierKey] = id
@@ -210,6 +229,13 @@ class AppRepository(private val context: Context) {
             preferences[partialWorkoutSessionIdKey] = ItemIdentifierGenerator.NO_ID
             preferences[partialWorkoutSessionAtItemKey]= -1
             preferences[partialWorkoutSessionRestTimerStart] = 0
+        }
+    }
+
+
+    suspend fun updateFirstTimeStart(isFirstTimeStart: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[firstTimeStartKey] = isFirstTimeStart
         }
     }
 }

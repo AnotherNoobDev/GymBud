@@ -6,11 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.gymbud.R
 import com.example.gymbud.databinding.FragmentGettingStartedGuideBinding
 
 
 class GettingStartedGuideFragment : Fragment() {
+    private val navigationArgs: GettingStartedGuideFragmentArgs by navArgs()
+
     private var _binding: FragmentGettingStartedGuideBinding? = null
     private val binding get() = _binding!!
 
@@ -39,6 +42,16 @@ class GettingStartedGuideFragment : Fragment() {
             statsGuide.setOnClickListener {
                 val action = GettingStartedGuideFragmentDirections.actionGettingStartedGuideFragmentToMonitoringProgressGuideFragment()
                 findNavController().navigate(action)
+            }
+
+            if (navigationArgs.isFirstTimeStartupScreen) {
+                firstTimeStartupScreenContent.visibility = View.VISIBLE
+                continueBtn.setOnClickListener {
+                    val action = GettingStartedGuideFragmentDirections.actionGettingStartedGuideFragmentToStartupFragment()
+                    findNavController().navigate(action)
+                }
+            } else {
+                firstTimeStartupScreenContent.visibility = View.GONE
             }
         }
 

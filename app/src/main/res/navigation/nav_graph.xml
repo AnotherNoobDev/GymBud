@@ -17,6 +17,13 @@
         <action
             android:id="@+id/action_startupFragment_to_templatesFragment"
             app:destination="@id/templatesFragment" />
+        <action
+            android:id="@+id/action_startupFragment_to_gettingStartedGuideFragment"
+            app:destination="@id/gettingStartedGuideFragment" >
+            <argument
+                android:name="isFirstTimeStartupScreen"
+                android:defaultValue="true" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/templatesFragment"
@@ -119,7 +126,11 @@
         tools:layout="@layout/fragment_settings" >
         <action
             android:id="@+id/action_settingsFragment_to_gettingStartedGuideFragment"
-            app:destination="@id/gettingStartedGuideFragment" />
+            app:destination="@id/gettingStartedGuideFragment" >
+            <argument
+                android:name="isFirstTimeStartupScreen"
+                android:defaultValue="false" />
+        </action>
         <action
             android:id="@+id/action_settingsFragment_to_creatingProgramGuideFragment"
             app:destination="@id/creatingProgramGuideFragment" />
@@ -257,6 +268,12 @@
         <action
             android:id="@+id/action_gettingStartedGuideFragment_to_monitoringProgressGuideFragment"
             app:destination="@id/monitoringProgressGuideFragment" />
+        <argument
+            android:name="isFirstTimeStartupScreen"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_gettingStartedGuideFragment_to_startupFragment"
+            app:destination="@id/startupFragment" />
     </fragment>
     <fragment
         android:id="@+id/creatingProgramGuideFragment"
