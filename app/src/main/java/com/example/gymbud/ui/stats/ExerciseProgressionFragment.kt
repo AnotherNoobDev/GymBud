@@ -18,10 +18,12 @@ import com.example.gymbud.R
 import com.example.gymbud.databinding.FragmentExerciseProgressionBinding
 import com.example.gymbud.model.Exercise
 import com.example.gymbud.model.ExerciseProgression
+import com.example.gymbud.model.WeightUnit
 import com.example.gymbud.ui.viewmodel.*
 import com.example.gymbud.utility.TimeFormatter
 import com.example.gymbud.utility.addDays
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.text.FieldPosition
@@ -50,6 +52,8 @@ class ExerciseProgressionFragment : Fragment() {
         val app = activity?.application as BaseApplication
         ProgressionChartViewModelFactory(app.exerciseRepository)
     }
+
+    private var weightUnit: WeightUnit = WeightUnit.KG
 
     private var _binding: FragmentExerciseProgressionBinding? = null
     private val binding get() = _binding!!
@@ -162,6 +166,13 @@ class ExerciseProgressionFragment : Fragment() {
             }
         }
 
+        val appRepository = (activity?.application as BaseApplication).appRepository
+        viewLifecycleOwner.lifecycleScope.launch {
+            appRepository.weightUnit.collect {
+                weightUnit = it
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             filterByProgram?.text = exerciseFiltersViewModel.getFilterForProgramAsText().first()
             filterByPeriod?.text = exerciseFiltersViewModel.getFilterForPeriodAsText()
@@ -224,7 +235,7 @@ class ExerciseProgressionFragment : Fragment() {
             return
         }
 
-        val (time, results) = chartViewModel.generateXYSeries(exerciseProgression!!)
+        val (time, results) = chartViewModel.generateXYSeries(exerciseProgression!!, weightUnit)
         val series: XYSeries = SimpleXYSeries(time.reversed(), results.reversed(), "ExerciseProgressionSeries")
         binding.progressionPlot.clear()
         binding.progressionPlot.addSeries(series, seriesFormatter)

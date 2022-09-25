@@ -84,7 +84,7 @@ class ProgressionChartViewModel(
     fun getSelectedExercise(): Exercise? = exercise
 
 
-    fun generateXYSeries(exerciseProgression: ExerciseProgression): Pair<List<Number>, List<Number>> {
+    fun generateXYSeries(exerciseProgression: ExerciseProgression, weightUnit: WeightUnit): Pair<List<Number>, List<Number>> {
         val timeSeries = mutableListOf<Number>()
         val resultEvalSeries = mutableListOf<Number>()
 
@@ -105,7 +105,11 @@ class ProgressionChartViewModel(
             if (addPoint) {
                 lastAdded = it.dateMs
                 timeSeries.add(it.dateMs)
-                resultEvalSeries.add((exerciseEvaluator(it).toDouble() * 100.0).roundToInt() / 100.0) // 2 decimal places
+                var resultEval = exerciseEvaluator(it).toDouble()
+                if (weightUnit == WeightUnit.LB) {
+                    resultEval = convertKGtoLB(resultEval)
+                }
+                resultEvalSeries.add((resultEval * 100.0).roundToInt() / 100.0) // 2 decimal places
             }
         }
 
