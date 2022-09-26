@@ -3,11 +3,9 @@ package com.example.gymbud.data.repository
 import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.data.datasource.database.GymBudRoomDatabase
 import com.example.gymbud.model.*
-//import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-//import kotlinx.coroutines.flow.merge
 
 
 class ItemRepository(
@@ -56,7 +54,7 @@ class ItemRepository(
     }
 
 
-    fun getItem(id: ItemIdentifier, type: ItemType? = null): Flow<Item?> {
+    fun getItem(id: ItemIdentifier, type: ItemType): Flow<Item?> {
         return when (type) {
             ItemType.EXERCISE -> exerciseRepository.retrieveExercise(id)
             ItemType.EXERCISE_TEMPLATE -> exerciseTemplateRepository.retrieveExerciseTemplate(id)
@@ -64,7 +62,7 @@ class ItemRepository(
             ItemType.WORKOUT_TEMPLATE -> workoutTemplateRepository.retrieveWorkoutTemplate(id)
             ItemType.PROGRAM_TEMPLATE -> programTemplateRepository.retrieveProgramTemplate(id)
             ItemType.REST_PERIOD -> restPeriodRepository.retrieveRestPeriod(id)
-            else -> findItemInAll(id)
+            else -> flowOf(null)
         }
     }
 
@@ -148,25 +146,6 @@ class ItemRepository(
         dependants.addAll(programTemplateRepository.retrieveProgramTemplatesByItem(id).map{"${it.name} (Program Template)"})
 
         return dependants.distinct()
-    }
-
-
-
-    //@OptIn(ExperimentalCoroutinesApi::class)
-    @Suppress("UNUSED_PARAMETER")
-    private fun findItemInAll(id: ItemIdentifier): Flow<Item?>  {
-        assert(false) // todo doesn't work
-        return flowOf()
-        /*
-        return merge(
-            exerciseRepository.retrieveExercise(id),
-            exerciseTemplateRepository.retrieveExerciseTemplate(id),
-            setTemplateRepository.retrieveSetTemplate(id),
-            workoutTemplateRepository.retrieveWorkoutTemplate(id),
-            programTemplateRepository.retrieveProgramTemplate(id),
-            restPeriodRepository.retrieveRestPeriod(id)
-        )
-         */
     }
 
 

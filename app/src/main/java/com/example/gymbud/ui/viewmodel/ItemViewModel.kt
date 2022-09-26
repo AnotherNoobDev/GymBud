@@ -27,7 +27,7 @@ class ItemViewModel(
         return itemRepository.getItemsByType(type)
     }
 
-    fun getItem(id: ItemIdentifier, type: ItemType? = null): Flow<Item?> {
+    fun getItem(id: ItemIdentifier, type: ItemType): Flow<Item?> {
         return itemRepository.getItem(id, type)
     }
 
