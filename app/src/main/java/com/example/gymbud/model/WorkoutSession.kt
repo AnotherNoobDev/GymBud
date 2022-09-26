@@ -78,7 +78,7 @@ class WorkoutSession(
     private fun addExerciseTemplateToSession(sessionItemsBuilder: MutableList<WorkoutSessionItem>, exerciseTemplate: ExerciseTemplate, tags: Tags?) {
         sessionItemsBuilder.add(
             WorkoutSessionItem.ExerciseSession(
-                exerciseTemplate.name,
+                exerciseTemplate.exercise.name,
                 exerciseTemplate,
                 tags,
                 null
