@@ -122,7 +122,6 @@ abstract class GymBudRoomDatabase: RoomDatabase() {
                     GymBudRoomDatabase::class.java,
                     "gymbud_database"
                 )
-                    .fallbackToDestructiveMigration() // todo migration scheme for production: https://medium.com/androiddevelopers/understanding-migrations-with-room-f01e04b07929
                     .build()
 
                 INSTANCE = instance
