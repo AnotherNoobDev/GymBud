@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.youtube.player.internal.ab;
 
+@SuppressWarnings("deprecation")
 public class YouTubePlayerSupportFragmentX extends Fragment implements YouTubePlayer.Provider {
     private final YouTubePlayerSupportFragmentX.a a = new YouTubePlayerSupportFragmentX.a();
     private Bundle b;
