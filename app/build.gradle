@@ -65,5 +65,5 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
 
     // AndroidPlot
-    implementation "com.androidplot:androidplot-core:1.5.9"
+    implementation "com.androidplot:androidplot-core:1.5.10"
 }
