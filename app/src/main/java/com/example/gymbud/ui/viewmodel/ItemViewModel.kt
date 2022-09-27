@@ -19,6 +19,10 @@ class ItemViewModel(
         return itemRepository.hasData()
     }
 
+    suspend fun populateWithMinimum() {
+        itemRepository.populateWithMinimum()
+    }
+
     suspend fun populateWithDefaults() {
         itemRepository.populateWithDefaults()
     }

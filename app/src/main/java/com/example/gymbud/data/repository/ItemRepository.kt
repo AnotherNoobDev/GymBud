@@ -25,6 +25,12 @@ class ItemRepository(
     }
 
 
+    suspend fun populateWithMinimum() {
+        // only the RestDay is required
+        restPeriodRepository.populateWithMinimum()
+    }
+
+
     suspend fun populateWithDefaults() {
         // order here matters!!
         exerciseRepository.populateWithDefaults()

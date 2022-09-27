@@ -97,9 +97,15 @@ class ExerciseTemplateEditView(
                     ex.name
                 }
 
-                val exerciseAdapter = ArrayAdapter(context, R.layout.dropdown_list_item, exercisesByName)
-                exerciseBinding.input.setAdapter(exerciseAdapter)
-                exerciseBinding.input.setText(exercisesByName[0], false)
+                if (exercisesByName.isEmpty()) {
+                    exerciseBinding.label.error = "No Exercises available"
+                } else {
+                    exerciseBinding.label.error = null
+
+                    val exerciseAdapter = ArrayAdapter(context, R.layout.dropdown_list_item, exercisesByName)
+                    exerciseBinding.input.setAdapter(exerciseAdapter)
+                    exerciseBinding.input.setText(exercisesByName[0], false)
+                }
             }
         }
     }
@@ -119,6 +125,8 @@ class ExerciseTemplateEditView(
             repRangeBinding.input.values[1].toInt(),
         )
 
+        // the Exercise cannot be changed when we modify an ExerciseTemplate
+        // so the exercise input field will convey a null Exercise
         return if (exercise == null) {
             ExerciseTemplateEditContent(name, targetRepRange)
         } else {
@@ -134,6 +142,11 @@ class ExerciseTemplateEditView(
     private fun validateInput(): Boolean {
         if (nameBinding.input.text.isNullOrEmpty()) {
             nameBinding.label.error = context.getString(R.string.item_name_err)
+            return false
+        }
+
+        // input is not valid if we are supposed to add an Exercise, but exercises has none
+        if (exercises != null && exercises!!.isEmpty()) {
             return false
         }
 

@@ -145,10 +145,6 @@ class TemplateWithItemsEditView(
         _itemSelectionBinding = LayoutEditDropdownFieldBinding.inflate(inflater)
         _intensityBinding = LayoutEditDropdownFieldBinding.inflate(inflater)
 
-        itemSelectionBinding.input.setOnClickListener {
-            itemSelectionBinding.label.error = null
-        }
-
         _addItemBinding = FragmentItemEditBinding.inflate(inflater)
 
         addItemBinding.apply {
@@ -168,11 +164,8 @@ class TemplateWithItemsEditView(
             confirmBtn.setOnClickListener {
                 nameBinding.label.error = null
 
-                setAddItemSectionVisibility(false)
-
                 val name = itemSelectionBinding.input.text.toString()
                 if (name.isEmpty()) {
-                    itemSelectionBinding.label.error = "Name is required"
                     return@setOnClickListener
                 }
 
@@ -190,6 +183,8 @@ class TemplateWithItemsEditView(
                 if (addingItemOfType == ItemType.SET_TEMPLATE) {
                     item = TaggedItem.makeTagged(item, TagCategory.Intensity, intensityBinding.input.text.toString())
                 }
+
+                setAddItemSectionVisibility(false)
 
                 updateItemListAdapter(item)
             }
@@ -221,10 +216,16 @@ class TemplateWithItemsEditView(
         setAddItemSectionVisibility(true)
 
         itemSelectionBinding.label.setStartIconDrawable(R.drawable.ic_equipment_24)
-        itemSelectionBinding.label.hint = "Exercise"
+        itemSelectionBinding.label.hint = templateTypeToDisplayStr(type)
 
-        itemSelectionBinding.input.setAdapter(availableTemplatesSelectionAdapter)
-        itemSelectionBinding.input.setText(availableTemplates?.get(0)?.name ?: "", false)
+        if (availableTemplates == null || availableTemplates!!.isEmpty()) {
+            itemSelectionBinding.label.error = "No templates available"
+        } else {
+            itemSelectionBinding.label.error = null
+            itemSelectionBinding.input.setAdapter(availableTemplatesSelectionAdapter)
+            itemSelectionBinding.input.setText(availableTemplates!![0].name, false)
+        }
+
 
         intensityBinding.label.setStartIconDrawable(R.drawable.ic_intensity_24)
         intensityBinding.label.hint = "Intensity"
@@ -248,8 +249,13 @@ class TemplateWithItemsEditView(
         itemSelectionBinding.label.setStartIconDrawable(R.drawable.ic_timer_24)
         itemSelectionBinding.label.hint = "Rest"
 
-        itemSelectionBinding.input.setAdapter(restPeriodsSelectionAdapter)
-        itemSelectionBinding.input.setText(restPeriods?.get(0)?.name ?: "", false)
+        if (restPeriods == null || restPeriods!!.isEmpty()) {
+            itemSelectionBinding.label.error = "No Rest Periods available"
+        } else {
+            itemSelectionBinding.label.error = null
+            itemSelectionBinding.input.setAdapter(restPeriodsSelectionAdapter)
+            itemSelectionBinding.input.setText(restPeriods!![0].name, false)
+        }
     }
 
 
@@ -398,6 +404,13 @@ class TemplateWithItemsEditView(
 
         if (itemListAdapter.currentList.size == 0) {
             nameBinding.label.error = "At least one item must be added."
+            return false
+        }
+
+        val items = itemListAdapter.currentList.toList()
+        val activeItems =  items.count { it !is RestPeriod }
+        if (activeItems == 0) {
+            nameBinding.label.error = "Cannot have only Rest Periods."
             return false
         }
 

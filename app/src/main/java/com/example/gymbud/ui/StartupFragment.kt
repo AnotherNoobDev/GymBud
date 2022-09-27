@@ -53,6 +53,8 @@ class StartupFragment : Fragment() {
 
 
     private suspend fun onFirstTimeStartup() {
+        viewModel.populateWithMinimum()
+
         val appRepo = (activity?.application as BaseApplication).appRepository
         appRepo.updateFirstTimeStart(false)
 
