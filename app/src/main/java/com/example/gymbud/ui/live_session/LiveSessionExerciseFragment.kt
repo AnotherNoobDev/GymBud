@@ -270,6 +270,7 @@ class LiveSessionExerciseFragment : Fragment() {
 
         // set keyboard mode to adjust resize to ensure all fields all visible on a single screen
         Log.d("keyboard_mode", "adjust resize")
+        @Suppress("DEPRECATION")
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
