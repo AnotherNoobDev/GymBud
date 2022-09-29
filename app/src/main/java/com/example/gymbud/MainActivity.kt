@@ -10,6 +10,7 @@ import android.util.TypedValue
 import android.view.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.forEach
@@ -63,6 +64,19 @@ class MainActivity : AppCompatActivity() {
         // and don't want any adjustment (resizing)
         // Fragments that need adjustment will take care of it themselves
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+
+        // theme
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+        lifecycleScope.launch {
+            (application as BaseApplication).appRepository.useDarkTheme.collect {
+                if (it) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+            }
+        }
     }
 
 

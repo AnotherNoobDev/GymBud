@@ -41,6 +41,9 @@ class AppRepository(private val context: Context) {
     private val partialWorkoutSessionAtItemKey = intPreferencesKey("partial_workout_session_at_item")
     private val partialWorkoutSessionRestTimerStart = longPreferencesKey("partial_workout_session_rest_timer_start")
 
+    private val useDarkThemeKey = booleanPreferencesKey("use_dark_theme")
+
+
     suspend fun reset() {
         updateFirstTimeStart(true)
 
@@ -172,6 +175,21 @@ class AppRepository(private val context: Context) {
         }
 
 
+    val useDarkTheme: Flow<Boolean> = context.dataStore.data
+        .catch {
+            if (it is IOException) {
+                it.printStackTrace()
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[useDarkThemeKey]?: true
+        }
+
+
+
     suspend fun updateLastUsedItemIdentifier(id: ItemIdentifier) {
         context.dataStore.edit { preferences ->
             preferences[lastItemIdentifierKey] = id
@@ -236,6 +254,13 @@ class AppRepository(private val context: Context) {
     suspend fun updateFirstTimeStart(isFirstTimeStart: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[firstTimeStartKey] = isFirstTimeStart
+        }
+    }
+
+
+    suspend fun updateUseDarkTheme(use: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[useDarkThemeKey] = use
         }
     }
 }

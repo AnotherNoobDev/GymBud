@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:focusable="true"
     android:clickable="true"
     android:id="@+id/container">
@@ -36,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:visibility="gone"
+        app:tint="?android:textColor"
         android:src="@drawable/ic_next_24" />
 
 </LinearLayout>

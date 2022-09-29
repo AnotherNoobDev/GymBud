@@ -23,7 +23,10 @@
         <item name="colorSurface">@color/jet</item>
         <item name="colorOnSurface">@color/white</item>
 
-        <item name="intensityWarmupColor">@color/cyber_yellow</item>
+        <item name="panelBackgroundColor">@color/black</item>
+        <item name="panelTextColor">@color/white</item>
+
+        <item name="intensityWarmupColor">@color/hot_pink</item>
         <item name="intensityWorkingColor">@color/illuminating_emerald</item>
         <item name="intensityDefaultColor">?attr/colorOnPrimary</item>
 
@@ -34,5 +37,10 @@
         <item name="prevResultColor">@color/battleship_grey</item>
 
         <item name="linkGuideColor">@color/illuminating_emerald</item>
+
+        <item name="plotStyle">@style/APDefacto.Dark</item>
+
+        <item name="editRangeSliderBackgroundColor">@color/davys_grey</item>
+        <item name="editRangeSliderLabelTextColor">@color/quick_silver</item>
     </style>
 </resources>

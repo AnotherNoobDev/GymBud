@@ -63,7 +63,11 @@ class ExerciseProgressionFragment : Fragment() {
 
     private var exerciseProgression: ExerciseProgression? = null
 
-    private lateinit var seriesFormatter: LineAndPointFormatter
+    private lateinit var seriesFormatterLight: LineAndPointFormatter
+    private lateinit var seriesFormatterDark: LineAndPointFormatter
+
+    private var useDarkTheme = true
+
     private lateinit var chartPan: PanZoom
     private var timeWindowCenter: Long = -1
 
@@ -93,8 +97,11 @@ class ExerciseProgressionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // line style
-        seriesFormatter = LineAndPointFormatter(requireContext(), R.xml.exercise_progression_chart_formatter)
-        seriesFormatter.pointLabelFormatter.vOffset = -30f
+        seriesFormatterDark = LineAndPointFormatter(requireContext(), R.xml.exercise_progression_chart_formatter_dark)
+        seriesFormatterDark.pointLabelFormatter.vOffset = -30f
+
+        seriesFormatterLight = LineAndPointFormatter(requireContext(), R.xml.exercise_progression_chart_formatter_light)
+        seriesFormatterLight.pointLabelFormatter.vOffset = -30f
 
         binding.apply {
             progressionPlot.clear()
@@ -174,6 +181,12 @@ class ExerciseProgressionFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
+            appRepository.useDarkTheme.collect {
+                useDarkTheme = it
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
             filterByProgram?.text = exerciseFiltersViewModel.getFilterForProgramAsText().first()
             filterByPeriod?.text = exerciseFiltersViewModel.getFilterForPeriodAsText()
         }
@@ -238,7 +251,12 @@ class ExerciseProgressionFragment : Fragment() {
         val (time, results) = chartViewModel.generateXYSeries(exerciseProgression!!, weightUnit)
         val series: XYSeries = SimpleXYSeries(time.reversed(), results.reversed(), "ExerciseProgressionSeries")
         binding.progressionPlot.clear()
-        binding.progressionPlot.addSeries(series, seriesFormatter)
+
+        if (useDarkTheme) {
+            binding.progressionPlot.addSeries(series, seriesFormatterDark)
+        } else{
+            binding.progressionPlot.addSeries(series, seriesFormatterLight)
+        }
 
         // time window (x)
         val timeWindowInDays = when (chartViewModel.timeWindow) {

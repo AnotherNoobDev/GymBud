@@ -21,4 +21,13 @@
 
     <color name="quick_silver">#a6a6a6</color>
     <color name="battleship_grey">#868686</color>
+
+    <color name="hot_pink">#F564A9</color>
+    <color name="xanthic">#E8F213</color>
+    <color name="space_cadet">#30384D</color>
+    <color name="pewter_blue">#76949F</color>
+    <color name="cadet_blue">#46ACC2</color>
+
+    <color name="davys_grey">#4d4d4d</color>
+    <color name="khaki_web">#BDB599</color>
 </resources>

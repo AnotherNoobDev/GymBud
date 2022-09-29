@@ -61,6 +61,7 @@ class SettingsFragment : Fragment() {
 
         setupWeightUnitDisplay(appRepository)
         setupKeepScreenOnDuringWorkout(appRepository)
+        setupAppThemeDisplay(appRepository)
         setupGuides()
         setupDevDisplay(appRepository)
     }
@@ -108,6 +109,36 @@ class SettingsFragment : Fragment() {
                 viewLifecycleOwner.lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
                         appRepository.updateLiveSessionKeepScreenOn(liveSessionKeepScreenOnSwitch.isChecked)
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun setupAppThemeDisplay(appRepository: AppRepository) {
+        binding.apply {
+            viewLifecycleOwner.lifecycleScope.launch {
+                appRepository.useDarkTheme.collect {
+                    when (it) {
+                        true -> themeGroup.check(R.id.theme_dark)
+                        false -> themeGroup.check(R.id.theme_light)
+                    }
+                }
+            }
+
+            themeDark.setOnClickListener {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        appRepository.updateUseDarkTheme(true)
+                    }
+                }
+            }
+
+            themeLight.setOnClickListener {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        appRepository.updateUseDarkTheme(false)
                     }
                 }
             }

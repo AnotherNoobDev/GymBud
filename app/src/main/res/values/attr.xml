@@ -14,4 +14,12 @@
     <attr name="prevResultColor" format="reference|color" />
 
     <attr name="linkGuideColor" format="reference|color"/>
+
+    <attr name="panelBackgroundColor" format="reference|color"/>
+    <attr name="panelTextColor" format="reference|color"/>
+
+    <attr name="plotStyle" format="string"/>
+
+    <attr name="editRangeSliderBackgroundColor" format="reference|color"/>
+    <attr name="editRangeSliderLabelTextColor" format="reference|color"/>
 </resources>
