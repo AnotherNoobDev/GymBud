@@ -1,126 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.guides.TrackingWorkoutGuideFragment"
     android:layout_margin="16dp">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/liveSessionGuideLabel"
-                    android:textSize="22sp"
-                    android:textAlignment="center"/>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_marginTop="16dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Active Program"
-                    android:textSize="16sp"
-                    android:textColor="?attr/colorPrimaryVariant"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="The Active Program can be selected from 'Dashboard'. With an Active Program selected GymBud automatically moves through the Program as the days pass by. You can also change the Active Program Day by selecting it from 'Dashboard > Today'."
-                    android:textSize="12sp" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="With an Active Program selected, only the days in that respective program are shown in 'Dashboard > Today'. With no Active Program selected ('None'), all available Workouts on the device will be shown."
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_marginTop="16dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Performing a Workout"
-                    android:textSize="16sp"
-                    android:textColor="?attr/colorPrimaryVariant"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="After starting a Workout session, you are presented with a starting screen showing you an overview of the results and notes of the previous session from the same Workout (if any)."
-                    android:textSize="12sp" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="The specific results and notes are also shown for every Exercise as you progress through the Workout session."
-                    android:textSize="12sp" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Above the 'Next' button you can see what item follows. You can also get an overview of your current progress through the Workout session by tapping 'Session Overview'. Here you can also go back to any item in the session you've already completed and modify your input. You can always return to the current item in the session by tapping 'To Current'."
-                    android:textSize="12sp" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="While in a Workout Session, GymBud remembers and restores your progress in case the app is closed."
-                    android:textSize="12sp" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="By default GymBud uses KG for weight, but you can change to LB from 'Settings' (cogwheel icon). Here you also have the option to toggle keeping the screen on during a Workout (On by default)."
-                    android:textSize="12sp" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="After going through all items in the Workout session, you are presented with a end screen showing you how long the workout took and your results, together with a comparison to the results from your previous session (if any). Here you also have the option to enter additional Notes that apply to the entire session. Up to this point, the results have not yet been permanently saved. Now you have the option to either Save or Discard the session's results."
-                    android:textSize="12sp" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="The Workout session can be stopped at any point by tapping 'End Session'."
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-
+                android:text="@string/liveSessionGuideLabel"
+                android:textSize="22sp"
+                android:textAlignment="center"/>
         </LinearLayout>
-    </ScrollView>
 
-</FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Active Program"
+                android:textSize="16sp"
+                android:textColor="?attr/colorPrimaryVariant"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="The Active Program can be selected from 'Dashboard'. With an Active Program selected GymBud automatically moves through the Program as the days pass by. You can also change the Active Program Day by selecting it from 'Dashboard > Today'."
+                android:textSize="12sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="With an Active Program selected, only the days in that respective program are shown in 'Dashboard > Today'. With no Active Program selected ('None'), all available Workouts on the device will be shown."
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Performing a Workout"
+                android:textSize="16sp"
+                android:textColor="?attr/colorPrimaryVariant"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="After starting a Workout session, you are presented with a starting screen showing you an overview of the results and notes of the previous session from the same Workout (if any)."
+                android:textSize="12sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="The specific results and notes are also shown for every Exercise as you progress through the Workout session."
+                android:textSize="12sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Above the 'Next' button you can see what item follows. You can also get an overview of your current progress through the Workout session by tapping 'Session Overview'. Here you can also go back to any item in the session you've already completed and modify your input. You can always return to the current item in the session by tapping 'To Current'."
+                android:textSize="12sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="While in a Workout Session, GymBud remembers and restores your progress in case the app is closed."
+                android:textSize="12sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="By default GymBud uses KG for weight, but you can change to LB from 'Settings' (cogwheel icon). Here you also have the option to toggle keeping the screen on during a Workout (On by default)."
+                android:textSize="12sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="After going through all items in the Workout session, you are presented with a end screen showing you how long the workout took and your results, together with a comparison to the results from your previous session (if any). Here you also have the option to enter additional Notes that apply to the entire session. Up to this point, the results have not yet been permanently saved. Now you have the option to either Save or Discard the session's results."
+                android:textSize="12sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="The Workout session can be stopped at any point by tapping 'End Session'."
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
