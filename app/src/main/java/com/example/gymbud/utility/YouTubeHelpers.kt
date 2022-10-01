@@ -2,7 +2,7 @@ package com.example.gymbud.utility
 
 
 object YoutubeHelper {
-    private val videoIdFromUrlRegex = "(?:[?&]v=|\\/embed\\/|\\/1\\/|\\/v\\/|https:\\/\\/(?:www\\.)?youtu\\.be\\/)([^&\\n?#]+)".toRegex()
+    private val videoIdFromUrlRegex = "(?:[?&]v=|/embed/|/1/|/v/|https://(?:www\\.)?youtu\\.be/)([^&\\n?#]+)".toRegex()
 
     fun getVideoIdFromURL(url: String): String? {
         val matchResult = videoIdFromUrlRegex.find(url) ?: return null

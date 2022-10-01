@@ -277,7 +277,7 @@
                     android:layout_marginTop="60dp"
                     android:textAlignment="center"
                     android:paddingTop="10dp"
-                    android:textSize="10sp"
+                    android:textSize="11sp"
                     android:text="Developed by"
                     android:background="?colorSurface" />
                 <TextView

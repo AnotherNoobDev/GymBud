@@ -58,14 +58,18 @@ class SetTemplateRepository(
         setItems.forEachIndexed { setItemIndex, setItem ->
             setItem.setItemPosition = setItemIndex // ensure no gaps
 
-            if (setItem.isWithExerciseTemplate()) {
-                setExerciseTemplates.find { exerciseTemplate -> exerciseTemplate.id == setItem.exerciseTemplateId  }
-                    ?.let { setTemplate.add(it) }
-            } else if (setItem.isWithRestPeriod()) {
-                setRestPeriods.find { restPeriod -> restPeriod.id == setItem.restPeriodId  }
-                    ?.let { setTemplate.add(it) }
-            } else {
-                assert(false)
+            when {
+                setItem.isWithExerciseTemplate() -> {
+                    setExerciseTemplates.find { exerciseTemplate -> exerciseTemplate.id == setItem.exerciseTemplateId  }
+                        ?.let { setTemplate.add(it) }
+                }
+                setItem.isWithRestPeriod() -> {
+                    setRestPeriods.find { restPeriod -> restPeriod.id == setItem.restPeriodId  }
+                        ?.let { setTemplate.add(it) }
+                }
+                else -> {
+                    assert(false)
+                }
             }
         }
     }

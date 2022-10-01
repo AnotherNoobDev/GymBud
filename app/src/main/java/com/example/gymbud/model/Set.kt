@@ -27,6 +27,11 @@ class SetTemplate(
     override fun equals(other: Any?): Boolean {
         return (other is SetTemplate) && other.id == this.id && other.name == this.name && other.items == this.items
     }
+
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
 }
 
 

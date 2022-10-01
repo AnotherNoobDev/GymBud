@@ -31,6 +31,11 @@ class WorkoutTemplate(
     override fun equals(other: Any?): Boolean {
         return (other is WorkoutTemplate) && other.id == this.id && other.name == this.name && other.items == this.items
     }
+
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
 }
 
 

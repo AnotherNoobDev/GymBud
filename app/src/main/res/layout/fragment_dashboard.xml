@@ -43,7 +43,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/active_program_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/active_program_label"
-        app:layout_constraintTop_toTopOf="@+id/active_program_label" />
+        app:layout_constraintTop_toTopOf="@+id/active_program_label"
+        android:focusable="true" />
 
     <View
         android:id="@+id/active_program_divider"
@@ -89,7 +90,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/active_program_day_label"
         app:layout_constraintEnd_toEndOf="@+id/active_program_edit_btn"
         app:layout_constraintStart_toStartOf="@+id/active_program_edit_btn"
-        app:layout_constraintTop_toTopOf="@+id/active_program_day_label" />
+        app:layout_constraintTop_toTopOf="@+id/active_program_day_label"
+        android:focusable="true" />
 
     <View
         android:id="@+id/active_program_day_divider"

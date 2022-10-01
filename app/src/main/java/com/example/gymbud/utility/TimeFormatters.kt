@@ -40,7 +40,7 @@ object TimeFormatter {
 
 
     fun getFormattedDateDDMMYYYY(date: Date): String {
-        return dateFormat.format(date, )
+        return dateFormat.format(date)
     }
 
 

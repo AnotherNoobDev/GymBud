@@ -88,6 +88,11 @@ class TaggedItem(
     }
 
 
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+
+
     companion object {
         fun makeTagged(item: Item, cat: TagCategory? = null, vararg tags: String): TaggedItem {
             val tagged = TaggedItem(item)
