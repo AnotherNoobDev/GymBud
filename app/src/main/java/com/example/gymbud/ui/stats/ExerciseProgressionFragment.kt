@@ -258,6 +258,11 @@ class ExerciseProgressionFragment : Fragment() {
             binding.progressionPlot.addSeries(series, seriesFormatterLight)
         }
 
+        if (time.isEmpty() || results.isEmpty()) {
+            binding.progressionPlot.redraw()
+            return
+        }
+
         // time window (x)
         val timeWindowInDays = when (chartViewModel.timeWindow) {
             TimeWindowLength.Week -> 7
