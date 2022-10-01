@@ -2,10 +2,12 @@ package com.example.gymbud.ui.live_session
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -128,6 +130,25 @@ class LiveSessionEndFragment : Fragment() {
         liveSessionViewModel.discardSession()
         val action = LiveSessionEndFragmentDirections.actionLiveSessionEndFragmentToDashboardFragment()
         findNavController().navigate(action)
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+
+        // set keyboard mode to adjust resize to ensure all fields all visible on a single screen
+        Log.d("keyboard_mode", "adjust resize")
+        @Suppress("DEPRECATION")
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+    }
+
+
+    override fun onStop() {
+        super.onStop()
+
+        // return keyboard mode to previous val
+        Log.d("keyboard_mode", "adjust nothing")
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
     }
 
 
