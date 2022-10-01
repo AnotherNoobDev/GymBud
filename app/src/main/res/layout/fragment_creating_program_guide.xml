@@ -95,13 +95,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="GymBud comes with a Strength Program and a Hypertrophy Program to get you started, but they are not loaded by default."
+                android:text="GymBud comes with a Hypertrophy Program to get you started, but it is not loaded by default."
                 android:textSize="12sp" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="You have the option to load them by 'Templates > Load Default Programs', as long as no other templates are detected on the device. The option is no longer available after you load them, or after you start creating your own templates."
+                android:text="You have the option to load it by 'Templates > Load Default Programs', as long as no other templates are detected on the device. The option is no longer available after you load it, or after you start creating your own templates."
                 android:textSize="12sp" />
         </LinearLayout>
 

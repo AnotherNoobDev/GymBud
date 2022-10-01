@@ -4,22 +4,32 @@ import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.model.SetTemplate
 
 
+// Workout 1 - Chest, Back, Shoulders and Neck
 const val CHEST_BACK_SET_1 = "Chest and Back 1"
+const val SHOULDERS_BACK_SET_1 = "Shoulders and Back"
+const val CHEST_BACK_NECK_SET_1 = "Chest, Traps and Neck"
+
+
+// Workout 2 - Legs, Arms and Shoulders
+const val LEGS_ARMS_SET_1 = "Legs and Arms 1"
+const val LEGS_ARMS_SHOULDERS_SET_1 = "Legs, Arms and Shoulders"
+const val CALVES_SHOULDERS_SET_1 = "Calves and Shoulders"
+
+// Workout 3 - Chest, Back and Shoulders
+const val BACK_SET_1 = "Deadlifts"
 const val CHEST_BACK_SET_2 = "Chest and Back 2"
 const val CHEST_BACK_SET_3 = "Chest and Back 3"
-const val CHEST_BACK_SET_4 = "Chest and Back 4"
+const val SHOULDERS_FINISHER_SET = "Shoulders Finisher Set"
 
-const val SHOULDERS_SET_1 = "Shoulders 1"
-const val SHOULDERS_SET_2 = "Shoulders 2"
+// Workout 4 - Arms and Shoulders
+const val ARMS_SHOULDERS_SET_1 = "Arms and Shoulders 1"
+const val ARMS_SHOULDERS_SET_2 = "Arms and Shoulders 2"
+const val ARMS_FINISHER_SET = "Arms Finisher"
 
+// Workout 5 - Legs, Traps and Neck
 const val LEGS_SET_1 = "Squats"
-
-const val LEGS_ARMS_TRAPS_SET_1 = "Legs, arms and traps 1"
-const val LEGS_ARMS_TRAPS_SET_2 = "Legs, arms and traps 2"
-
-const val CALVES_NECK_SET_1 = "Calves and Neck 1"
-const val CALVES_NECK_SET_2 = "Calves and Neck 2"
-
+const val LEGS_TRAPS_SET_1 = "Legs and Traps"
+const val CALVES_NECK_SET_1 = "Calves and Neck"
 
 
 object SetTemplateDefaultDatasource {
@@ -55,62 +65,93 @@ object SetTemplateDefaultDatasource {
         val bicepsCurl = ExerciseDefaultDatasource.getExerciseTemplateForHypertrophyByName(BICEPS_CURL)!!
         val skullcrushers = ExerciseDefaultDatasource.getExerciseTemplateForHypertrophyByName(SKULLCRUSHERS)!!
         val neckCurl = ExerciseDefaultDatasource.getExerciseTemplateForHypertrophyByName(NECK_CURL)!!
+        val deadlift = ExerciseDefaultDatasource.getExerciseTemplateForHypertrophyByName(DEADLIFT)!!
+        val reversePushDown = ExerciseDefaultDatasource.getExerciseTemplateForHypertrophyByName(REVERSE_PUSH_DOWN)!!
+        val reverseCurl = ExerciseDefaultDatasource.getExerciseTemplateForHypertrophyByName(REVERSE_CURL)!!
+        val hammerCurl = ExerciseDefaultDatasource.getExerciseTemplateForHypertrophyByName(HAMMER_CURL)!!
+        val supinatedCurl = ExerciseDefaultDatasource.getExerciseTemplateForHypertrophyByName(SUPINATED_CURL)!!
 
         val rest60 = RestPeriodDefaultDatasource.rest60
-        val rest60to120 = RestPeriodDefaultDatasource.rest60to120
 
-        // todo add rest blocks
         return listOf(
             SetTemplate(
                 ItemIdentifierGenerator.generateId(),
                 CHEST_BACK_SET_1
-            ).add(bench).add(rest60).add(rows) as SetTemplate,
+            ).add(bench).add(rest60).add(pullUps) as SetTemplate,
+            SetTemplate(
+                ItemIdentifierGenerator.generateId(),
+                SHOULDERS_BACK_SET_1
+            ).add(ohp).add(rest60).add(rows) as SetTemplate,
+            SetTemplate(
+                ItemIdentifierGenerator.generateId(),
+                CHEST_BACK_NECK_SET_1
+            ).add(pushUps).add(rest60).add(dbShrug).add(rest60).add(neckCurl) as SetTemplate,
+
+
+            SetTemplate(
+                ItemIdentifierGenerator.generateId(),
+                LEGS_ARMS_SET_1
+            ).add(bicepsCurl).add(rest60).add(hipThrust) as SetTemplate,
+            SetTemplate(
+                ItemIdentifierGenerator.generateId(),
+                LEGS_ARMS_SHOULDERS_SET_1
+            ).add(skullcrushers).add(rest60).add(lunges).add(rest60).add(lateralRaises) as SetTemplate,
+            SetTemplate(
+                ItemIdentifierGenerator.generateId(),
+                CALVES_SHOULDERS_SET_1
+            ).add(calfRaises).add(reverseFly) as SetTemplate,
+
+
+            SetTemplate(
+                ItemIdentifierGenerator.generateId(),
+                BACK_SET_1
+            ).add(deadlift) as SetTemplate,
             SetTemplate(
                 ItemIdentifierGenerator.generateId(),
                 CHEST_BACK_SET_2
-            ).add(pushUps).add(rest60to120).add(pullUps) as SetTemplate,
-            SetTemplate(
-                ItemIdentifierGenerator.generateId(),
-                CHEST_BACK_SET_3
             ).add(inclinePress).add(rest60).add(pullUps) as SetTemplate,
             SetTemplate(
                 ItemIdentifierGenerator.generateId(),
-                CHEST_BACK_SET_4
+                CHEST_BACK_SET_3
             ).add(chestFly).add(rest60).add(invertedRow) as SetTemplate,
             SetTemplate(
                 ItemIdentifierGenerator.generateId(),
-                SHOULDERS_SET_1
-            ).add(ohp).add(lateralRaises).add(reverseFly) as SetTemplate,
+                SHOULDERS_FINISHER_SET
+            ).add(arnoldPress) as SetTemplate,
+
+
             SetTemplate(
                 ItemIdentifierGenerator.generateId(),
-                SHOULDERS_SET_2
-            ).add(arnoldPress).add(lateralRaises).add(facePull) as SetTemplate,
+                ARMS_SHOULDERS_SET_1
+            ).add(bicepsCurl).add(rest60).add(skullcrushers).add(rest60).add(facePull) as SetTemplate,
+            SetTemplate(
+                ItemIdentifierGenerator.generateId(),
+                ARMS_SHOULDERS_SET_2
+            ).add(inclineCurl).add(rest60).add(pushDown).add(rest60).add(lateralRaises) as SetTemplate,
+            SetTemplate(
+                ItemIdentifierGenerator.generateId(),
+                ARMS_FINISHER_SET
+            ).add(reverseCurl).add(reversePushDown).add(hammerCurl).add(reversePushDown).add(supinatedCurl).add(reversePushDown) as SetTemplate,
+
+
             SetTemplate(
                 ItemIdentifierGenerator.generateId(),
                 LEGS_SET_1
             ).add(squat) as SetTemplate,
             SetTemplate(
                 ItemIdentifierGenerator.generateId(),
-                LEGS_ARMS_TRAPS_SET_1
-            ).add(dbShrug).add(pushDown).add(inclineCurl).add(hipThrust) as SetTemplate,
-            SetTemplate(
-                ItemIdentifierGenerator.generateId(),
-                LEGS_ARMS_TRAPS_SET_2
-            ).add(barbellShrug).add(lunges).add(bicepsCurl).add(nordicCurl).add(skullcrushers) as SetTemplate,
+                LEGS_TRAPS_SET_1
+            ).add(barbellShrug).add(rest60).add(nordicCurl) as SetTemplate,
             SetTemplate(
                 ItemIdentifierGenerator.generateId(),
                 CALVES_NECK_SET_1
-            ).add(calfRaises).add(neckExtensions) as SetTemplate,
-            SetTemplate(
-                ItemIdentifierGenerator.generateId(),
-                CALVES_NECK_SET_2
-            ).add(calfRaises).add(neckCurl) as SetTemplate
+            ).add(neckExtensions).add(rest60).add(calfRaises) as SetTemplate
         )
     }
 
 
     fun getSetTemplateForHypertrophyByName(name: String): SetTemplate? {
-        return setTemplatesForHypertrophy.find { it.name.contains(name) }
+        return setTemplatesForHypertrophy.find { it.name == name }
     }
 }
 

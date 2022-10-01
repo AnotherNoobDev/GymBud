@@ -88,7 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Want to be able to squat a baby orca? Grow biceps twice the size of your head? Enter a room sideways because your shoulders are too wide? It's time to enter that program in GymBud and make it happen! \n\nDon't have a program? GymBud comes with a Strength Program and a Hypertrophy Program to get you started."
+            android:text="Want to be able to squat a baby orca? Grow biceps twice the size of your head? Enter a room sideways because your shoulders are too wide? It's time to enter that program in GymBud and make it happen! \n\nDon't have a program? GymBud comes with a Hypertrophy Program to get you started."
             android:textSize="12sp" />
         <LinearLayout
             android:layout_width="match_parent"

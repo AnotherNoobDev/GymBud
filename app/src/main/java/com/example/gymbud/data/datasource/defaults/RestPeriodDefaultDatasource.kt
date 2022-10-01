@@ -34,6 +34,4 @@ object RestPeriodDefaultDatasource {
         rest60to120,
         rest180to300
     )
-
-    // todo add remaining rest periods
 }

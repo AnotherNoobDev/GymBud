@@ -5,31 +5,49 @@ import com.example.gymbud.model.Exercise
 import com.example.gymbud.model.ExerciseTemplate
 import com.example.gymbud.model.MuscleGroup
 
-const val BENCH_PRESS =  "Bench press"
-const val ROWS = "Rows"
+// CHEST
+const val BENCH_PRESS =  "Bench Press"
 const val PUSH_UPS = "Push-ups"
+const val INCLINE_PRESS = "Incline Press"
+const val CHEST_FLY = "Chest Fly"
+
+// BACK
 const val PULL_UPS = "Pull-ups"
-const val OHP = "OHP"
-const val LATERAL_RAISES = "Lateral raises"
-const val REVERSE_FLY = "Reverse fly"
-const val SQUAT = "Squat"
+const val ROWS = "Rows"
 const val BARBELL_SHRUG = "Barbell Shrug"
 const val DUMBELL_SHRUG = "Dumbbell Shrug"
-const val HIP_THRUST = "Hip thrust"
-const val INCLINE_CURL = "Incline curl"
+const val DEADLIFT = "Deadlift"
+const val INVERTED_ROW = "Inverted Row"
+
+// SHOULDERS
+const val OHP = "Overhead Press"
+const val ARNOLD_PRESS = "Arnold Press"
+const val LATERAL_RAISES = "Lateral Raises"
+const val REVERSE_FLY = "Reverse Fly"
+const val FACE_PULL = "Face Pull"
+const val INCLINE_CURL = "Incline Curl"
+
+// ARMS
+const val BICEPS_CURL = "Biceps Curl"
+const val SKULLCRUSHERS = "Skull Crushers"
 const val PUSH_DOWN = "Push-down"
-const val CALF_RAISES = "Calf raises"
-const val INCLINE_PRESS = "Incline press"
-const val NECK_EXTENSIONS = "Neck extensions"
-const val CHEST_FLY = "Chest fly"
-const val INVERTED_ROW = "Inverted row"
-const val ARNOLD_PRESS = "Arnold press"
-const val FACE_PULL = "Face pull"
-const val NORDIC_CURL = "Nordic curl"
+const val REVERSE_CURL = "Reverse Curl"
+const val HAMMER_CURL = "Hammer Curl"
+const val SUPINATED_CURL = "Supinated Curl"
+const val REVERSE_PUSH_DOWN = "Reverse Push-down"
+
+// NECK
+const val NECK_CURL = "Neck Curl"
+const val NECK_EXTENSIONS = "Neck Extensions"
+
+// LEGS
+const val SQUAT = "Squat"
+const val NORDIC_CURL = "Nordic Curl"
+const val HIP_THRUST = "Hip Thrust"
 const val LUNGES = "Lunges"
-const val BICEPS_CURL = "Biceps curl"
-const val SKULLCRUSHERS = "Skullcrushers"
-const val NECK_CURL = "Neck curl"
+
+// CALVES
+const val CALF_RAISES = "Calf Raises"
 
 
 const val HYPERTROPHY_NAME_TAG = "Hypertrophy"
@@ -47,177 +65,212 @@ object ExerciseDefaultDatasource {
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 BENCH_PRESS,
-                "Add notes here...\nAdd notes here...\nAdd notes here...\nAdd notes here...\nAdd notes here...\n",
+                "", //TODO take notes from video (same for the others bellow)
                 MuscleGroup.CHEST,
-                "HnQGKxU3eds"
+                "vcBig73ojpE"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 ROWS,
-                "Add notes here...",
+                "",
                 MuscleGroup.BACK,
-                "xVFU7XSgdxI"
+                "T3N-TO4reLQ"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 PUSH_UPS,
-                "Add notes here...",
+                "",
                 MuscleGroup.CHEST,
                 "IODxDxX7oi4"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 PULL_UPS,
-                "Add notes here...",
+                "",
                 MuscleGroup.BACK,
                 "B5z3k20QCS0"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 OHP,
-                "Add notes here...",
+                "",
                 MuscleGroup.FRONT_DELT,
                 "hxH2F2Qp2YA"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 LATERAL_RAISES,
-                "Add notes here...",
+                "",
                 MuscleGroup.SIDE_DELT,
                 "fD6kaKjiy84"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 REVERSE_FLY,
-                "Add notes here...",
+                "",
                 MuscleGroup.REAR_DELT,
-                ""
+                "lPt0GqwaqEw"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 SQUAT,
-                "Add notes here...",
+                "",
                 MuscleGroup.QUADS,
-                ""
+                "Uv_DKDl7EjA"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 BARBELL_SHRUG,
-                "Add notes here...",
+                "",
                 MuscleGroup.BACK,
-                ""
+                "Jl2fzN3mY_k"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 DUMBELL_SHRUG,
-                "Add notes here...",
+                "",
                 MuscleGroup.BACK,
-                ""
+                "Jl2fzN3mY_k"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 HIP_THRUST,
-                "Add notes here...",
+                "",
                 MuscleGroup.GLUTES,
-                ""
+                "xDmFkJxPzeM"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 INCLINE_CURL,
-                "Add notes here...",
+                "",
                 MuscleGroup.BICEPS,
-                ""
+                "soxrZlIl35U"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 PUSH_DOWN,
-                "Add notes here...",
+                "",
                 MuscleGroup.TRICEPS,
-                ""
+                "GCa8Q4e7laU"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 CALF_RAISES,
-                "Add notes here...",
+                "",
                 MuscleGroup.CALVES,
-                ""
+                "Xa18jxyeSnM"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 INCLINE_PRESS,
-                "Add notes here...",
+                "",
                 MuscleGroup.CHEST,
-                ""
+                "GHcAIiL9J_Y"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 NECK_EXTENSIONS,
-                "Add notes here...",
+                "",
                 MuscleGroup.NECK,
-                ""
+                "qQz2JoBn19k"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 CHEST_FLY,
-                "Add notes here...",
+                "",
                 MuscleGroup.CHEST,
-                ""
+                "2dKBS61BX24"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 INVERTED_ROW,
-                "Add notes here...",
+                "",
                 MuscleGroup.BACK,
-                ""
+                "s1A4i8dQeu8"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 ARNOLD_PRESS,
-                "Add notes here...",
+                "",
                 MuscleGroup.FRONT_DELT,
-                ""
+                "6Z15_WdXmVw"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 FACE_PULL,
-                "Add notes here...",
+                "",
                 MuscleGroup.REAR_DELT,
-                ""
+                "eIq5CB9JfKE"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 NORDIC_CURL,
-                "Add notes here...",
+                "",
                 MuscleGroup.BACK,
-                ""
+                "F-AaE8mw_pY"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 LUNGES,
-                "Add notes here...",
+                "",
                 MuscleGroup.QUADS,
-                ""
+                "0MZd3iKzzPM"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 BICEPS_CURL,
-                "Add notes here...",
+                "",
                 MuscleGroup.BICEPS,
-                ""
+                "QZEqB6wUPxQ"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 SKULLCRUSHERS,
-                "Add notes here...",
+                "",
                 MuscleGroup.TRICEPS,
-                ""
+                "ir5PsbniVSc"
             ),
             Exercise(
                 ItemIdentifierGenerator.generateId(),
                 NECK_CURL,
-                "Add notes here...",
+                "",
                 MuscleGroup.NECK,
-                ""
+                "ym8iHuzAMiU"
+            ),
+            Exercise(
+                ItemIdentifierGenerator.generateId(),
+                DEADLIFT,
+                "",
+                MuscleGroup.BACK,
+                "wYREQkVtvEc"
+            ),
+            Exercise(
+                ItemIdentifierGenerator.generateId(),
+                REVERSE_PUSH_DOWN,
+                "",
+                MuscleGroup.TRICEPS,
+                "xQO6-Yy_uKM"
+            ),
+            Exercise(
+                ItemIdentifierGenerator.generateId(),
+                SUPINATED_CURL,
+                "",
+                MuscleGroup.BICEPS,
+                "OtFLz4RwYMQ"
+            ),
+            Exercise(
+                ItemIdentifierGenerator.generateId(),
+                REVERSE_CURL,
+                "",
+                MuscleGroup.BICEPS,
+                "hfNRgBNVhk4"
+            ),
+            Exercise(
+                ItemIdentifierGenerator.generateId(),
+                HAMMER_CURL,
+                "",
+                MuscleGroup.BICEPS,
+                "zC3nLlEvin4"
             )
         )
     }
@@ -242,7 +295,7 @@ object ExerciseDefaultDatasource {
         return when (exercise.name) {
             BENCH_PRESS -> 8..12
             ROWS -> 8..12
-            PUSH_UPS -> 20..60
+            PUSH_UPS -> 15..60
             PULL_UPS -> 3..15
             OHP -> 8..12
             LATERAL_RAISES -> 20..30
@@ -258,19 +311,24 @@ object ExerciseDefaultDatasource {
             NECK_EXTENSIONS -> 20..30
             CHEST_FLY -> 8..12
             INVERTED_ROW -> 8..15
-            ARNOLD_PRESS -> 8..12
+            ARNOLD_PRESS -> 10..15
             FACE_PULL -> 20..30
             NORDIC_CURL -> 3..12
             LUNGES -> 16..24
             BICEPS_CURL -> 8..12
             SKULLCRUSHERS -> 8..12
             NECK_CURL -> 20..30
+            DEADLIFT -> 8..10
+            REVERSE_PUSH_DOWN -> 16..24
+            REVERSE_CURL -> 10..15
+            HAMMER_CURL -> 10..15
+            SUPINATED_CURL -> 10..15
             else -> 8..12
         }
     }
 
 
     fun getExerciseTemplateForHypertrophyByName(name: String): ExerciseTemplate? {
-        return exerciseTemplatesForHypertrophy.find { it.name.contains(name) }
+        return exerciseTemplatesForHypertrophy.find { it.name == (name + " " + HYPERTROPHY_NAME_TAG)}
     }
 }

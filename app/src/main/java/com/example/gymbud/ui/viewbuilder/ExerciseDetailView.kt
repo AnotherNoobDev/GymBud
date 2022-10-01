@@ -84,9 +84,9 @@ class ExerciseDetailView: ItemView {
 
                 override fun onInitializationFailure(
                     provider: YouTubePlayer.Provider,
-                    youTubeInitializationResult: YouTubeInitializationResult
+                    err: YouTubeInitializationResult
                 ) {
-                    Log.e(TAG, "Failed to initialize YoutubePlayer")
+                    Log.e(TAG, "Failed to initialize YoutubePlayer: $err")
                 }
             }
         )

@@ -5,7 +5,7 @@ import com.example.gymbud.model.ProgramTemplate
 import com.example.gymbud.model.RestPeriod
 
 
-const val DEFAULT_HYPERTROPHY_PROGRAM = "4 day-split Hypertrophy Program"
+const val DEFAULT_HYPERTROPHY_PROGRAM = "Default Hypertrophy Program"
 
 
 object ProgramTemplateDefaultDatasource {
@@ -13,12 +13,12 @@ object ProgramTemplateDefaultDatasource {
 
     init {
         val programForHypertrophy = ProgramTemplate(ItemIdentifierGenerator.generateId(), DEFAULT_HYPERTROPHY_PROGRAM)
-            .add(WorkoutTemplateDefaultDatasource.getWorkoutTemplateForHypertrophyByName(WORKOUT_CHEST_BACK_SHOULDERS_1)!!)
-            .add(WorkoutTemplateDefaultDatasource.getWorkoutTemplateForHypertrophyByName(WORKOUT_LEGS_ARMS_TRAPS_NECK_1)!!)
+            .add(WorkoutTemplateDefaultDatasource.getWorkoutTemplateForHypertrophyByName(WORKOUT_1)!!)
+            .add(WorkoutTemplateDefaultDatasource.getWorkoutTemplateForHypertrophyByName(WORKOUT_2)!!)
             .add(RestPeriod.RestDay)
-            .add(WorkoutTemplateDefaultDatasource.getWorkoutTemplateForHypertrophyByName(WORKOUT_CHEST_BACK_SHOULDERS_2)!!)
-            .add(WorkoutTemplateDefaultDatasource.getWorkoutTemplateForHypertrophyByName(WORKOUT_LEGS_ARMS_TRAPS_NECK_2)!!)
-            .add(RestPeriod.RestDay)
+            .add(WorkoutTemplateDefaultDatasource.getWorkoutTemplateForHypertrophyByName(WORKOUT_3)!!)
+            .add(WorkoutTemplateDefaultDatasource.getWorkoutTemplateForHypertrophyByName(WORKOUT_4)!!)
+            .add(WorkoutTemplateDefaultDatasource.getWorkoutTemplateForHypertrophyByName(WORKOUT_5)!!)
             .add(RestPeriod.RestDay)
 
         programs = listOf(programForHypertrophy as ProgramTemplate)
