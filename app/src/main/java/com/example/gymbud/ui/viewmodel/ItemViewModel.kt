@@ -23,8 +23,8 @@ class ItemViewModel(
         itemRepository.populateWithMinimum()
     }
 
-    suspend fun populateWithDefaults() {
-        itemRepository.populateWithDefaults()
+    suspend fun populateWithDefaults(progressCallback: (Int) -> Unit) {
+        itemRepository.populateWithDefaults(progressCallback)
     }
 
     fun getItemsByType(type: ItemType): Flow<List<Item>> {

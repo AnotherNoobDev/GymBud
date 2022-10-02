@@ -1,10 +1,15 @@
+@file:Suppress("DEPRECATION")
+// todo ProgressDialog is deprecated
+
 package com.example.gymbud.ui
 
+import android.app.ProgressDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -27,6 +32,12 @@ class TemplatesFragment : Fragment() {
         )
     }
 
+    private var populateWithDefaultsProgressDialog: ProgressDialog? = null
+
+    // todo remove this (only needed with test data generation)
+    private var debugDataReady = false
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,12 +53,24 @@ class TemplatesFragment : Fragment() {
             }
 
             loadDefaultsButton.setOnClickListener {
+                val dialog = ProgressDialog(requireContext())
+                dialog.max = 100
+                dialog.setTitle("Loading default Programs...")
+                dialog.setMessage("\n\nPlease do not close the app while this operation is in progress.")
+                dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+                dialog.show()
+                populateWithDefaultsProgressDialog = dialog
+
                 viewLifecycleOwner.lifecycleScope.launch {
-                    viewModel.populateWithDefaults()
+                    viewModel.populateWithDefaults {
+                        updatePopulateWithDefaultsProgress(it)
+                    }
 
                     // todo remove this (generates test data)!!
                     val app = activity?.application as BaseApplication
                     populateWithSessions(app.programRepository, app.sessionRepository)
+                    debugDataReady = true
+                    updatePopulateWithDefaultsProgress(100)
                 }
             }
 
@@ -63,5 +86,21 @@ class TemplatesFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+
+    private fun updatePopulateWithDefaultsProgress(progress: Int) {
+        populateWithDefaultsProgressDialog?.progress = progress
+
+        if (progress == 100 && debugDataReady) {
+            activity?.runOnUiThread {
+                populateWithDefaultsProgressDialog?.dismiss()
+            }
+
+            Toast.makeText(
+                requireContext(), "Default Programs have been successfully loaded.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 }

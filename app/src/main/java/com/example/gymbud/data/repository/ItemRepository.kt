@@ -31,14 +31,35 @@ class ItemRepository(
     }
 
 
-    suspend fun populateWithDefaults() {
-        // order here matters!!
+    suspend fun populateWithDefaults(progressCallback: (Int) -> Unit) {
+        var progress = 0
+
+        // order in which we populate repositories matters!!
         exerciseRepository.populateWithDefaults()
+        progress += 10
+        progressCallback(progress)
+
         exerciseTemplateRepository.populateWithDefaults()
+        progress += 5
+        progressCallback(progress)
+
         restPeriodRepository.populateWithDefaults()
+        progress += 5
+        progressCallback(progress)
+
         setTemplateRepository.populateWithDefaults()
+        progress += 35
+        progressCallback(progress)
+
         workoutTemplateRepository.populateWithDefaults()
+        progress += 35
+        progressCallback(progress)
+
         programTemplateRepository.populateWithDefaults()
+        progress += 10
+        progressCallback(progress)
+
+        assert(progress == 100)
     }
 
 
