@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         tools:text="Exercise Name"
         android:textAlignment="center"
-        android:textSize="30sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,7 +28,7 @@
         android:layout_marginTop="5dp"
         tools:text="*  Warmup  *"
         android:textAlignment="center"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/exercise_label" />
