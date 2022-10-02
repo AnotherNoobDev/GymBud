@@ -63,9 +63,6 @@
         android:name="com.example.gymbud.ui.DashboardFragment"
         android:label="DashboardFragment" >
         <action
-            android:id="@+id/action_dashboardFragment_to_startupFragment"
-            app:destination="@id/startupFragment" />
-        <action
             android:id="@+id/action_dashboardFragment_to_liveSessionStartFragment"
             app:destination="@id/liveSessionStartFragment"
             app:popUpToInclusive="false" />

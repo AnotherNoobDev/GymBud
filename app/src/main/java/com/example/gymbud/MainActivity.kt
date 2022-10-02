@@ -66,8 +66,6 @@ class MainActivity : AppCompatActivity() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
 
         // theme
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-
         lifecycleScope.launch {
             (application as BaseApplication).appRepository.useDarkTheme.collect {
                 if (it) {

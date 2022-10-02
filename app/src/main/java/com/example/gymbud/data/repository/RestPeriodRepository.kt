@@ -27,7 +27,11 @@ class RestPeriodRepository(
 
 
     suspend fun populateWithMinimum() {
-        restPeriodDao.insert(RestPeriod.RestDay)
+        try {
+            restPeriodDao.insert(RestPeriod.RestDay)
+        } catch (e: SQLiteConstraintException) {
+            Log.w(TAG, "RestDay already exists in DB!")
+        }
     }
 
 
