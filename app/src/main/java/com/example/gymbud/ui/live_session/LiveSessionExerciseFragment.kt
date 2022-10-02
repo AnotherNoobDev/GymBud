@@ -13,15 +13,23 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.gymbud.AppConfig
 import com.example.gymbud.BaseApplication
+import com.example.gymbud.R
 import com.example.gymbud.data.repository.AppRepository
 import com.example.gymbud.databinding.FragmentLiveSessionExerciseBinding
 import com.example.gymbud.model.*
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModel
 import com.example.gymbud.ui.viewmodel.LiveSessionViewModelFactory
 import com.example.gymbud.utility.SoftKeyboardVisibilityListener
+import com.google.android.youtube.player.YouTubeInitializationResult
+import com.google.android.youtube.player.YouTubePlayer
+import com.google.android.youtube.player.YouTubePlayerSupportFragmentX
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+
+
+private const val TAG = "LiveSesExerciseFragment"
 
 
 class LiveSessionExerciseFragment : Fragment() {
@@ -40,6 +48,11 @@ class LiveSessionExerciseFragment : Fragment() {
 
     private lateinit var keyboardVisibilityListener: SoftKeyboardVisibilityListener
 
+    private var youtubePlayer: YouTubePlayer? = null
+    private var videoId: String? = null
+
+    private var showInstructions = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +66,8 @@ class LiveSessionExerciseFragment : Fragment() {
 
         binding.root.viewTreeObserver.addOnGlobalLayoutListener(keyboardVisibilityListener)
 
+        setupYoutubePlayer()
+
         return binding.root
     }
 
@@ -65,17 +80,58 @@ class LiveSessionExerciseFragment : Fragment() {
                 exerciseLabel.visibility = View.GONE
                 exerciseTags.visibility = View.GONE
 
-                // hide previous session section
-                previousSession.visibility = View.GONE
+                // hide info
+                infoContainer.visibility = View.GONE
             }
         } else {
             binding.apply {
                 exerciseLabel.visibility = View.VISIBLE
                 exerciseTags.visibility = View.VISIBLE
 
-                previousSession.visibility = View.VISIBLE
+                infoContainer.visibility = View.VISIBLE
             }
         }
+    }
+
+
+    private fun setupYoutubePlayer() {
+        val youTubePlayerFragment = YouTubePlayerSupportFragmentX.newInstance()
+
+        youTubePlayerFragment.initialize(
+            AppConfig.youtubeApiKey,
+            object : YouTubePlayer.OnInitializedListener {
+
+                override fun onInitializationSuccess(
+                    provider: YouTubePlayer.Provider,
+                    player: YouTubePlayer, b: Boolean
+                ) {
+                    youtubePlayer = player
+
+                    youtubePlayer!!.setShowFullscreenButton(false)
+
+                    cueYoutubePlayerVideo()
+                }
+
+                override fun onInitializationFailure(
+                    provider: YouTubePlayer.Provider,
+                    err: YouTubeInitializationResult
+                ) {
+                    Log.e(TAG, "Failed to initialize YoutubePlayer: $err")
+                }
+            }
+        )
+
+        val transaction = childFragmentManager.beginTransaction()
+        transaction.add(R.id.youtubePlayerPlaceholder, youTubePlayerFragment).commit()
+    }
+
+
+    private fun cueYoutubePlayerVideo() {
+        if (youtubePlayer == null || videoId == null) {
+            return
+        }
+
+        youtubePlayer!!.cueVideo(videoId!!)
     }
 
 
@@ -107,6 +163,23 @@ class LiveSessionExerciseFragment : Fragment() {
             val intensity = exerciseSession.tags?.get(TagCategory.Intensity)?.joinToString() ?: ""
             if (intensity.isNotEmpty()) {
                 exerciseTags.text = "*  $intensity *"
+            }
+
+            // instructions
+            exerciseNotes.text = exerciseSession.exerciseTemplate.exercise.notes
+            if (exerciseSession.exerciseTemplate.exercise.videoTutorial != "") {
+                youtubePlayerPlaceholder.visibility = View.VISIBLE
+                videoId = exerciseSession.exerciseTemplate.exercise.videoTutorial
+                cueYoutubePlayerVideo()
+            } else {
+                youtubePlayerPlaceholder.visibility = View.GONE
+                videoId = null
+            }
+
+            updateInstructionsVisibility()
+            expandCollapseInstructions.setOnClickListener {
+                showInstructions = !showInstructions
+                updateInstructionsVisibility()
             }
 
             previousNotes.text = exerciseSession.getPreviousNotes()?: "No notes..."
@@ -187,6 +260,19 @@ class LiveSessionExerciseFragment : Fragment() {
         }
 
         displayWeightUnit = u
+    }
+
+
+    private fun updateInstructionsVisibility() {
+        binding.apply {
+            if (showInstructions) {
+                instructionsContent.visibility = View.VISIBLE
+                expandCollapseInstructions.setImageResource(R.drawable.ic_expanded_24)
+            } else {
+                instructionsContent.visibility = View.GONE
+                expandCollapseInstructions.setImageResource(R.drawable.ic_collapsed_24)
+            }
+        }
     }
 
 

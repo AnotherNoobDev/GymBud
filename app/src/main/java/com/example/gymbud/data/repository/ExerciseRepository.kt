@@ -31,10 +31,12 @@ class ExerciseRepository(
     suspend fun fillExerciseContent(exercise: Exercise) {
         val exerciseEntry = exerciseDao.get(exercise.id).first()
 
+        // todo I don't like this.. seems error prone
         if (exerciseEntry != null) {
             exercise.name = exerciseEntry.name
             exercise.targetMuscle = exerciseEntry.targetMuscle
             exercise.notes = exerciseEntry.notes
+            exercise.videoTutorial = exerciseEntry.videoTutorial
         }
     }
 

@@ -33,25 +33,90 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/exercise_label" />
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/info_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp"
-        android:orientation="vertical"
+        android:scrollbars="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exercise_tags">
+        app:layout_constraintTop_toBottomOf="@+id/exercise_tags"
+        app:layout_constraintBottom_toTopOf="@id/input_container"
+        android:overScrollMode="never">
 
-        <ScrollView
-            android:id="@+id/previous_session"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp">
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/exercise_instructions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/instructions_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Instructions"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/instructions_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="2dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/instructions_label" />
+
+                <ImageView
+                    android:id="@+id/expand_collapse_instructions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/instructions_label"
+                    app:layout_constraintEnd_toEndOf="@+id/instructions_divider"
+                    app:layout_constraintTop_toTopOf="@+id/instructions_label"
+                    app:tint="?android:textColor"
+                    android:src="@drawable/ic_collapsed_24" />
+
+                <LinearLayout
+                    android:id="@+id/instructions_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/instructions_divider"
+                    android:visibility="gone">
+                    <TextView
+                        android:id="@+id/exercise_notes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        tools:text="Exercise notes here.." />
+
+                    <FrameLayout
+                        android:id="@+id/youtubePlayerPlaceholder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp">
+                    </FrameLayout>
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/previous_session"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp">
 
                 <TextView
                     android:id="@+id/previous_session_label"
@@ -90,9 +155,19 @@
                     app:layout_constraintEnd_toEndOf="@+id/previous_session_divider"
                     app:layout_constraintTop_toTopOf="@+id/previous_session_label"
                     tools:text="Reps x Resistance" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/input_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/next_item_hint">
 
         <LinearLayout
             android:layout_width="match_parent"
