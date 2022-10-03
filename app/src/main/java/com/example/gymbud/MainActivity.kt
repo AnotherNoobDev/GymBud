@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.forEach
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -22,8 +23,7 @@ import com.example.gymbud.databinding.LayoutLiveSessionOverviewBinding
 import com.example.gymbud.model.WorkoutSessionItemType
 import com.example.gymbud.model.WorkoutSessionState
 import com.example.gymbud.ui.live_session.LiveSessionOverviewRecyclerViewAdapter
-import com.example.gymbud.ui.viewmodel.LiveSessionViewModel
-import com.example.gymbud.ui.viewmodel.LiveSessionViewModelFactory
+import com.example.gymbud.ui.viewmodel.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collect
@@ -34,6 +34,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
 
+    private lateinit var navBar: BottomNavigationView
+
+    private lateinit var appBar: Toolbar
+
     private val liveSessionViewModel: LiveSessionViewModel by viewModels {
         LiveSessionViewModelFactory(
             (application as BaseApplication).sessionRepository,
@@ -41,9 +45,15 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    private val appViewModel: AppViewModel by viewModels {
+        AppViewModelFactory()
+    }
+
     private var workoutSessionState: WorkoutSessionState = WorkoutSessionState.NotReady
 
     private var disableBackNavigation = false
+
+    private var appBarMenuVisible = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,11 +83,22 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            appViewModel.appWorkflowState.collect {
+                when(it) {
+                    AppWorkflowState.FirstTime -> prepareForFirstTimeWorkflow()
+                    AppWorkflowState.Normal -> prepareForNormalWorkflow()
+                    else -> {}
+                }
+            }
+        }
     }
 
 
     private fun setupActionBar() {
-        setSupportActionBar(findViewById(R.id.app_bar))
+        appBar = findViewById(R.id.app_bar)
+        setSupportActionBar(appBar)
 
         val str = SpannableStringBuilder("GYMBUD")
 
@@ -98,13 +119,20 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        val navBar = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        navBar = findViewById(R.id.bottom_navigation)
         navBar.setupWithNavController(navController)
+    }
 
-        lifecycleScope.launch {
-            liveSessionViewModel.state.collect {
-                onLiveSessionStateChanged(it)
-            }
+
+    private fun prepareForFirstTimeWorkflow() {
+        navBar.visibility = View.GONE
+        setupActionBarVisibility(false)
+    }
+
+
+    private suspend fun prepareForNormalWorkflow() {
+        liveSessionViewModel.state.collect {
+            onLiveSessionStateChanged(it)
         }
     }
 
@@ -119,8 +147,6 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun presentBottomNavigation(state: WorkoutSessionState) {
-        val navBar = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-
         navBar.visibility = if (state == WorkoutSessionState.Finished) View.GONE else View.VISIBLE
 
         val isLiveSessionMenu = (state == WorkoutSessionState.Started)
@@ -183,15 +209,18 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun presentActionBar(state: WorkoutSessionState) {
-        val appBar = findViewById<Toolbar>(R.id.app_bar)
-
         when(state) {
-            WorkoutSessionState.NotReady, WorkoutSessionState.Ready -> appBar.menu.forEach {
-                it.isVisible = true
-            }
-            else -> appBar.menu.forEach {
-                it.isVisible = false
-            }
+            WorkoutSessionState.NotReady, WorkoutSessionState.Ready -> setupActionBarVisibility(true)
+            else -> setupActionBarVisibility(false)
+        }
+    }
+
+
+    private fun setupActionBarVisibility(visible: Boolean) {
+        appBarMenuVisible = visible
+
+        appBar.menu.forEach {
+            it.isVisible = visible
         }
     }
 
@@ -206,6 +235,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.app_bar_menu, menu)
+        setupActionBarVisibility(appBarMenuVisible)
+
         return super.onCreateOptionsMenu(menu)
     }
 

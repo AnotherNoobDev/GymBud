@@ -11,8 +11,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.gymbud.BaseApplication
 import com.example.gymbud.databinding.FragmentStartupBinding
-import com.example.gymbud.ui.viewmodel.ItemViewModel
-import com.example.gymbud.ui.viewmodel.ItemViewModelFactory
+import com.example.gymbud.ui.viewmodel.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -22,10 +21,14 @@ class StartupFragment : Fragment() {
     private var _binding: FragmentStartupBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: ItemViewModel by activityViewModels {
+    private val itemViewModel: ItemViewModel by activityViewModels {
         ItemViewModelFactory(
             (activity?.application as BaseApplication).itemRepository
         )
+    }
+
+    private val appViewModel: AppViewModel by activityViewModels {
+        AppViewModelFactory()
     }
 
 
@@ -52,13 +55,16 @@ class StartupFragment : Fragment() {
 
 
     private fun onFirstTimeStartup() {
+        appViewModel.setAppWorkflowState(AppWorkflowState.FirstTime)
         val action = StartupFragmentDirections.actionStartupFragmentToGettingStartedGuideFragment()
         findNavController().navigate(action)
     }
 
 
     private suspend fun onReturningUserStartup() {
-        val withData = viewModel.hasData().first()
+        appViewModel.setAppWorkflowState(AppWorkflowState.Normal)
+
+        val withData = itemViewModel.hasData().first()
 
         if (withData) {
             // if we have some templates -> show Dashboard
