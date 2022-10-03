@@ -18,9 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.gymbud.data.ItemIdentifierGenerator
 import com.example.gymbud.databinding.LayoutLiveSessionOverviewBinding
-import com.example.gymbud.model.PartialWorkoutSessionRecord
 import com.example.gymbud.model.WorkoutSessionItemType
 import com.example.gymbud.model.WorkoutSessionState
 import com.example.gymbud.ui.live_session.LiveSessionOverviewRecyclerViewAdapter
@@ -29,18 +27,18 @@ import com.example.gymbud.ui.viewmodel.LiveSessionViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-
-private const val PARTIAL_WORKOUT_SESSION_TAG = "partial_workout_session"
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
 
     private val liveSessionViewModel: LiveSessionViewModel by viewModels {
-        LiveSessionViewModelFactory((application as BaseApplication).sessionRepository)
+        LiveSessionViewModelFactory(
+            (application as BaseApplication).sessionRepository,
+            (application as BaseApplication).appRepository
+        )
     }
 
     private var workoutSessionState: WorkoutSessionState = WorkoutSessionState.NotReady
@@ -239,48 +237,23 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
 
         // ensure LiveSession survives app close
-        if (workoutSessionState == WorkoutSessionState.Started) {
-            lifecycleScope.launch {
-                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session")
-                // persist partial workout session
-                val atItem = liveSessionViewModel.getCurrentItemIndex()
-                val restTimerStartTime = liveSessionViewModel.getRestTimerStartTime()
-
-                liveSessionViewModel.finish()
-                val workoutSessionId = liveSessionViewModel.saveSession("")
-
-                // update app repository with partial workout session id
-                (application as BaseApplication).appRepository.savePartialWorkoutSessionInfo(
-                    PartialWorkoutSessionRecord(workoutSessionId, atItem, restTimerStartTime)
-                )
-
-                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Session saved")
-            }
-        }
+        liveSessionViewModel.onInterrupt()
     }
 
 
     override fun onResume() {
         super.onResume()
 
-        // restore LiveSession
         lifecycleScope.launch {
-            // we are done if no partialWorkoutSession was persisted
-            val partialWorkoutSession = (application as BaseApplication).appRepository.partialWorkoutSessionRecord.first()
-
-            Log.d(PARTIAL_WORKOUT_SESSION_TAG, "onResume: $partialWorkoutSession")
-
-            if (partialWorkoutSession.workoutSessionId == ItemIdentifierGenerator.NO_ID) {
-                return@launch
-            }
-
-            lifecycleScope.launch {
-                liveSessionViewModel.restore(partialWorkoutSession)
-                (application as BaseApplication).appRepository.clearPartialWorkoutSessionInfo()
-
-                navigateToCurrentLiveSessionItem()
+            liveSessionViewModel.sessionRestored.collect {
+                if (it) {
+                    Log.d("partial_workout_session", "navigate")
+                    navigateToCurrentLiveSessionItem()
+                }
             }
         }
+
+        liveSessionViewModel.onRestore()
     }
 
 

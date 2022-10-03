@@ -26,7 +26,10 @@ import kotlinx.coroutines.launch
 
 class LiveSessionEndFragment : Fragment() {
     private val liveSessionViewModel: LiveSessionViewModel by activityViewModels {
-        LiveSessionViewModelFactory((activity?.application as BaseApplication).sessionRepository)
+        LiveSessionViewModelFactory(
+            (activity?.application as BaseApplication).sessionRepository,
+            (activity?.application as BaseApplication).appRepository,
+        )
     }
 
     private lateinit var appRepository: AppRepository

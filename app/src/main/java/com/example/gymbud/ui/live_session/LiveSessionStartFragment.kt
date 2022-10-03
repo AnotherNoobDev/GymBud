@@ -27,7 +27,10 @@ class LiveSessionStartFragment : Fragment() {
     private val navigationArgs: LiveSessionStartFragmentArgs by navArgs()
 
     private val liveSessionViewModel: LiveSessionViewModel by activityViewModels {
-        LiveSessionViewModelFactory((activity?.application as BaseApplication).sessionRepository)
+        LiveSessionViewModelFactory(
+            (activity?.application as BaseApplication).sessionRepository,
+            (activity?.application as BaseApplication).appRepository,
+        )
     }
 
     private val itemViewModel: ItemViewModel by activityViewModels {
