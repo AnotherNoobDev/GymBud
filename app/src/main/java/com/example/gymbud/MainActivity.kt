@@ -175,7 +175,14 @@ class MainActivity : AppCompatActivity() {
             }
 
             // third item -> End Live Session
-            navBar.menu.findItem(R.id.liveSessionEndFragment).isVisible = true
+            navBar.menu.findItem(R.id.liveSessionEndFragment).apply {
+                isVisible = true
+                setOnMenuItemClickListener {
+                    openLiveSessionEndDialog()
+                    true
+                }
+            }
+
             navBar.menu.findItem(R.id.statsFragment).isVisible = false
 
             // HACK to clear checked state from all items (otherwise second item stays checked, but we don't want any item checked...)
@@ -320,5 +327,19 @@ class MainActivity : AppCompatActivity() {
         binding.resultsRecyclerView.adapter = adapter
 
         dialog.show()
+    }
+
+
+    private fun openLiveSessionEndDialog() {
+        val context = (supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment).requireContext()
+
+        MaterialAlertDialogBuilder(context)
+            .setTitle("End Workout Session?")
+            .setPositiveButton("Ok") { _, _ ->
+                navController.navigate(R.id.liveSessionEndFragment)
+            }
+            .setNegativeButton("Cancel"){_,_ ->}
+            .show()
     }
 }
