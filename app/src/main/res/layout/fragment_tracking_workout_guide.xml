@@ -105,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="After going through all items in the Workout session, you are presented with a end screen showing you how long the workout took and your results, together with a comparison to the results from your previous session (if any). Here you also have the option to enter additional Notes that apply to the entire session. Up to this point, the results have not yet been permanently saved. Now you have the option to either Save or Discard the session's results."
+                android:text="After going through all items in the Workout session, you are presented with an end screen showing you how long the workout took and your results, together with a comparison to the results from your previous session (if any). Here you also have the option to enter additional Notes that apply to the entire session. Up to this point, the results have not yet been permanently saved. Now you have the option to either Save or Discard the session's results."
                 android:textSize="12sp" />
             <TextView
                 android:layout_width="match_parent"
