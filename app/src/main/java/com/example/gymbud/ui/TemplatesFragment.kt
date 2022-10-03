@@ -17,7 +17,8 @@ import com.example.gymbud.BaseApplication
 import com.example.gymbud.databinding.FragmentTemplatesBinding
 import com.example.gymbud.ui.viewmodel.ItemViewModel
 import com.example.gymbud.ui.viewmodel.ItemViewModelFactory
-import com.example.gymbud.utility.populateWithSessions
+// TEST_DATA_GENERATION
+// import com.example.gymbud.utility.populateWithSessions
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -34,8 +35,8 @@ class TemplatesFragment : Fragment() {
 
     private var populateWithDefaultsProgressDialog: ProgressDialog? = null
 
-    // todo remove this (only needed with test data generation)
-    private var debugDataReady = false
+    // TEST_DATA_GENERATION only needed with test data generation
+    // private var debugDataReady = false
 
 
     override fun onCreateView(
@@ -66,11 +67,13 @@ class TemplatesFragment : Fragment() {
                         updatePopulateWithDefaultsProgress(it)
                     }
 
-                    // todo remove this (generates test data)!!
+                    // TEST_DATA_GENERATION generate test data (for debugging only!!)
+                    /*
                     val app = activity?.application as BaseApplication
                     populateWithSessions(app.programRepository, app.sessionRepository)
                     debugDataReady = true
                     updatePopulateWithDefaultsProgress(100)
+                     */
                 }
             }
 
@@ -92,7 +95,8 @@ class TemplatesFragment : Fragment() {
     private fun updatePopulateWithDefaultsProgress(progress: Int) {
         populateWithDefaultsProgressDialog?.progress = progress
 
-        if (progress == 100 && debugDataReady) {
+        // TEST_DATA_GENERATION && debugDataReady
+        if (progress == 100) {
             activity?.runOnUiThread {
                 populateWithDefaultsProgressDialog?.dismiss()
             }
