@@ -296,6 +296,8 @@ class ExerciseProgressionFragment : Fragment() {
                 rangeMaxValue
             )
 
+            rangeTitle.text = weightUnit.toString()
+
             redraw()
         }
     }
