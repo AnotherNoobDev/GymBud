@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/startupFragment"
-        android:name="com.example.gymbud.ui.StartupFragment"
+        android:name="com.gymbud.gymbud.ui.StartupFragment"
         android:label="fragment_startup"
         tools:layout="@layout/fragment_startup" >
         <action
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/templatesFragment"
-        android:name="com.example.gymbud.ui.TemplatesFragment"
+        android:name="com.gymbud.gymbud.ui.TemplatesFragment"
         android:label="fragment_templates"
         tools:layout="@layout/fragment_templates">
         <action
@@ -36,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/programBuilderFragment"
-        android:name="com.example.gymbud.ui.ProgramBuilderFragment"
+        android:name="com.gymbud.gymbud.ui.ProgramBuilderFragment"
         android:label="fragment_program_builder"
         tools:layout="@layout/fragment_program_builder" >
         <action
@@ -45,12 +45,12 @@
     </fragment>
     <fragment
         android:id="@+id/itemListFragment"
-        android:name="com.example.gymbud.ui.ItemListFragment"
+        android:name="com.gymbud.gymbud.ui.ItemListFragment"
         android:label="fragment_item_list"
         tools:layout="@layout/fragment_item_list" >
         <argument
             android:name="itemType"
-            app:argType="com.example.gymbud.model.ItemType" />
+            app:argType="com.gymbud.gymbud.model.ItemType" />
         <action
             android:id="@+id/action_itemListFragment_to_itemDetailFragment"
             app:destination="@id/itemDetailFragment" />
@@ -60,7 +60,7 @@
     </fragment>
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="com.example.gymbud.ui.DashboardFragment"
+        android:name="com.gymbud.gymbud.ui.DashboardFragment"
         android:label="DashboardFragment" >
         <action
             android:id="@+id/action_dashboardFragment_to_liveSessionStartFragment"
@@ -69,14 +69,14 @@
     </fragment>
     <fragment
         android:id="@+id/itemDetailFragment"
-        android:name="com.example.gymbud.ui.ItemDetailFragment"
+        android:name="com.gymbud.gymbud.ui.ItemDetailFragment"
         android:label="ItemDetailFragment" >
         <argument
             android:name="id"
             app:argType="long" />
         <argument
             android:name="type"
-            app:argType="com.example.gymbud.model.ItemType" />
+            app:argType="com.gymbud.gymbud.model.ItemType" />
         <action
             android:id="@+id/action_itemDetailFragment_to_itemEditFragment"
             app:destination="@id/itemEditFragment" />
@@ -86,7 +86,7 @@
     </fragment>
     <fragment
         android:id="@+id/itemEditFragment"
-        android:name="com.example.gymbud.ui.ItemEditFragment"
+        android:name="com.gymbud.gymbud.ui.ItemEditFragment"
         android:label="ItemEditFragment" >
         <action
             android:id="@+id/action_itemEditFragment_to_itemListFragment"
@@ -99,11 +99,11 @@
             android:defaultValue="-1L" />
         <argument
             android:name="type"
-            app:argType="com.example.gymbud.model.ItemType" />
+            app:argType="com.gymbud.gymbud.model.ItemType" />
     </fragment>
     <fragment
         android:id="@+id/statsFragment"
-        android:name="com.example.gymbud.ui.StatsFragment"
+        android:name="com.gymbud.gymbud.ui.StatsFragment"
         android:label="fragment_stats"
         tools:layout="@layout/fragment_stats" >
         <action
@@ -118,7 +118,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.gymbud.ui.SettingsFragment"
+        android:name="com.gymbud.gymbud.ui.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" >
         <action
@@ -140,7 +140,7 @@
     </fragment>
     <fragment
         android:id="@+id/liveSessionStartFragment"
-        android:name="com.example.gymbud.ui.live_session.LiveSessionStartFragment"
+        android:name="com.gymbud.gymbud.ui.live_session.LiveSessionStartFragment"
         android:label="fragment_live_session_start"
         tools:layout="@layout/fragment_live_session_start" >
         <action
@@ -160,7 +160,7 @@
     </fragment>
     <fragment
         android:id="@+id/liveSessionExerciseFragment"
-        android:name="com.example.gymbud.ui.live_session.LiveSessionExerciseFragment"
+        android:name="com.gymbud.gymbud.ui.live_session.LiveSessionExerciseFragment"
         android:label="fragment_live_session_exercise"
         tools:layout="@layout/fragment_live_session_exercise" >
         <action
@@ -175,7 +175,7 @@
     </fragment>
     <fragment
         android:id="@+id/liveSessionRestFragment"
-        android:name="com.example.gymbud.ui.live_session.LiveSessionRestFragment"
+        android:name="com.gymbud.gymbud.ui.live_session.LiveSessionRestFragment"
         android:label="fragment_live_session_rest"
         tools:layout="@layout/fragment_live_session_rest" >
         <action
@@ -190,7 +190,7 @@
     </fragment>
     <fragment
         android:id="@+id/liveSessionEndFragment"
-        android:name="com.example.gymbud.ui.live_session.LiveSessionEndFragment"
+        android:name="com.gymbud.gymbud.ui.live_session.LiveSessionEndFragment"
         android:label="fragment_live_session_end"
         tools:layout="@layout/fragment_live_session_end" >
         <action
@@ -201,7 +201,7 @@
     </fragment>
     <fragment
         android:id="@+id/statsSessionCalendarFragment"
-        android:name="com.example.gymbud.ui.stats.StatsSessionCalendarFragment"
+        android:name="com.gymbud.gymbud.ui.stats.StatsSessionCalendarFragment"
         android:label="fragment_stats_session_calendar"
         tools:layout="@layout/fragment_stats_session_calendar" >
         <action
@@ -210,7 +210,7 @@
     </fragment>
     <fragment
         android:id="@+id/sessionDetailFragment"
-        android:name="com.example.gymbud.ui.stats.SessionDetailFragment"
+        android:name="com.gymbud.gymbud.ui.stats.SessionDetailFragment"
         android:label="fragment_session_detail"
         tools:layout="@layout/fragment_session_detail" >
         <argument
@@ -219,7 +219,7 @@
     </fragment>
     <fragment
         android:id="@+id/personalBestsFragment"
-        android:name="com.example.gymbud.ui.stats.PersonalBestsFragment"
+        android:name="com.gymbud.gymbud.ui.stats.PersonalBestsFragment"
         android:label="fragment_personal_bests"
         tools:layout="@layout/fragment_personal_bests" >
         <action
@@ -231,12 +231,12 @@
     </fragment>
     <fragment
         android:id="@+id/exerciseFiltersFragment"
-        android:name="com.example.gymbud.ui.stats.ExerciseFiltersFragment"
+        android:name="com.gymbud.gymbud.ui.stats.ExerciseFiltersFragment"
         android:label="fragment_exercise_filters"
         tools:layout="@layout/fragment_exercise_filters" />
     <fragment
         android:id="@+id/exerciseProgressionFragment"
-        android:name="com.example.gymbud.ui.stats.ExerciseProgressionFragment"
+        android:name="com.gymbud.gymbud.ui.stats.ExerciseProgressionFragment"
         android:label="fragment_exercise_progression"
         tools:layout="@layout/fragment_exercise_progression" >
         <action
@@ -253,7 +253,7 @@
     </fragment>
     <fragment
         android:id="@+id/gettingStartedGuideFragment"
-        android:name="com.example.gymbud.ui.guides.GettingStartedGuideFragment"
+        android:name="com.gymbud.gymbud.ui.guides.GettingStartedGuideFragment"
         android:label="fragment_getting_started_guide"
         tools:layout="@layout/fragment_getting_started_guide" >
         <action
@@ -274,17 +274,17 @@
     </fragment>
     <fragment
         android:id="@+id/creatingProgramGuideFragment"
-        android:name="com.example.gymbud.ui.guides.CreatingProgramGuideFragment"
+        android:name="com.gymbud.gymbud.ui.guides.CreatingProgramGuideFragment"
         android:label="fragment_creating_program_guide"
         tools:layout="@layout/fragment_creating_program_guide" />
     <fragment
         android:id="@+id/monitoringProgressGuideFragment"
-        android:name="com.example.gymbud.ui.guides.MonitoringProgressGuideFragment"
+        android:name="com.gymbud.gymbud.ui.guides.MonitoringProgressGuideFragment"
         android:label="fragment_monitoring_progress_guide"
         tools:layout="@layout/fragment_monitoring_progress_guide" />
     <fragment
         android:id="@+id/trackingWorkoutGuideFragment"
-        android:name="com.example.gymbud.ui.guides.TrackingWorkoutGuideFragment"
+        android:name="com.gymbud.gymbud.ui.guides.TrackingWorkoutGuideFragment"
         android:label="fragment_tracking_workout_guide"
         tools:layout="@layout/fragment_tracking_workout_guide" />
 </navigation>
