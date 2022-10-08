@@ -13,7 +13,7 @@ import com.gymbud.gymbud.databinding.FragmentStartupBinding
 import com.gymbud.gymbud.ui.viewmodel.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-
+import java.lang.IllegalStateException
 
 
 class StartupFragment : Fragment() {
@@ -67,18 +67,22 @@ class StartupFragment : Fragment() {
 
         if (withData) {
             // if we have some templates -> show Dashboard
-            val action = StartupFragmentDirections.actionStartupFragmentToDashboardFragment()
-            findNavController().navigate(action)
+            try {
+                val action = StartupFragmentDirections.actionStartupFragmentToDashboardFragment()
+                findNavController().navigate(action)
+            } catch (e: IllegalStateException) {
+                // the coroutine doesn't seem to be cancelled, leading to findNavController throwing..
+                // I don't think this should be the case.. it only happens in debug.. TODO check docs again
+            }
         } else {
             // if we don't have any templates -> show Templates
-            val action = StartupFragmentDirections.actionStartupFragmentToTemplatesFragment()
-            findNavController().navigate(action)
+            try {
+                val action = StartupFragmentDirections.actionStartupFragmentToTemplatesFragment()
+                findNavController().navigate(action)
+            }
+            catch (e: IllegalStateException) {
+                // same as above
+            }
         }
-    }
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
