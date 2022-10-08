@@ -19,6 +19,7 @@ private const val PARTIAL_WORKOUT_SESSION_TAG = "partial_workout_session"
 private enum class RecoveryState {
     Idle,
     RestorationStarted,
+    RestorationCompleted,
     PersistenceStarted
 }
 
@@ -201,7 +202,7 @@ class LiveSessionViewModel(
 
 
     fun onInterrupt() {
-        if (recoveryState != RecoveryState.Idle) {
+        if (recoveryState != RecoveryState.Idle && recoveryState != RecoveryState.RestorationCompleted) {
             return
         }
 
@@ -217,6 +218,7 @@ class LiveSessionViewModel(
             Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session")
             // persist partial workout session
             val atItem = getCurrentItemIndex()
+            val progressedToItem = getProgressedToItemIndex()
             val restTimerStartTime = getRestTimerStartTime()
 
             finish()
@@ -224,7 +226,7 @@ class LiveSessionViewModel(
 
             // update app repository with partial workout session id
             appRepository.savePartialWorkoutSessionInfo(
-                PartialWorkoutSessionRecord(workoutSessionId, atItem, restTimerStartTime)
+                PartialWorkoutSessionRecord(workoutSessionId, atItem, progressedToItem, restTimerStartTime)
             )
 
             Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Session saved")
@@ -248,17 +250,17 @@ class LiveSessionViewModel(
 
             if (partialWorkoutSession.workoutSessionId == ItemIdentifierGenerator.NO_ID) {
                 _sessionRestored.value = false
-                recoveryState  = RecoveryState.Idle
+                recoveryState  = RecoveryState.RestorationCompleted
                 Log.d(PARTIAL_WORKOUT_SESSION_TAG,"No session to restore")
                 return@launch
             }
 
-            restore(partialWorkoutSession)
+            val restored = restore(partialWorkoutSession)
             appRepository.clearPartialWorkoutSessionInfo()
 
-            _sessionRestored.value = true
+            _sessionRestored.value = restored
             Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Session restored")
-            recoveryState = RecoveryState.Idle
+            recoveryState = RecoveryState.RestorationCompleted
         }
     }
 
@@ -279,7 +281,7 @@ class LiveSessionViewModel(
         prepare(partialSession.workoutTemplate, partialSession.programTemplateId)
 
         // bring workout session to current item from partial session
-        workoutSession.restart(partialSession, partialRecord.atItem)
+        workoutSession.restart(partialSession, partialRecord.atItem, partialRecord.progressedToItem)
         updateRestTimerStartTime(partialRecord.restTimerStartMs)
         _state.value = WorkoutSessionState.Started
 

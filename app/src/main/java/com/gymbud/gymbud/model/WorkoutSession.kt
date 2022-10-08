@@ -6,6 +6,7 @@ import com.gymbud.gymbud.data.ItemIdentifierGenerator
 import java.lang.Exception
 
 import java.util.*
+import kotlin.math.max
 
 
 private const val TAG = "WorkoutSession"
@@ -145,7 +146,7 @@ class WorkoutSession(
     /**
      * Use this to continue a partial session from where it left off
      */
-    fun restart(other: WorkoutSession, fromItem: Int) {
+    fun restart(other: WorkoutSession, fromItem: Int, progressedToItem: Int) {
         assert (state == WorkoutSessionState.Ready)
         assert (items.size == other.items.size)
 
@@ -181,7 +182,7 @@ class WorkoutSession(
 
         assert(atItem >= 0 && atItem < items.size)
 
-        atItemProgressionIndex = atItem
+        atItemProgressionIndex = max(progressedToItem, max(fromItem, lastCompleted))
 
         state = WorkoutSessionState.Started
     }
@@ -494,5 +495,6 @@ data class DayOfTheMonth(
 data class PartialWorkoutSessionRecord (
     val workoutSessionId: ItemIdentifier,
     val atItem: Int,
+    val progressedToItem: Int,
     val restTimerStartMs: Long
 )
