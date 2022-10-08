@@ -2,12 +2,15 @@ package com.gymbud.gymbud
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -25,6 +28,7 @@ import com.gymbud.gymbud.ui.live_session.LiveSessionOverviewRecyclerViewAdapter
 import com.gymbud.gymbud.ui.viewmodel.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.gymbud.gymbud.utility.TimeFormatter
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -36,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navBar: BottomNavigationView
 
     private lateinit var appBar: Toolbar
+    private lateinit var workoutSessionTimer: TextView
 
     private val liveSessionViewModel: LiveSessionViewModel by viewModels {
         LiveSessionViewModelFactory(
@@ -53,6 +58,20 @@ class MainActivity : AppCompatActivity() {
     private var disableBackNavigation = false
 
     private var appBarMenuVisible = true
+
+    // workout session timer
+    private var startTime: Long = 0
+    private val timerIntervalMs: Long = 1000 // 1 second in this case
+    private var timerHandler: Handler? = null
+    private var timerStatusChecker: Runnable = object : Runnable {
+        override fun run() {
+            try {
+                updateTimer()
+            } finally {
+                timerHandler!!.postDelayed(this, timerIntervalMs)
+            }
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,6 +116,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupActionBar() {
         appBar = findViewById(R.id.app_bar)
+        workoutSessionTimer = appBar.findViewById(R.id.workout_session_timer)
         setSupportActionBar(appBar)
 
         val str = SpannableStringBuilder("GYMBUD")
@@ -215,9 +235,16 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun presentActionBar(state: WorkoutSessionState) {
+        // visibility
         when(state) {
             WorkoutSessionState.NotReady, WorkoutSessionState.Ready -> setupActionBarVisibility(true)
             else -> setupActionBarVisibility(false)
+        }
+
+        // timer
+        when (state) {
+            WorkoutSessionState.Started -> setupWorkoutSessionTimer(true)
+            else -> setupWorkoutSessionTimer(false)
         }
     }
 
@@ -228,6 +255,36 @@ class MainActivity : AppCompatActivity() {
         appBar.menu.forEach {
             it.isVisible = visible
         }
+    }
+
+
+    private fun setupWorkoutSessionTimer(enabled: Boolean) {
+        if (enabled) {
+            workoutSessionTimer.visibility = View.VISIBLE
+            startTimer()
+        } else {
+            workoutSessionTimer.visibility = View.GONE
+            stopTimer()
+        }
+    }
+
+
+    private fun startTimer() {
+        startTime = liveSessionViewModel.getStartTime()
+
+        timerHandler = Handler(Looper.getMainLooper())
+        timerStatusChecker.run()
+    }
+
+
+    private fun stopTimer() {
+        timerHandler?.removeCallbacks(timerStatusChecker)
+    }
+
+
+    private fun updateTimer() {
+        val elapsedTimeSec = (System.currentTimeMillis() - startTime) / 1000
+        workoutSessionTimer.text = TimeFormatter.getFormattedTimeHHMMSS(elapsedTimeSec)
     }
 
 

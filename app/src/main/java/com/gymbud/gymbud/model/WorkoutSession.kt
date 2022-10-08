@@ -146,11 +146,11 @@ class WorkoutSession(
     /**
      * Use this to continue a partial session from where it left off
      */
-    fun restart(other: WorkoutSession, fromItem: Int, progressedToItem: Int) {
+    fun restart(other: WorkoutSession, fromItem: Int, progressedToItem: Int, initialStartTimeMs: Long) {
         assert (state == WorkoutSessionState.Ready)
         assert (items.size == other.items.size)
 
-        startTime = Date(Date().time - other.durationMs)
+        startTime = if (initialStartTimeMs > 0) Date(initialStartTimeMs) else  Date(Date().time - other.durationMs)
 
         // fill items with data from partial session
         var lastCompleted = 0
@@ -496,5 +496,6 @@ data class PartialWorkoutSessionRecord (
     val workoutSessionId: ItemIdentifier,
     val atItem: Int,
     val progressedToItem: Int,
+    val startTimeMs: Long,
     val restTimerStartMs: Long
 )

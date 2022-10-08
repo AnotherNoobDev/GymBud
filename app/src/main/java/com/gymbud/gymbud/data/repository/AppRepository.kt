@@ -40,6 +40,7 @@ class AppRepository(private val context: Context) {
     private val partialWorkoutSessionIdKey = longPreferencesKey("partial_workout_session_id")
     private val partialWorkoutSessionAtItemKey = intPreferencesKey("partial_workout_session_at_item")
     private val partialWorkoutSessionProgressedToItemKey = intPreferencesKey("partial_workout_session_progressed_to_item")
+    private val partialWorkoutSessionStartTime = longPreferencesKey("partial_workout_session_start_time")
     private val partialWorkoutSessionRestTimerStart = longPreferencesKey("partial_workout_session_rest_timer_start")
 
     private val useDarkThemeKey = booleanPreferencesKey("use_dark_theme")
@@ -158,6 +159,7 @@ class AppRepository(private val context: Context) {
                 preferences[partialWorkoutSessionIdKey] ?: ItemIdentifierGenerator.NO_ID,
                 preferences[partialWorkoutSessionAtItemKey] ?: -1,
                 preferences[partialWorkoutSessionProgressedToItemKey] ?: -1,
+                preferences[partialWorkoutSessionStartTime] ?: 0,
                 preferences[partialWorkoutSessionRestTimerStart]?: 0
             )
         }
@@ -240,6 +242,7 @@ class AppRepository(private val context: Context) {
             preferences[partialWorkoutSessionIdKey] = session.workoutSessionId
             preferences[partialWorkoutSessionAtItemKey]= session.atItem
             preferences[partialWorkoutSessionProgressedToItemKey] = session.progressedToItem
+            preferences[partialWorkoutSessionStartTime] = session.startTimeMs
             preferences[partialWorkoutSessionRestTimerStart] = session.restTimerStartMs
         }
     }
@@ -250,6 +253,7 @@ class AppRepository(private val context: Context) {
             preferences[partialWorkoutSessionIdKey] = ItemIdentifierGenerator.NO_ID
             preferences[partialWorkoutSessionAtItemKey]= -1
             preferences[partialWorkoutSessionProgressedToItemKey] = -1
+            preferences[partialWorkoutSessionStartTime] = 0
             preferences[partialWorkoutSessionRestTimerStart] = 0
         }
     }

@@ -158,6 +158,11 @@ class LiveSessionViewModel(
     }
 
 
+    fun getStartTime(): Long {
+        return workoutSession.getStartTime().time
+    }
+
+
     fun getDuration(): Long {
         return workoutSession.getDuration()
     }
@@ -219,6 +224,7 @@ class LiveSessionViewModel(
             // persist partial workout session
             val atItem = getCurrentItemIndex()
             val progressedToItem = getProgressedToItemIndex()
+            val startTime = getStartTime()
             val restTimerStartTime = getRestTimerStartTime()
 
             finish()
@@ -226,7 +232,7 @@ class LiveSessionViewModel(
 
             // update app repository with partial workout session id
             appRepository.savePartialWorkoutSessionInfo(
-                PartialWorkoutSessionRecord(workoutSessionId, atItem, progressedToItem, restTimerStartTime)
+                PartialWorkoutSessionRecord(workoutSessionId, atItem, progressedToItem, startTime, restTimerStartTime)
             )
 
             Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Session saved")
@@ -281,7 +287,7 @@ class LiveSessionViewModel(
         prepare(partialSession.workoutTemplate, partialSession.programTemplateId)
 
         // bring workout session to current item from partial session
-        workoutSession.restart(partialSession, partialRecord.atItem, partialRecord.progressedToItem)
+        workoutSession.restart(partialSession, partialRecord.atItem, partialRecord.progressedToItem, partialRecord.startTimeMs)
         updateRestTimerStartTime(partialRecord.restTimerStartMs)
         _state.value = WorkoutSessionState.Started
 

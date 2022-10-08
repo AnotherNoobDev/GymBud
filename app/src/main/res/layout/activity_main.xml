@@ -16,7 +16,20 @@
         app:titleTextAppearance="@style/AppTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="01:20:33"
+            android:textColor = "?attr/colorOnPrimary"
+            android:textSize="18sp"
+            android:layout_gravity="right"
+            android:layout_marginEnd="20dp"
+            android:id="@+id/workout_session_timer"
+            android:visibility="gone"/>
+
+    </androidx.appcompat.widget.Toolbar>.
 
 
     <androidx.fragment.app.FragmentContainerView
