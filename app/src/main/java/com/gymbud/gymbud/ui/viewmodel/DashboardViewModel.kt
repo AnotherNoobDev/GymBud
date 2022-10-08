@@ -9,10 +9,8 @@ import com.gymbud.gymbud.model.Item
 import com.gymbud.gymbud.model.ItemIdentifier
 import com.gymbud.gymbud.model.ItemType
 import com.gymbud.gymbud.model.ProgramTemplate
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import com.gymbud.gymbud.utility.getDayOfMonth
+import kotlinx.coroutines.flow.*
 
 
 private const val NO_PROGRAM_NAME = "None"
@@ -31,13 +29,21 @@ class DashboardViewModel(
     private val appRepository: AppRepository
 ): ViewModel() {
 
+    suspend fun getActiveProgramAndProgramDay(): Flow<ActiveProgramAndProgramDay> {
+        // check if we need to progress to next program day in program (due to time passing)
+        val (programId, programDayIdOrPos, timestamp) = appRepository.activeProgramAndProgramDay.first()
+        val programAndProgramDay = determineActiveProgramAndProgramDayFromStorage(programId, programDayIdOrPos, timestamp)
+        if (programAndProgramDay.programDayPosInProgram >= 0 && programAndProgramDay.programDayPosInProgram != programDayIdOrPos) {
+            appRepository.updateActiveProgramDay(programAndProgramDay.programDayPosInProgram)
+        }
 
-    fun getActiveProgramAndProgramDay(): Flow<ActiveProgramAndProgramDay> = appRepository.activeProgramAndProgramDay.map { (programId, programDayIdOrPos) ->
-        determineActiveProgramAndProgramDayFromStorage(programId, programDayIdOrPos)
+        return appRepository.activeProgramAndProgramDay.map { (programId, programDayIdOrPos, timestamp) ->
+            determineActiveProgramAndProgramDayFromStorage(programId, programDayIdOrPos, timestamp)
+        }
     }
 
 
-    private suspend fun determineActiveProgramAndProgramDayFromStorage(programId: ItemIdentifier, programDayIdOrPos: Long): ActiveProgramAndProgramDay {
+    private suspend fun determineActiveProgramAndProgramDayFromStorage(programId: ItemIdentifier, programDayIdOrPos: Long, programDayTimestamp: Long): ActiveProgramAndProgramDay {
         val program = determineActiveProgramFromStorage(programId)
 
         val programDay: Item?
@@ -51,7 +57,7 @@ class DashboardViewModel(
                 programDay = determineUnboundedProgramDayFromStorage(programDayIdOrPos)
                 programDayPosInProgram = -1
             } else {
-                val (pos, day) =  determineProgramBoundedProgramDayFromStorage(program, programDayIdOrPos.toInt())
+                val (pos, day) =  determineProgramBoundedProgramDayFromStorage(program, programDayIdOrPos.toInt(), programDayTimestamp)
                 programDay = day
                 programDayPosInProgram = pos.toLong()
             }
@@ -84,11 +90,21 @@ class DashboardViewModel(
     }
 
 
-    private fun determineProgramBoundedProgramDayFromStorage(program: ProgramTemplate, pos: Int): Pair<Int, Item> {
-        return if (pos >= program.items.size) {
+    private fun determineProgramBoundedProgramDayFromStorage(program: ProgramTemplate, pos: Int, programDayTimestamp: Long): Pair<Int, Item> {
+        val today = getDayOfMonth(System.currentTimeMillis())
+        // don't move more than one day.. we don't want to automatically skip workouts.. let user needs to manually do that for now
+        val daysPast = if (today != getDayOfMonth(programDayTimestamp)) {
+            1
+        } else {
+            0
+        }
+
+        val upToDatePos = pos + daysPast
+
+        return if (upToDatePos >= program.items.size) {
             Pair(0, program.get(0))
         } else {
-            Pair(pos, program.get(pos))
+            Pair(upToDatePos, program.get(pos))
         }
     }
 

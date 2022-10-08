@@ -3,6 +3,8 @@ package com.gymbud.gymbud.utility
 import java.util.*
 
 
+const val ONE_DAY_MS = 24 * 3600 * 1000
+
 /**
  * returns a span of time around a given month (use Calendar.JANUARY.. Calendar..DECEMBER), filling with days from the month before and after
  * return value is [start date timestamp, end date timestamp, list of days in month]

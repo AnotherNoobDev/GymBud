@@ -32,6 +32,7 @@ class AppRepository(private val context: Context) {
     // todo kinda dirty, what if ItemIdentifier wouldn't hold a pos(Int)?
     private val activeProgramIdKey = longPreferencesKey("active_program_id")
     private val activeProgramDayKey = longPreferencesKey("active_program_day")
+    private val activeProgramDayLastUpdateTimestamp = longPreferencesKey("active_program_day_last_update_timestamp")
 
     private val weightUnitKey = stringPreferencesKey("weight_unit")
 
@@ -86,7 +87,7 @@ class AppRepository(private val context: Context) {
         }
 
 
-    val activeProgramDay: Flow<Long> = context.dataStore.data
+    val activeProgramDay: Flow<Pair<Long, Long>> = context.dataStore.data
         .catch {
             if (it is IOException) {
                 it.printStackTrace()
@@ -96,11 +97,14 @@ class AppRepository(private val context: Context) {
             }
         }
         .map { preferences ->
-            preferences[activeProgramDayKey] ?: ItemIdentifierGenerator.NO_ID
+            val workout = preferences[activeProgramDayKey] ?: ItemIdentifierGenerator.NO_ID
+            val workoutTimestamp = preferences[activeProgramDayLastUpdateTimestamp] ?: 0
+
+            Pair(workout,workoutTimestamp)
         }
 
 
-    val activeProgramAndProgramDay: Flow<Pair<ItemIdentifier,Long>> = context.dataStore.data
+    val activeProgramAndProgramDay: Flow<Triple<ItemIdentifier,Long, Long>> = context.dataStore.data
         .catch {
             if (it is IOException) {
                 it.printStackTrace()
@@ -112,8 +116,9 @@ class AppRepository(private val context: Context) {
         .map { preferences ->
             val program = preferences[activeProgramIdKey] ?: ItemIdentifierGenerator.NO_ID
             val workout = preferences[activeProgramDayKey] ?: ItemIdentifierGenerator.NO_ID
+            val workoutTimestamp = preferences[activeProgramDayLastUpdateTimestamp] ?: 0
 
-            Pair(program, workout)
+            Triple(program, workout, workoutTimestamp)
         }
 
 
@@ -211,6 +216,7 @@ class AppRepository(private val context: Context) {
     suspend fun updateActiveProgramDay(idOrPos: Long) {
         context.dataStore.edit { preferences ->
             preferences[activeProgramDayKey] = idOrPos
+            preferences[activeProgramDayLastUpdateTimestamp] = System.currentTimeMillis()
         }
     }
 
@@ -219,6 +225,7 @@ class AppRepository(private val context: Context) {
         context.dataStore.edit { preferences ->
             preferences[activeProgramIdKey] = programId
             preferences[activeProgramDayKey] = programDayIdOrPos
+            preferences[activeProgramDayLastUpdateTimestamp] = System.currentTimeMillis()
         }
     }
 

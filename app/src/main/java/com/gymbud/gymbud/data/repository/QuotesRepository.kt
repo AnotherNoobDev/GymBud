@@ -5,11 +5,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import com.gymbud.gymbud.data.datasource.defaults.QuotesDataSource
+import com.gymbud.gymbud.utility.ONE_DAY_MS
 import kotlinx.coroutines.flow.*
 import java.io.IOException
 
-
-private const val ONE_DAY_MS = 24 * 3600 * 1000
 
 private const val QUOTES_STATE_NAME = "quotes_state"
 
