@@ -37,9 +37,6 @@ class SessionsRepository(
             ?: return null
 
         val exerciseRecords = exerciseSessionRecordDao.getFromSession(record.id)
-        if (exerciseRecords.isEmpty()) {
-            return null
-        }
 
         return WorkoutSession.fromRecord(record, template, exerciseRecords)
     }

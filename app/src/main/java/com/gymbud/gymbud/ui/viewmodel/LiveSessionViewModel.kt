@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-private const val TAG = "LiveSessionViewModel"
+//private const val TAG = "LiveSessionViewModel"
 private const val PARTIAL_WORKOUT_SESSION_TAG = "partial_workout_session"
 
 private enum class RecoveryState {
@@ -177,20 +177,15 @@ class LiveSessionViewModel(
      * returns the id of the WorkoutSession if it was saved to persistent storage, otherwise returns ItemIdentifier.NO_ID
      */
     suspend fun saveSession(notes: String?): ItemIdentifier {
-        var workoutSessionRecordId = ItemIdentifierGenerator.NO_ID
-
         workoutSession.notes = notes?: ""
         val (workoutSessionRecord, exerciseSessionRecords) = workoutSession.finalize()
 
-        // don't save empty workout sessions
-        if (exerciseSessionRecords.isNotEmpty()) {
-            workoutSessionRecordId = workoutSessionRecord.id
+        val workoutSessionRecordId = workoutSessionRecord.id
 
-            sessionRepository.addWorkoutSessionRecord(workoutSessionRecord)
+        sessionRepository.addWorkoutSessionRecord(workoutSessionRecord)
 
-            exerciseSessionRecords.forEach {
-                sessionRepository.addExerciseSessionRecord(it)
-            }
+        exerciseSessionRecords.forEach {
+            sessionRepository.addExerciseSessionRecord(it)
         }
 
         _workoutSession = null
@@ -220,22 +215,27 @@ class LiveSessionViewModel(
         // persist LiveSession
         recoveryState = RecoveryState.PersistenceStarted
         GlobalScope.launch {
-            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session")
+            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: started")
             // persist partial workout session
             val atItem = getCurrentItemIndex()
             val progressedToItem = getProgressedToItemIndex()
             val startTime = getStartTime()
             val restTimerStartTime = getRestTimerStartTime()
 
+            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: collected partial session info")
+
             finish()
+            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: finish() completed")
+
             val workoutSessionId = saveSession("")
+            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: saveSession() completed")
 
             // update app repository with partial workout session id
             appRepository.savePartialWorkoutSessionInfo(
                 PartialWorkoutSessionRecord(workoutSessionId, atItem, progressedToItem, startTime, restTimerStartTime)
             )
 
-            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Session saved")
+            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: completed")
             recoveryState  = RecoveryState.Idle
         }
     }
@@ -249,7 +249,7 @@ class LiveSessionViewModel(
         // restore LiveSession
         recoveryState  = RecoveryState.RestorationStarted
         GlobalScope.launch {
-            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Restoring session")
+            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Restoring session started")
             // we are done if no partialWorkoutSession was persisted
             val partialWorkoutSession = appRepository.partialWorkoutSessionRecord.first()
             Log.d(PARTIAL_WORKOUT_SESSION_TAG, "onResume: $partialWorkoutSession")
@@ -265,7 +265,7 @@ class LiveSessionViewModel(
             appRepository.clearPartialWorkoutSessionInfo()
 
             _sessionRestored.value = restored
-            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Session restored")
+            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Restoring session completed")
             recoveryState = RecoveryState.RestorationCompleted
         }
     }
@@ -276,7 +276,7 @@ class LiveSessionViewModel(
         val partialSession = sessionRepository.getWorkoutSession(partialRecord.workoutSessionId)
 
         if (partialSession == null) {
-            Log.e(TAG, "No partial session with id $partialRecord.workoutSessionId found on record")
+            Log.e(PARTIAL_WORKOUT_SESSION_TAG, "No partial session with id ${partialRecord.workoutSessionId} found on record")
             return false
         }
 

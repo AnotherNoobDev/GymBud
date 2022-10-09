@@ -153,7 +153,7 @@ class WorkoutSession(
         startTime = if (initialStartTimeMs > 0) Date(initialStartTimeMs) else  Date(Date().time - other.durationMs)
 
         // fill items with data from partial session
-        var lastCompleted = 0
+        var lastCompleted = -1
         other.items.forEachIndexed { at, item ->
             if (item is WorkoutSessionItem.ExerciseSession && item.isCompleted) {
                 if (at > lastCompleted) {
@@ -177,12 +177,13 @@ class WorkoutSession(
             fromItem
         } else {
             // go to last completed item
-            lastCompleted
+            max(0, lastCompleted)
         }
 
         assert(atItem >= 0 && atItem < items.size)
 
-        atItemProgressionIndex = max(progressedToItem, max(fromItem, lastCompleted))
+        atItemProgressionIndex = max(0, max(progressedToItem, max(fromItem, lastCompleted)))
+        assert(atItemProgressionIndex >= 0 && atItemProgressionIndex < items.size)
 
         state = WorkoutSessionState.Started
     }
