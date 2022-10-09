@@ -21,7 +21,12 @@ class SetTemplateRepository(
     private val exerciseTemplateRepository: ExerciseTemplateRepository,
     private val restPeriodRepository: RestPeriodRepository
 ) {
-    val setTemplates: Flow<List<SetTemplate>> = setTemplateDao.getAll()
+    val setTemplates: Flow<List<SetTemplate>> = setTemplateDao.getAll().map { sets ->
+        sets.map {
+            populateSetTemplateItems(it)
+            it
+        }
+    }
 
 
     suspend fun populateWithDefaults() {

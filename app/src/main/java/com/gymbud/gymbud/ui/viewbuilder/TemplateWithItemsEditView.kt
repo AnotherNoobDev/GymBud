@@ -15,6 +15,7 @@ import com.gymbud.gymbud.databinding.*
 import com.gymbud.gymbud.model.*
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModel
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -159,6 +160,8 @@ class TemplateWithItemsEditView(
             newButtonsLayoutParams.setMargins(0, 0, 0, 0)
             buttonsLayout.layoutParams = newButtonsLayoutParams
 
+            detailsBtn.text = context.getString(R.string.details)
+
             confirmBtn.text = context.getString(R.string.bnt_add)
 
             confirmBtn.setOnClickListener {
@@ -213,6 +216,8 @@ class TemplateWithItemsEditView(
     private fun onAddNewTemplateItem(type: ItemType) {
         addingItemOfType = type
 
+        presentInfoButton(addingItemOfType)
+
         setAddItemSectionVisibility(true)
 
         itemSelectionBinding.label.setStartIconDrawable(R.drawable.ic_equipment_24)
@@ -233,6 +238,48 @@ class TemplateWithItemsEditView(
         val intensityAdapter = ArrayAdapter(context, R.layout.dropdown_list_item, SetIntensity.values().map { it.toString()})
         intensityBinding.input.setAdapter(intensityAdapter)
         intensityBinding.input.setText(SetIntensity.Working.toString(), false)
+    }
+
+
+    private fun presentInfoButton(type: ItemType) {
+        when(addingItemOfType) {
+            ItemType.SET_TEMPLATE, ItemType.WORKOUT_TEMPLATE ->  {
+                addItemBinding.detailsBtn.apply {
+                    visibility = View.VISIBLE
+                    setOnClickListener {
+                        openDetailsDialog()
+                    }
+                }
+            }
+            else -> {
+                addItemBinding.detailsBtn.apply {
+                    visibility = View.VISIBLE
+                    setOnClickListener {
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun openDetailsDialog() {
+        val name = itemSelectionBinding.input.text.toString()
+        if (name.isEmpty()) {
+            return
+        }
+
+        val item = availableTemplates?.find { it.name == name } ?: return
+
+        if (item !is ItemContainer) {
+            return
+        }
+
+        MaterialAlertDialogBuilder(context)
+            .setTitle(name)
+            .setMessage("\n" + item.items.joinToString("\n\n") { it.name })
+            .setPositiveButton("Dismiss") {_,_ ->
+            }
+            .show()
     }
 
 
