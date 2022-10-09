@@ -29,6 +29,7 @@ import com.gymbud.gymbud.ui.viewmodel.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gymbud.gymbud.utility.TimeFormatter
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -58,6 +59,8 @@ class MainActivity : AppCompatActivity() {
     private var disableBackNavigation = false
 
     private var appBarMenuVisible = true
+
+    private lateinit var onSessionRestoredJob: Job
 
     // workout session timer
     private var startTime: Long = 0
@@ -92,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
 
         // theme
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenCreated {
             (application as BaseApplication).appRepository.useDarkTheme.collect {
                 if (it) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -102,7 +105,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenCreated {
             appViewModel.appWorkflowState.collect {
                 when(it) {
                     AppWorkflowState.FirstTime -> prepareForFirstTimeWorkflow()
@@ -330,6 +333,8 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
 
+        onSessionRestoredJob.cancel()
+
         // ensure LiveSession survives app close
         liveSessionViewModel.onInterrupt()
     }
@@ -338,7 +343,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        lifecycleScope.launch {
+        onSessionRestoredJob = lifecycleScope.launch {
             liveSessionViewModel.sessionRestored.collect {
                 if (it) {
                     Log.d("partial_workout_session", "navigate")
