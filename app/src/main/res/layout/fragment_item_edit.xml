@@ -29,11 +29,13 @@
         android:gravity="center">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/confirm_btn"
+            android:id="@+id/cancel_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="@string/save"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="?negativeButtonBackgroundColor"
+            android:textColor="?negativeButtonTextColor"
+            tools:text="@string/delete" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/details_btn"
@@ -44,11 +46,11 @@
             android:visibility="gone"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/cancel_btn"
+            android:id="@+id/confirm_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            tools:text="@string/delete" />
+            tools:text="@string/save" />
+
     </LinearLayout>
 
 </LinearLayout>
