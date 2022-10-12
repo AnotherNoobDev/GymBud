@@ -221,7 +221,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Contact: georgian.besleaga@gmail.com"
+                    android:text="Contact: mygymbudapp@gmail.com"
                     android:textSize="16sp"
                     android:paddingStart="30dp"
                     android:layout_marginTop="10dp"
