@@ -32,6 +32,7 @@ import com.gymbud.gymbud.utility.TimeFormatter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 
 class MainActivity : AppCompatActivity() {
@@ -384,9 +385,11 @@ class MainActivity : AppCompatActivity() {
             navigateToCurrentLiveSessionItem()
         }
 
-        adapter.update(liveSessionViewModel.getItems(), liveSessionViewModel.getCurrentItemIndex(), liveSessionViewModel.getProgressedToItemIndex())
+        val currentItem = liveSessionViewModel.getCurrentItemIndex()
+        adapter.update(liveSessionViewModel.getItems(), currentItem, liveSessionViewModel.getProgressedToItemIndex())
 
         binding.resultsRecyclerView.adapter = adapter
+        binding.resultsRecyclerView.scrollToPosition(max(0, currentItem - 5)) // show the current item somewhere in the "middle"
 
         dialog.show()
     }
