@@ -7,6 +7,7 @@ import com.gymbud.gymbud.data.datasource.database.WorkoutSessionRecordDao
 import com.gymbud.gymbud.model.*
 import com.gymbud.gymbud.ui.viewmodel.ExerciseFilters
 import com.gymbud.gymbud.utility.getDayOfMonth
+import com.gymbud.gymbud.utility.getMonth
 import com.gymbud.gymbud.utility.getMonthSpan
 import kotlinx.coroutines.flow.first
 
@@ -70,7 +71,7 @@ class SessionsRepository(
         // fill with empty days
         val sessionDays = mutableListOf<DayOfTheMonth>()
         daysInMonth.forEach {
-            sessionDays.add(DayOfTheMonth(it, ItemIdentifierGenerator.NO_ID, ""))
+            sessionDays.add(DayOfTheMonth(it.second, it.first, ItemIdentifierGenerator.NO_ID, ""))
         }
 
         // query for all sessions within that time period (sessions are in order)
@@ -80,8 +81,8 @@ class SessionsRepository(
         var atDay = 0
         sessions.forEach { session ->
             for (day in atDay until daySpan) {
-                if (getDayOfMonth(session.date) == sessionDays[day].day) {
-                    sessionDays[day] = DayOfTheMonth(sessionDays[day].day, session.id, session.name)
+                if (getMonth(session.date) == sessionDays[day].month && getDayOfMonth(session.date) == sessionDays[day].day) {
+                    sessionDays[day] = DayOfTheMonth(sessionDays[day].day, sessionDays[day].month, session.id, session.name)
                     atDay = day + 1
                     break
                 }

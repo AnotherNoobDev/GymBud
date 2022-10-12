@@ -488,6 +488,7 @@ data class WorkoutSessionRecord(
 
 data class DayOfTheMonth(
     val day: Int,
+    val month: Int,
     val workoutSessionsId: ItemIdentifier,
     val workoutSessionName: String
 )

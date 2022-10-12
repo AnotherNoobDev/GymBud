@@ -7,9 +7,9 @@ const val ONE_DAY_MS = 24 * 3600 * 1000
 
 /**
  * returns a span of time around a given month (use Calendar.JANUARY.. Calendar..DECEMBER), filling with days from the month before and after
- * return value is [start date timestamp, end date timestamp, list of days in month]
+ * return value is (start date timestamp, end date timestamp, list of (month, day in month))
  */
-fun getMonthSpan(year: Int, month: Int, daySpan: Int): Triple<Long, Long, List<Int>> {
+fun getMonthSpan(year: Int, month: Int, daySpan: Int): Triple<Long, Long, List<Pair<Int,Int>>> {
     val calendar: Calendar = Calendar.getInstance()
 
     // set month and year
@@ -27,9 +27,9 @@ fun getMonthSpan(year: Int, month: Int, daySpan: Int): Triple<Long, Long, List<I
     calendar.add(Calendar.DAY_OF_MONTH, -monthBeginningCell)
     val startDate = calendar.time.time
 
-    val daysInMonth = mutableListOf<Int>()
+    val daysInMonth = mutableListOf<Pair<Int,Int>>()
     for (i in 1..daySpan) {
-        daysInMonth.add(calendar[Calendar.DAY_OF_MONTH])
+        daysInMonth.add(Pair(calendar[Calendar.MONTH], calendar[Calendar.DAY_OF_MONTH]))
         calendar.add(Calendar.DAY_OF_MONTH, 1)
     }
 
@@ -37,6 +37,14 @@ fun getMonthSpan(year: Int, month: Int, daySpan: Int): Triple<Long, Long, List<I
     val endDate = calendar.time.time
 
     return Triple(startDate, endDate, daysInMonth)
+}
+
+
+fun getMonth(dateMs: Long): Int {
+    val calendar: Calendar = Calendar.getInstance()
+    calendar.time = Date(dateMs)
+
+    return calendar[Calendar.MONTH]
 }
 
 
