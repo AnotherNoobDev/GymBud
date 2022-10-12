@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.gymbud.gymbud.BaseApplication
+import com.gymbud.gymbud.BuildConfig
 import com.gymbud.gymbud.R
 import com.gymbud.gymbud.data.repository.AppRepository
 import com.gymbud.gymbud.databinding.FragmentSettingsBinding
@@ -63,6 +64,7 @@ class SettingsFragment : Fragment() {
         setupKeepScreenOnDuringWorkout(appRepository)
         setupAppThemeDisplay(appRepository)
         setupGuides()
+        setupAbout()
         setupDevDisplay(appRepository)
     }
 
@@ -171,6 +173,11 @@ class SettingsFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }
+    }
+
+
+    private fun setupAbout() {
+        binding.versionLabel.text = "Version: ${BuildConfig.VERSION_NAME}"
     }
 
 
