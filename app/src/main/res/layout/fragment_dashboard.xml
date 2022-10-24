@@ -44,7 +44,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/active_program_label"
         app:layout_constraintTop_toTopOf="@+id/active_program_label"
-        android:focusable="true" />
+        android:focusable="true"
+        android:enabled="false"/>
 
     <View
         android:id="@+id/active_program_divider"
@@ -91,7 +92,8 @@
         app:layout_constraintEnd_toEndOf="@+id/active_program_edit_btn"
         app:layout_constraintStart_toStartOf="@+id/active_program_edit_btn"
         app:layout_constraintTop_toTopOf="@+id/active_program_day_label"
-        android:focusable="true" />
+        android:focusable="true"
+        android:enabled="false"/>
 
     <View
         android:id="@+id/active_program_day_divider"
@@ -103,18 +105,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/active_program_day_value" />
 
-    <Button
-        android:id="@+id/start_workout_btn"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start Workout"
-        android:textSize="20sp"
-        app:icon="@drawable/ic_live_session_24"
+        android:id="@+id/workout_buttons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/active_program_day_divider"
-        android:visibility="gone"/>
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/start_workout_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" Resume Workout "
+            android:textSize="20sp"
+            app:icon="@drawable/ic_live_session_24"
+            android:layout_gravity="center_horizontal"/>
+
+        <Button
+            android:id="@+id/discard_workout_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Discard Workout"
+            android:backgroundTint="?negativeButtonBackgroundColor"
+            android:textColor="?negativeButtonTextColor"
+            android:textSize="20sp"
+            app:icon="@drawable/ic_clear_24"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/motivational_quote"

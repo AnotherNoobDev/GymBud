@@ -242,7 +242,7 @@ class TemplateWithItemsEditView(
 
 
     private fun presentInfoButton(type: ItemType) {
-        when(addingItemOfType) {
+        when(type) {
             ItemType.SET_TEMPLATE, ItemType.WORKOUT_TEMPLATE ->  {
                 addItemBinding.detailsBtn.apply {
                     visibility = View.VISIBLE

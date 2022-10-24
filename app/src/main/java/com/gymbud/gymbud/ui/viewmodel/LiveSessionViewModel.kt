@@ -16,13 +16,6 @@ import kotlinx.coroutines.launch
 //private const val TAG = "LiveSessionViewModel"
 private const val PARTIAL_WORKOUT_SESSION_TAG = "partial_workout_session"
 
-private enum class RecoveryState {
-    Idle,
-    RestorationStarted,
-    RestorationCompleted,
-    PersistenceStarted
-}
-
 
 class LiveSessionViewModel(
     private val sessionRepository: SessionsRepository,
@@ -39,11 +32,6 @@ class LiveSessionViewModel(
     private val workoutSession get() = _workoutSession!!
 
     private var restTimerStartTime: Long = -1
-
-    private var recoveryState =  RecoveryState.Idle
-
-    private val _sessionRestored: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val sessionRestored: Flow<Boolean> = _sessionRestored
 
 
     suspend fun prepare(workoutTemplate: WorkoutTemplate, programTemplateId: ItemIdentifier)  {
@@ -202,18 +190,10 @@ class LiveSessionViewModel(
 
 
     fun onInterrupt() {
-        if (recoveryState != RecoveryState.Idle && recoveryState != RecoveryState.RestorationCompleted) {
-            return
-        }
-
         if (_state.value != WorkoutSessionState.Started) {
             return
         }
 
-        _sessionRestored.value = false
-
-        // persist LiveSession
-        recoveryState = RecoveryState.PersistenceStarted
         GlobalScope.launch {
             Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: started")
             // persist partial workout session
@@ -236,38 +216,55 @@ class LiveSessionViewModel(
             )
 
             Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: completed")
-            recoveryState  = RecoveryState.Idle
         }
     }
 
 
-    fun onRestore() {
-        if (recoveryState != RecoveryState.Idle) {
-            return
+    suspend fun canContinueWorkout(workout: WorkoutTemplate): Boolean {
+        val partialWorkoutSessionRecord = appRepository.partialWorkoutSessionRecord.first()
+        Log.d(PARTIAL_WORKOUT_SESSION_TAG, "canContinueWorkout: $partialWorkoutSessionRecord")
+
+        if (partialWorkoutSessionRecord.workoutSessionId == ItemIdentifierGenerator.NO_ID) {
+            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"No session to restore")
+            return false
         }
 
-        // restore LiveSession
-        recoveryState  = RecoveryState.RestorationStarted
-        GlobalScope.launch {
-            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Restoring session started")
-            // we are done if no partialWorkoutSession was persisted
-            val partialWorkoutSession = appRepository.partialWorkoutSessionRecord.first()
-            Log.d(PARTIAL_WORKOUT_SESSION_TAG, "onResume: $partialWorkoutSession")
+        val partialSession = sessionRepository.getWorkoutSession(partialWorkoutSessionRecord.workoutSessionId)
 
-            if (partialWorkoutSession.workoutSessionId == ItemIdentifierGenerator.NO_ID) {
-                _sessionRestored.value = false
-                recoveryState  = RecoveryState.RestorationCompleted
-                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"No session to restore")
-                return@launch
-            }
-
-            val restored = restore(partialWorkoutSession)
+        if (partialSession == null) {
+            Log.e(PARTIAL_WORKOUT_SESSION_TAG, "No partial session with id ${partialWorkoutSessionRecord.workoutSessionId} found on record")
             appRepository.clearPartialWorkoutSessionInfo()
-
-            _sessionRestored.value = restored
-            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Restoring session completed")
-            recoveryState = RecoveryState.RestorationCompleted
+            return false
         }
+
+        if (partialSession.workoutTemplate.id != workout.id) {
+            Log.e(PARTIAL_WORKOUT_SESSION_TAG, "Partial session is stale.. Found partial session for workout ${partialSession.workoutTemplate.id} but active workout is ${workout.id}")
+            sessionRepository.removeSession(partialWorkoutSessionRecord.workoutSessionId)
+            appRepository.clearPartialWorkoutSessionInfo()
+            return false
+        }
+
+        return true
+    }
+
+
+    suspend fun restorePartialSession(): Boolean {
+        Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Restoring session started")
+        // we are done if no partialWorkoutSession was persisted
+        val partialWorkoutSession = appRepository.partialWorkoutSessionRecord.first()
+        Log.d(PARTIAL_WORKOUT_SESSION_TAG, "partialWorkoutSession: $partialWorkoutSession")
+
+        if (partialWorkoutSession.workoutSessionId == ItemIdentifierGenerator.NO_ID) {
+            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"No session to restore")
+            return false
+        }
+
+        val restored = restore(partialWorkoutSession)
+        appRepository.clearPartialWorkoutSessionInfo()
+
+        Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Restoring session completed")
+
+        return restored
     }
 
 
@@ -292,6 +289,18 @@ class LiveSessionViewModel(
         _state.value = WorkoutSessionState.Started
 
         return true
+    }
+
+
+    suspend fun discardPartialSession() {
+        val partialRecord = appRepository.partialWorkoutSessionRecord.first()
+
+        if (partialRecord.workoutSessionId == ItemIdentifierGenerator.NO_ID) {
+            return
+        }
+
+        sessionRepository.removeSession(partialRecord.workoutSessionId)
+        appRepository.clearPartialWorkoutSessionInfo()
     }
 }
 

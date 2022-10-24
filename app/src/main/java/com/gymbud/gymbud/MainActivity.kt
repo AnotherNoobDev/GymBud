@@ -7,7 +7,6 @@ import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.TextView
@@ -29,9 +28,7 @@ import com.gymbud.gymbud.ui.viewmodel.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gymbud.gymbud.utility.TimeFormatter
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import kotlin.math.max
 
 
@@ -60,8 +57,6 @@ class MainActivity : AppCompatActivity() {
     private var disableBackNavigation = false
 
     private var appBarMenuVisible = true
-
-    private lateinit var onSessionRestoredJob: Job
 
     // workout session timer
     private var startTime: Long = 0
@@ -334,26 +329,12 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
 
-        onSessionRestoredJob.cancel()
+        if (workoutSessionState == WorkoutSessionState.Started) {
+            navController.navigate(R.id.dashboardFragment)
+        }
 
         // ensure LiveSession survives app close
         liveSessionViewModel.onInterrupt()
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-
-        onSessionRestoredJob = lifecycleScope.launch {
-            liveSessionViewModel.sessionRestored.collect {
-                if (it) {
-                    Log.d("partial_workout_session", "navigate")
-                    navigateToCurrentLiveSessionItem()
-                }
-            }
-        }
-
-        liveSessionViewModel.onRestore()
     }
 
 
