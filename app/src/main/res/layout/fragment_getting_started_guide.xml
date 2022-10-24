@@ -65,7 +65,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Plan.Track.Analyse."
+                    android:text="Plan.Track.Analyze."
                     android:textSize="22sp"
                     android:textAlignment="center"/>
             </LinearLayout>
