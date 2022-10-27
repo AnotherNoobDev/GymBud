@@ -59,7 +59,7 @@ class ExerciseTemplateDetailView(
         item: Item
     ) {
         if (item !is ExerciseTemplate) {
-            Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not an exercise template!")
+            //Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not an exercise template!")
             return
         }
 

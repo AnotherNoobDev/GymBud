@@ -89,7 +89,7 @@ class ExerciseEditView(
         item: Item
     ) {
         if (item !is Exercise) {
-            Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not an exercise!")
+            //Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not an exercise!")
             return
         }
 

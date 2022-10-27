@@ -46,7 +46,7 @@ suspend fun populateWithSessions(programTemplateRepository: ProgramTemplateRepos
         sessionsRepository.addExerciseSessionRecord(it)
     }
 
-    Log.i("DataHelpers", "Done")
+    //Log.i("DataHelpers", "Done")
 }
 
 

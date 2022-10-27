@@ -30,7 +30,7 @@ class RestPeriodRepository(
         try {
             restPeriodDao.insert(RestPeriod.RestDay)
         } catch (e: SQLiteConstraintException) {
-            Log.w(TAG, "RestDay already exists in DB!")
+            //Log.w(TAG, "RestDay already exists in DB!")
         }
     }
 
@@ -76,7 +76,7 @@ class RestPeriodRepository(
             try {
                 restPeriodDao.insert(RestPeriod(id, validName, targetPeriodSec))
             } catch (e: SQLiteConstraintException) {
-                Log.e(TAG, "RestPeriod with id: $id already exists!")
+                //Log.e(TAG, "RestPeriod with id: $id already exists!")
                 throw e
             }
         }

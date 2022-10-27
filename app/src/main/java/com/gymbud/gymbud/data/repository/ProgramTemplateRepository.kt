@@ -96,7 +96,7 @@ class ProgramTemplateRepository(
             try {
                 programTemplateDao.insert(ProgramTemplate(id, validName))
             } catch (e: SQLiteConstraintException) {
-                Log.e(TAG, "Program template with id: $id already exists!")
+                //Log.e(TAG, "Program template with id: $id already exists!")
                 throw e
             }
 
@@ -108,7 +108,7 @@ class ProgramTemplateRepository(
                         else -> assert(false)
                     }
                 } catch (e: SQLiteConstraintException) {
-                    Log.e(TAG, "Failed to link item with id: ${item.id} to program $id")
+                    //Log.e(TAG, "Failed to link item with id: ${item.id} to program $id")
                     throw e
                 }
             }

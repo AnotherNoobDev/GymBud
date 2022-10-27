@@ -45,7 +45,7 @@ class RestPeriodDetailView: ItemView {
         item: Item
     ) {
         if (item !is RestPeriod) {
-            Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not a RestPeriod!")
+            //Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not a RestPeriod!")
             return
         }
 

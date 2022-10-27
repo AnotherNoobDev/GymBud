@@ -86,7 +86,7 @@ class ExerciseDetailView: ItemView {
                     provider: YouTubePlayer.Provider,
                     err: YouTubeInitializationResult
                 ) {
-                    Log.e(TAG, "Failed to initialize YoutubePlayer: $err")
+                    //Log.e(TAG, "Failed to initialize YoutubePlayer: $err")
                 }
             }
         )
@@ -102,7 +102,7 @@ class ExerciseDetailView: ItemView {
         item: Item
     ) {
         if (item !is Exercise) {
-            Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not an exercise!")
+            //Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not an exercise!")
             return
         }
 

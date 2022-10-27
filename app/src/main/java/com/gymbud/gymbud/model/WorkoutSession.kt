@@ -97,7 +97,7 @@ class WorkoutSession(
         // so the new session and previous session should always have the same items
         if (sessionItemsBuilder.size != previousSession.items.size) {
             val msg = "Previous session length (no. items) doesn't match current session length!"
-            Log.e(TAG, msg)
+            //Log.e(TAG, msg)
             throw Exception(msg)
         }
 
@@ -106,13 +106,13 @@ class WorkoutSession(
             if (current is WorkoutSessionItem.ExerciseSession) {
                 if (prev !is WorkoutSessionItem.ExerciseSession) {
                     val msg = "WorkoutSessionItem type mismatch between previous session and current session"
-                    Log.e(TAG, msg)
+                    //Log.e(TAG, msg)
                     throw Exception(msg)
                 }
 
                 if (current.getShortName() != prev.getShortName()) {
                     val msg = "WorkoutSessionItem name mismatch between previous session and current session"
-                    Log.e(TAG, msg)
+                    //Log.e(TAG, msg)
                     throw Exception(msg)
                 }
 

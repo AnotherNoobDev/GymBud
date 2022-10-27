@@ -78,7 +78,7 @@ class WorkoutTemplateRepository(
             }
 
             if (itemToBeAdded == null) {
-                Log.e(TAG,"The workout item with id: $workoutItemIndex could not be retrieved from the DB.")
+                //Log.e(TAG,"The workout item with id: $workoutItemIndex could not be retrieved from the DB.")
                 assert(false) // should never happen
             }
 
@@ -117,7 +117,7 @@ class WorkoutTemplateRepository(
             try {
                 workoutTemplateDao.insert(WorkoutTemplate(id, validName))
             } catch (e: SQLiteConstraintException) {
-                Log.e(TAG, "Workout template with id: $id already exists!")
+                //Log.e(TAG, "Workout template with id: $id already exists!")
                 throw e
             }
 
@@ -138,7 +138,7 @@ class WorkoutTemplateRepository(
                         else -> assert(false)
                     }
                 } catch (e: SQLiteConstraintException) {
-                    Log.e(TAG, "Failed to link item with id: ${item.id} to workout $id")
+                    //Log.e(TAG, "Failed to link item with id: ${item.id} to workout $id")
                     throw e
                 }
             }

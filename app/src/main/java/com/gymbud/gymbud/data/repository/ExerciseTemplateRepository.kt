@@ -95,7 +95,7 @@ class ExerciseTemplateRepository(
             try {
                 exerciseTemplateDao.insert(ExerciseTemplate(id, validName, exercise, targetRepRange))
             } catch (e: SQLiteConstraintException) {
-                Log.e(TAG, "Exercise template with id: $id already exists!")
+                //Log.e(TAG, "Exercise template with id: $id already exists!")
                 throw e
             }
         }

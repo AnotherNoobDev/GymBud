@@ -68,7 +68,7 @@ class ExerciseRepository(
             try {
                 exerciseDao.insert(Exercise(id, validName, description, targetMuscle, videoTutorial))
             } catch (e: SQLiteConstraintException) {
-                Log.e(TAG, "Exercise with id: $id already exists!")
+                //Log.e(TAG, "Exercise with id: $id already exists!")
                 throw e
             }
         }

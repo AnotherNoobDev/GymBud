@@ -179,7 +179,7 @@ class TemplateWithItemsEditView(
                 }
 
                 if (item == null) {
-                    Log.e(TAG, "Failed to retrieve item to be added to set")
+                    //Log.e(TAG, "Failed to retrieve item to be added to set")
                     return@setOnClickListener
                 }
 
@@ -373,7 +373,7 @@ class TemplateWithItemsEditView(
         item: Item
     ) {
         if (item !is ItemContainer) {
-            Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not a Template with Items (ItemContainer)!")
+            //Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not a Template with Items (ItemContainer)!")
             return
         }
 

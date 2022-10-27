@@ -105,7 +105,7 @@ class SetTemplateRepository(
             try {
                 setTemplateDao.insert(SetTemplate(id, validName))
             } catch (e: SQLiteConstraintException) {
-                Log.e(TAG, "Set template with id: $id already exists!")
+                //Log.e(TAG, "Set template with id: $id already exists!")
                 throw e
             }
 
@@ -117,7 +117,7 @@ class SetTemplateRepository(
                         else -> assert(false)
                     }
                 } catch (e: SQLiteConstraintException) {
-                    Log.e(TAG, "Failed to link item with id: ${item.id} to set $id")
+                    //Log.e(TAG, "Failed to link item with id: ${item.id} to set $id")
                     throw e
                 }
             }

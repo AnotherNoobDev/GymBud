@@ -63,7 +63,7 @@ class TemplateWithItemsDetailView(
         item: Item
     ) {
         if (item !is ItemContainer) {
-            Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not a Template with Items (ItemContainer)!")
+            //Log.e(TAG, "Can't populate view because item " + item.name +"(" + item.id + ") is not a Template with Items (ItemContainer)!")
             return
         }
 

@@ -140,7 +140,7 @@ class LiveSessionEndFragment : Fragment() {
         super.onStart()
 
         // set keyboard mode to adjust resize to ensure all fields all visible on a single screen
-        Log.d("keyboard_mode", "adjust resize")
+        //Log.d("keyboard_mode", "adjust resize")
         @Suppress("DEPRECATION")
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
@@ -150,7 +150,7 @@ class LiveSessionEndFragment : Fragment() {
         super.onStop()
 
         // return keyboard mode to previous val
-        Log.d("keyboard_mode", "adjust nothing")
+        //Log.d("keyboard_mode", "adjust nothing")
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
     }
 
