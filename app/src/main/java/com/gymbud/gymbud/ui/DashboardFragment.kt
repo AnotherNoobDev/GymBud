@@ -108,8 +108,10 @@ class DashboardFragment : Fragment() {
             }
             .setPositiveButton("Ok") { _, _ ->
                 viewLifecycleOwner.lifecycleScope.launch {
-                    val newActiveProgramDay = programDayOptions!![checkedItem].first
-                    dashboardViewModel.setActiveProgramDay(newActiveProgramDay)
+                    if (checkedItem >= 0) {
+                        val newActiveProgramDay = programDayOptions!![checkedItem].first
+                        dashboardViewModel.setActiveProgramDay(newActiveProgramDay)
+                    }
                 }
             }
             .setNegativeButton("Cancel") {_,_ ->
