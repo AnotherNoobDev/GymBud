@@ -84,8 +84,10 @@ class DashboardFragment : Fragment() {
             }
             .setPositiveButton("Ok") { _, _ ->
                 viewLifecycleOwner.lifecycleScope.launch {
-                    val newActiveProgram = programOptions!![checkedItem].first
-                    dashboardViewModel.setActiveProgram(newActiveProgram)
+                    if (checkedItem >= 0) {
+                        val newActiveProgram = programOptions!![checkedItem].first
+                        dashboardViewModel.setActiveProgram(newActiveProgram)
+                    }
                 }
             }
             .setNegativeButton("Cancel") {_,_ ->
