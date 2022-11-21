@@ -1,7 +1,13 @@
 package com.gymbud.gymbud
 
+import android.content.Context
+import android.content.pm.PackageManager
+
 class AppConfig {
     companion object {
-        const val youtubeApiKey = "AIzaSyCHnkKQEnHKigIeSjl4JfsQwxBxLk2_q8k"
+        fun getYoutubeApiKey(context: Context): String {
+            val appInfo = context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
+            return appInfo.metaData["youtubeApiKey"].toString()
+        }
     }
 }

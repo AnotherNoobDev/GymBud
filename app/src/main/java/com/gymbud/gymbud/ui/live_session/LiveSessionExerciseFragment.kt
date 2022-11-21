@@ -101,7 +101,7 @@ class LiveSessionExerciseFragment : Fragment() {
         val youTubePlayerFragment = YouTubePlayerSupportFragmentX.newInstance()
 
         youTubePlayerFragment.initialize(
-            AppConfig.youtubeApiKey,
+            AppConfig.getYoutubeApiKey(requireContext()),
             object : YouTubePlayer.OnInitializedListener {
 
                 override fun onInitializationSuccess(

@@ -12,7 +12,7 @@ class ItemViewFactory {
             onDetailsCallback: (Item) -> Unit
         ): ItemView {
             return when (type) {
-                ItemType.EXERCISE -> ExerciseDetailView()
+                ItemType.EXERCISE -> ExerciseDetailView(context)
                 ItemType.EXERCISE_TEMPLATE -> ExerciseTemplateDetailView(onDetailsCallback)
                 ItemType.SET_TEMPLATE -> TemplateWithItemsDetailView(context, onDetailsCallback)
                 ItemType.WORKOUT_TEMPLATE -> TemplateWithItemsDetailView(context, onDetailsCallback)

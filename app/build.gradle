@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.secrets_gradle_plugin' version '0.4'
 }
 
 android {
@@ -12,7 +13,7 @@ android {
         applicationId "com.gymbud.gymbud"
         minSdk 21
         targetSdk 32
-        versionCode 3
+        versionCode 5
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

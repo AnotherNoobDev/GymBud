@@ -1,5 +1,7 @@
 package com.gymbud.gymbud.ui.viewbuilder
 
+import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +21,7 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragmentX
 private const val TAG = "ExerciseDV"
 
 
-class ExerciseDetailView: ItemView {
+class ExerciseDetailView(val context: Context): ItemView {
     private var _nameBinding: LayoutDetailNameBinding? = null
     private val nameBinding get() = _nameBinding!!
 
@@ -68,7 +70,7 @@ class ExerciseDetailView: ItemView {
         val youTubePlayerFragment = YouTubePlayerSupportFragmentX.newInstance()
 
         youTubePlayerFragment.initialize(
-            AppConfig.youtubeApiKey,
+            AppConfig.getYoutubeApiKey(context),
             object : YouTubePlayer.OnInitializedListener {
 
                 override fun onInitializationSuccess(
