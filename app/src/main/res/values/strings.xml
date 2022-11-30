@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">GymBud</string>
-
     <string name="item_name">Name</string>
     <string name="item_name_err">Name is required</string>
     <string name="item_notes">Notes</string>

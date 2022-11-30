@@ -13,7 +13,7 @@ android {
         applicationId "com.gymbud.gymbud"
         minSdk 21
         targetSdk 32
-        versionCode 6
+        versionCode 7
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -28,6 +28,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            applicationIdSuffix ".debug"
         }
     }
     compileOptions {

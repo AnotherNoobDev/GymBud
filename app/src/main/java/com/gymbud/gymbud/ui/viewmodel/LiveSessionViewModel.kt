@@ -3,6 +3,7 @@ package com.gymbud.gymbud.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.gymbud.gymbud.BuildConfig
 import com.gymbud.gymbud.data.ItemIdentifierGenerator
 import com.gymbud.gymbud.data.repository.AppRepository
 import com.gymbud.gymbud.data.repository.SessionsRepository
@@ -195,50 +196,76 @@ class LiveSessionViewModel(
         }
 
         GlobalScope.launch {
-            //Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: started")
+            if (BuildConfig.DEBUG) {
+                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: started")
+            }
+
             // persist partial workout session
             val atItem = getCurrentItemIndex()
             val progressedToItem = getProgressedToItemIndex()
             val startTime = getStartTime()
             val restTimerStartTime = getRestTimerStartTime()
 
-            //Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: collected partial session info")
+            if (BuildConfig.DEBUG) {
+                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: collected partial session info")
+            }
 
             finish()
-            //Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: finish() completed")
+
+            if (BuildConfig.DEBUG) {
+                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: finish() completed")
+            }
 
             val workoutSessionId = saveSession("")
-            //Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: saveSession() completed")
+
+            if (BuildConfig.DEBUG) {
+                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: saveSession() completed")
+            }
 
             // update app repository with partial workout session id
             appRepository.savePartialWorkoutSessionInfo(
                 PartialWorkoutSessionRecord(workoutSessionId, atItem, progressedToItem, startTime, restTimerStartTime)
             )
 
-            //Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: completed")
+            if (BuildConfig.DEBUG) {
+                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: completed")
+            }
         }
     }
 
 
     suspend fun canContinueWorkout(workout: WorkoutTemplate): Boolean {
         val partialWorkoutSessionRecord = appRepository.partialWorkoutSessionRecord.first()
-        //Log.d(PARTIAL_WORKOUT_SESSION_TAG, "canContinueWorkout: $partialWorkoutSessionRecord")
+
+        if (BuildConfig.DEBUG) {
+            Log.d(PARTIAL_WORKOUT_SESSION_TAG, "canContinueWorkout: $partialWorkoutSessionRecord")
+        }
+
 
         if (partialWorkoutSessionRecord.workoutSessionId == ItemIdentifierGenerator.NO_ID) {
-           // Log.d(PARTIAL_WORKOUT_SESSION_TAG,"No session to restore")
+            if (BuildConfig.DEBUG) {
+                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"No session to restore")
+            }
+
             return false
         }
 
         val partialSession = sessionRepository.getWorkoutSession(partialWorkoutSessionRecord.workoutSessionId)
 
         if (partialSession == null) {
-            //Log.e(PARTIAL_WORKOUT_SESSION_TAG, "No partial session with id ${partialWorkoutSessionRecord.workoutSessionId} found on record")
+            if (BuildConfig.DEBUG) {
+                Log.e(PARTIAL_WORKOUT_SESSION_TAG, "No partial session with id ${partialWorkoutSessionRecord.workoutSessionId} found on record")
+            }
+
             appRepository.clearPartialWorkoutSessionInfo()
             return false
         }
 
         if (partialSession.workoutTemplate.id != workout.id) {
-            //Log.e(PARTIAL_WORKOUT_SESSION_TAG, "Partial session is stale.. Found partial session for workout ${partialSession.workoutTemplate.id} but active workout is ${workout.id}")
+            if (BuildConfig.DEBUG) {
+                Log.e(PARTIAL_WORKOUT_SESSION_TAG, "Partial session is stale.. Found partial session for workout ${partialSession.workoutTemplate.id} but active workout is ${workout.id}")
+            }
+
             sessionRepository.removeSession(partialWorkoutSessionRecord.workoutSessionId)
             appRepository.clearPartialWorkoutSessionInfo()
             return false
@@ -249,20 +276,31 @@ class LiveSessionViewModel(
 
 
     suspend fun restorePartialSession(): Boolean {
-        //Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Restoring session started")
+        if (BuildConfig.DEBUG) {
+            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Restoring session started")
+        }
+
         // we are done if no partialWorkoutSession was persisted
         val partialWorkoutSession = appRepository.partialWorkoutSessionRecord.first()
-        //Log.d(PARTIAL_WORKOUT_SESSION_TAG, "partialWorkoutSession: $partialWorkoutSession")
+
+        if (BuildConfig.DEBUG) {
+            Log.d(PARTIAL_WORKOUT_SESSION_TAG, "partialWorkoutSession: $partialWorkoutSession")
+        }
 
         if (partialWorkoutSession.workoutSessionId == ItemIdentifierGenerator.NO_ID) {
-            //Log.d(PARTIAL_WORKOUT_SESSION_TAG,"No session to restore")
+            if (BuildConfig.DEBUG) {
+                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"No session to restore")
+            }
+
             return false
         }
 
         val restored = restore(partialWorkoutSession)
         appRepository.clearPartialWorkoutSessionInfo()
 
-        //Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Restoring session completed")
+        if (BuildConfig.DEBUG) {
+            Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Restoring session completed")
+        }
 
         return restored
     }
@@ -273,7 +311,10 @@ class LiveSessionViewModel(
         val partialSession = sessionRepository.getWorkoutSession(partialRecord.workoutSessionId)
 
         if (partialSession == null) {
-            //Log.e(PARTIAL_WORKOUT_SESSION_TAG, "No partial session with id ${partialRecord.workoutSessionId} found on record")
+            if (BuildConfig.DEBUG) {
+                Log.e(PARTIAL_WORKOUT_SESSION_TAG, "No partial session with id ${partialRecord.workoutSessionId} found on record")
+            }
+
             return false
         }
 
