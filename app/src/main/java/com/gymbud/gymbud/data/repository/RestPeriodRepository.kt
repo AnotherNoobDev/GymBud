@@ -45,6 +45,10 @@ class RestPeriodRepository(
     fun retrieveRestPeriod(id: ItemIdentifier): Flow<RestPeriod?> = restPeriodDao.get(id)
 
 
+    suspend fun hasRestPeriodWithSameContent(pendingEntry: RestPeriod): RestPeriod? =
+        restPeriodDao.hasRestPeriodWithSameContent(pendingEntry.name, pendingEntry.targetRestPeriodSec)
+
+
     suspend fun retrieveRestPeriods(ids: List<ItemIdentifier>): List<RestPeriod> {
         return restPeriodDao.get(ids)
     }
@@ -69,12 +73,14 @@ class RestPeriodRepository(
         id: ItemIdentifier,
         name: String,
         targetPeriodSec: IntRange
-    ) {
-        withContext(Dispatchers.IO) {
+    ): RestPeriod {
+        return withContext(Dispatchers.IO) {
             val validName = getValidName(id, name, restPeriodDao.getAll().first())
 
             try {
-                restPeriodDao.insert(RestPeriod(id, validName, targetPeriodSec))
+                val entry = RestPeriod(id, validName, targetPeriodSec)
+                restPeriodDao.insert(entry)
+                return@withContext entry
             } catch (e: SQLiteConstraintException) {
                 //Log.e(TAG, "RestPeriod with id: $id already exists!")
                 throw e

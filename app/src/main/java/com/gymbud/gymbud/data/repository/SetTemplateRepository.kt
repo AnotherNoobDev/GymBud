@@ -95,15 +95,31 @@ class SetTemplateRepository(
     }
 
 
+    suspend fun hasSetTemplateWithSameContent(pendingEntry: SetTemplate): SetTemplate? {
+        val emptyTemplate = setTemplateDao.hasSetTemplateWithSameContent(pendingEntry.name)?: return null
+
+        val template = retrieveSetTemplate(emptyTemplate.id).first()
+
+        return if (pendingEntry.items == template!!.items) {
+            template
+        } else {
+            null
+        }
+    }
+
+
     suspend fun addSetTemplate(
         id: ItemIdentifier,
         name: String,
         items: List<Item>
-    ) {
-        withContext(Dispatchers.IO) {
+    ): SetTemplate {
+        return withContext(Dispatchers.IO) {
             val validName = getValidName(id, name, setTemplateDao.getAll().first())
+            val entry = SetTemplate(id, validName)
+            entry.replaceAllWith(items)
+
             try {
-                setTemplateDao.insert(SetTemplate(id, validName))
+                setTemplateDao.insert(entry)
             } catch (e: SQLiteConstraintException) {
                 //Log.e(TAG, "Set template with id: $id already exists!")
                 throw e
@@ -121,6 +137,8 @@ class SetTemplateRepository(
                     throw e
                 }
             }
+
+            return@withContext entry
         }
     }
 

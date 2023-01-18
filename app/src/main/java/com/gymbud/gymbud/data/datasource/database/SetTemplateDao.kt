@@ -1,5 +1,6 @@
 package com.gymbud.gymbud.data.datasource.database
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -37,6 +38,12 @@ interface SetTemplateDao {
 
     @Query("SELECT * from set_template ORDER BY name ASC")
     fun getAll(): Flow<List<SetTemplate>>
+
+    @Query("SELECT * from set_template WHERE name = :name")
+    suspend fun hasSetTemplateWithSameContent(name: String): SetTemplate?
+
+    @Query("SELECT * from set_template WHERE id = :id")
+    fun getRows(id: ItemIdentifier): Cursor
 }
 
 
@@ -53,4 +60,7 @@ interface SetTemplateWithItemDao {
 
     @Query("SELECT * from set_template_item WHERE set_template_id = :setTemplateId ORDER BY set_item_pos ASC")
     suspend fun getAll(setTemplateId: ItemIdentifier): List<SetTemplateWithItem>
+
+    @Query("SELECT * from set_template_item WHERE set_template_id = :setTemplateId")
+    fun getRows(setTemplateId: ItemIdentifier): Cursor
 }

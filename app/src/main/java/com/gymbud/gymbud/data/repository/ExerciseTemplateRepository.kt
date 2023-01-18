@@ -71,6 +71,14 @@ class ExerciseTemplateRepository(
     }
 
 
+    suspend fun hasExerciseTemplateWithSameContent(pendingEntry: ExerciseTemplate): ExerciseTemplate? {
+        val repoEntry = exerciseTemplateDao.hasExerciseTemplateWithSameContent(pendingEntry.name, pendingEntry.exercise.id, pendingEntry.targetRepRange)?: return null
+
+        exerciseRepository.fillExerciseContent(repoEntry.exercise)
+        return repoEntry
+    }
+
+
 
     suspend fun updateExerciseTemplate(
         id: ItemIdentifier,
@@ -89,11 +97,13 @@ class ExerciseTemplateRepository(
         name: String,
         exercise: Exercise,
         targetRepRange: IntRange
-    ) {
-        withContext(Dispatchers.IO) {
+    ): ExerciseTemplate {
+        return withContext(Dispatchers.IO) {
             val validName = getValidName(id, name, exerciseTemplateDao.getAll().first())
             try {
-                exerciseTemplateDao.insert(ExerciseTemplate(id, validName, exercise, targetRepRange))
+                val entry = ExerciseTemplate(id, validName, exercise, targetRepRange)
+                exerciseTemplateDao.insert(entry)
+                return@withContext entry
             } catch (e: SQLiteConstraintException) {
                 //Log.e(TAG, "Exercise template with id: $id already exists!")
                 throw e

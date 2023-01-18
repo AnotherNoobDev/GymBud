@@ -3,6 +3,10 @@ package com.gymbud.gymbud.data.datasource.database
 import android.content.Context
 import androidx.room.*
 import com.gymbud.gymbud.model.*
+import com.gymbud.gymbud.utility.convertIntRangeFromString
+import com.gymbud.gymbud.utility.convertIntRangeToString
+import com.gymbud.gymbud.utility.convertTagsFromString
+import com.gymbud.gymbud.utility.convertTagsToString
 
 class Converters {
     /// Exercise <--> ItemIdentifier
@@ -20,56 +24,27 @@ class Converters {
 
     /// IntRange <--> String (first..last)
 
-    private val delimiterBetweenFirstAndLast = ".."
-
     @TypeConverter
     fun intRangeFromString(value: String?): IntRange? {
-        return value?.let {
-            val tokenized = value.split(delimiterBetweenFirstAndLast)
-
-            return@let if(tokenized.size != 2) {
-                null
-            } else {
-                IntRange(tokenized[0].toInt(), tokenized[1].toInt())
-            }
-        }
+        return convertIntRangeFromString(value)
     }
 
     @TypeConverter
     fun intRangeToString(range: IntRange?): String? {
-        return range?.let { "${range.first}${delimiterBetweenFirstAndLast}${range.last}" }
+        return convertIntRangeToString(range)
     }
 
 
     /// Tags <--> String (tagCategory1:tagValue1,tagValue2,tagValue3|tagCategory2:tagValue1,tagValue2)
 
-    private val delimiterBetweenCategories = "|"
-    private val delimiterBetweenCategoryAndValues = ":"
-    private val delimiterBetweenValues = ","
-
     @TypeConverter
     fun tagsFromString(value: String?): Tags? {
-        return value?.let {
-            val tags: MutableMap<TagCategory, Set<String>> = mutableMapOf()
-
-            if (value.isEmpty()) return@let tags.toMap()
-
-            value.split(delimiterBetweenCategories).forEach{ categoryWithValues ->
-                val (category, values) = categoryWithValues.split(delimiterBetweenCategoryAndValues)
-                tags[TagCategory.valueOf(category)] = values.split(delimiterBetweenValues).toSet()
-            }
-
-            return@let tags.toMap()
-        }
+        return convertTagsFromString(value)
     }
 
     @TypeConverter
     fun tagsToString(tags: Tags?): String? {
-        return tags?.let {
-            tags.entries.joinToString(separator = delimiterBetweenCategories) {
-                "${it.key}${delimiterBetweenCategoryAndValues}${it.value.joinToString(separator=delimiterBetweenValues)}"
-            }
-        }
+        return convertTagsToString(tags)
     }
 }
 

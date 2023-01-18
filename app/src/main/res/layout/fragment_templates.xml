@@ -19,17 +19,31 @@
         layout="@layout/layout_panel"/>
 
 
-    <Button
-        android:id="@+id/load_defaults_button"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Load default Programs"
+        android:orientation="vertical"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/library_panel" />
+        app:layout_constraintTop_toBottomOf="@+id/library_panel">
 
+        <Button
+            android:id="@+id/load_defaults_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Load default Programs"
+            android:layout_gravity="center_horizontal"/>
 
+        <Button
+            android:id="@+id/export_program_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Export Program"
+            android:layout_gravity="center_horizontal"/>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

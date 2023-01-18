@@ -28,6 +28,11 @@ class ExerciseRepository(
 
     fun retrieveExercise(id: ItemIdentifier): Flow<Exercise?> = exerciseDao.get(id)
 
+
+    suspend fun hasExerciseWithSameContent(pendingEntry: Exercise): Exercise? =
+        exerciseDao.hasExerciseWithSameContent(pendingEntry.name, pendingEntry.notes, pendingEntry.targetMuscle, pendingEntry.videoTutorial)
+
+
     suspend fun fillExerciseContent(exercise: Exercise) {
         val exerciseEntry = exerciseDao.get(exercise.id).first()
 
@@ -61,12 +66,14 @@ class ExerciseRepository(
         targetMuscle: MuscleGroup,
         description: String,
         videoTutorial: String,
-    ) {
-        withContext(Dispatchers.IO) {
+    ): Exercise {
+        return withContext(Dispatchers.IO) {
             val validName = getValidName(id, name, exerciseDao.getAll().first())
 
             try {
-                exerciseDao.insert(Exercise(id, validName, description, targetMuscle, videoTutorial))
+                val entry = Exercise(id, validName, description, targetMuscle, videoTutorial)
+                exerciseDao.insert(entry)
+                return@withContext entry
             } catch (e: SQLiteConstraintException) {
                 //Log.e(TAG, "Exercise with id: $id already exists!")
                 throw e

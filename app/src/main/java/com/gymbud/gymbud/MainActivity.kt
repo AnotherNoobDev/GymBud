@@ -1,5 +1,6 @@
 package com.gymbud.gymbud
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
@@ -7,9 +8,11 @@ import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -20,15 +23,23 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gymbud.gymbud.databinding.LayoutLiveSessionOverviewBinding
 import com.gymbud.gymbud.model.WorkoutSessionItemType
 import com.gymbud.gymbud.model.WorkoutSessionState
 import com.gymbud.gymbud.ui.live_session.LiveSessionOverviewRecyclerViewAdapter
 import com.gymbud.gymbud.ui.viewmodel.*
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.gymbud.gymbud.utility.SerializationException
 import com.gymbud.gymbud.utility.TimeFormatter
+import com.gymbud.gymbud.utility.deserializeProgramTemplate
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.lang.Exception
 import kotlin.math.max
 
 
@@ -76,6 +87,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        handleIntent()
+
         // note: lock orientation because UI/UX are lacking when in landscape at the moment
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
@@ -109,6 +122,68 @@ class MainActivity : AppCompatActivity() {
                     else -> {}
                 }
             }
+        }
+    }
+
+
+    private fun handleIntent() {
+        if (intent == null) {
+            return
+        }
+
+        if (intent.action != Intent.ACTION_VIEW) {
+            return
+        }
+
+        val uri = intent.data ?: return
+        //Log.d("Intent", uri.toString())
+
+        val inputStream = contentResolver.openInputStream(uri) ?: return
+
+
+        val inputStreamReader = InputStreamReader(inputStream)
+        val bufferedReader = BufferedReader(inputStreamReader)
+
+        val content = mutableListOf<String>()
+        var line: String? = bufferedReader.readLine()
+
+        while (line != null) {
+            content.add(line)
+            line = bufferedReader.readLine()
+        }
+
+        bufferedReader.close()
+
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    val (wasImported, importedProgramName) = deserializeProgramTemplate(content, (application as BaseApplication))
+                    if (wasImported) {
+                        showImportProgramToast("Program has been imported as: $importedProgramName")
+                    } else {
+                        showImportProgramToast("Program already present on device. Importing is not necessary.")
+                    }
+                } catch (e: SerializationException) {
+                    showImportProgramToast("Failed to import program due to: ${e.message}")
+                }
+                catch (e: Exception) {
+                    showImportProgramToast("Failed to import program due to: File is corrupt.")
+                    if (BuildConfig.DEBUG) {
+                        Log.e("Serialization", e.stackTrace.toString())
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun showImportProgramToast(message: String) {
+        Handler(Looper.getMainLooper()).post {
+            Toast.makeText(
+                applicationContext,
+                message,
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

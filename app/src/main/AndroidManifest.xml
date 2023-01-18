@@ -26,8 +26,15 @@
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="file" android:mimeType="*/*" android:pathPattern=".*\\.gymbud"/>
+                <data android:scheme="content" android:pathPattern=".*\\.gymbud" android:mimeType="application/octet-stream" />
+                <!-- <data android:host="*"/> -->
             </intent-filter>
         </activity>
 
@@ -35,6 +42,16 @@
             android:name = "YoutubeApiKey"
             android:value = "${YOUTUBE_API_KEY}"
         />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
     </application>
 

@@ -1,5 +1,6 @@
 package com.gymbud.gymbud.data.datasource.database
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -33,6 +34,12 @@ interface RestPeriodDao {
     @Query("SELECT * from rest_period ORDER BY name ASC")
     fun getAll(): Flow<List<RestPeriod>>
 
+    @Query("SELECT * from rest_period WHERE name = :name AND target_in_seconds = :targetPeriodSec")
+    suspend fun hasRestPeriodWithSameContent(name: String, targetPeriodSec: IntRange): RestPeriod?
+
     @Query("DELETE from rest_period WHERE id = :id")
     suspend fun delete(id: ItemIdentifier): Int
+
+    @Query("SELECT * from rest_period WHERE id = :id")
+    fun getRows(id: ItemIdentifier): Cursor
 }

@@ -35,15 +35,15 @@ class ItemRepository(
         var progress = 0
 
         // order in which we populate repositories matters!!
+        restPeriodRepository.populateWithDefaults()
+        progress += 5
+        progressCallback(progress)
+
         exerciseRepository.populateWithDefaults()
         progress += 10
         progressCallback(progress)
 
         exerciseTemplateRepository.populateWithDefaults()
-        progress += 5
-        progressCallback(progress)
-
-        restPeriodRepository.populateWithDefaults()
         progress += 5
         progressCallback(progress)
 

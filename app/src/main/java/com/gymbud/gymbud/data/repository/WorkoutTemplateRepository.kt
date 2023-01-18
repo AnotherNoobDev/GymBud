@@ -107,15 +107,32 @@ class WorkoutTemplateRepository(
     }
 
 
+    suspend fun hasWorkoutTemplateWithSameContent(pendingEntry: WorkoutTemplate): WorkoutTemplate? {
+        val emptyTemplate = workoutTemplateDao.hasWorkoutTemplateWithSameContent(pendingEntry.name)
+            ?: return null
+
+        val template = retrieveWorkoutTemplate(emptyTemplate.id).first()
+
+        return if (pendingEntry.items == template!!.items) {
+            template
+        } else {
+            null
+        }
+    }
+
+
     suspend fun addWorkoutTemplate(
         id: ItemIdentifier,
         name: String,
         items: List<Item>
-    ) {
-        withContext(Dispatchers.IO) {
+    ): WorkoutTemplate {
+        return withContext(Dispatchers.IO) {
             val validName = getValidName(id, name, workoutTemplateDao.getAll().first())
+            val entry = WorkoutTemplate(id, validName)
+            entry.replaceAllWith(items)
+
             try {
-                workoutTemplateDao.insert(WorkoutTemplate(id, validName))
+                workoutTemplateDao.insert(entry)
             } catch (e: SQLiteConstraintException) {
                 //Log.e(TAG, "Workout template with id: $id already exists!")
                 throw e
@@ -142,6 +159,8 @@ class WorkoutTemplateRepository(
                     throw e
                 }
             }
+
+            return@withContext entry
         }
     }
 

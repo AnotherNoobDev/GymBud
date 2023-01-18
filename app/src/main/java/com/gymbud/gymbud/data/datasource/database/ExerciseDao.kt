@@ -1,5 +1,6 @@
 package com.gymbud.gymbud.data.datasource.database
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -37,6 +38,16 @@ interface ExerciseDao {
     @Query("SELECT * from exercise ORDER BY name ASC")
     fun getAll(): Flow<List<Exercise>>
 
+    @Query("SELECT * from exercise WHERE name = :name AND notes = :notes AND target_muscle = :targetMuscle AND video_tutorial = :videoTutorial")
+    suspend fun hasExerciseWithSameContent(
+        name: String,
+        notes: String,
+        targetMuscle: MuscleGroup,
+        videoTutorial: String): Exercise?
+
     @Query("SELECT COUNT(id) from exercise")
     fun count(): Flow<Int>
+
+    @Query("SELECT * from exercise WHERE id = :id")
+    fun getRows(id: ItemIdentifier): Cursor
 }

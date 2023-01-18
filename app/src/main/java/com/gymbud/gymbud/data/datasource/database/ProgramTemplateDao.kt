@@ -1,5 +1,6 @@
 package com.gymbud.gymbud.data.datasource.database
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -33,6 +34,12 @@ interface ProgramTemplateDao {
 
     @Query("SELECT * from program_template ORDER BY name ASC")
     fun getAll(): Flow<List<ProgramTemplate>>
+
+    @Query("SELECT * from program_template WHERE name = :name")
+    suspend fun hasProgramTemplateWithSameContent(name: String): ProgramTemplate?
+
+    @Query("SELECT * from program_template WHERE id = :id")
+    fun getRows(id: ItemIdentifier): Cursor
 }
 
 
@@ -49,4 +56,7 @@ interface ProgramTemplateWithItemDao {
 
     @Query("SELECT * from program_template_item WHERE program_template_id = :programTemplateId ORDER BY program_item_pos ASC")
     suspend fun getAll(programTemplateId: ItemIdentifier): List<ProgramTemplateWithItem>
+
+    @Query("SELECT * from program_template_item WHERE program_template_id = :programTemplateId")
+    fun getRows(programTemplateId: ItemIdentifier): Cursor
 }

@@ -171,5 +171,35 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sharing Programs"
+                android:textSize="16sp"
+                android:textColor="?attr/colorPrimaryVariant"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Programs can be exported from Templates > Export Program. This will save the Program to a .gymbud file that can be shared with other users."
+                android:textSize="12sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="To import a Program from a .gymbud file, tap on the file and select GymBud from the list of apps that appears on screen."
+                android:textSize="12sp" />
+        </LinearLayout>
+
     </LinearLayout>
 </ScrollView>

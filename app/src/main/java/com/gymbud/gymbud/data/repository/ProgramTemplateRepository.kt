@@ -86,15 +86,32 @@ class ProgramTemplateRepository(
     }
 
 
+    suspend fun hasProgramTemplateWithSameContent(pendingEntry: ProgramTemplate): ProgramTemplate? {
+        val emptyTemplate = programTemplateDao.hasProgramTemplateWithSameContent(pendingEntry.name)
+            ?: return null
+
+        val template = retrieveProgramTemplate(emptyTemplate.id).first()
+
+        return if (pendingEntry.items == template!!.items) {
+            template
+        } else {
+            null
+        }
+    }
+
+
     suspend fun addProgramTemplate(
         id: ItemIdentifier,
         name: String,
         items: List<Item>
-    ) {
-        withContext(Dispatchers.IO) {
+    ): ProgramTemplate {
+        return withContext(Dispatchers.IO) {
             val validName = getValidName(id, name, programTemplateDao.getAll().first())
+            val entry = ProgramTemplate(id, validName)
+            entry.replaceAllWith(items)
+
             try {
-                programTemplateDao.insert(ProgramTemplate(id, validName))
+                programTemplateDao.insert(entry)
             } catch (e: SQLiteConstraintException) {
                 //Log.e(TAG, "Program template with id: $id already exists!")
                 throw e
@@ -112,6 +129,8 @@ class ProgramTemplateRepository(
                     throw e
                 }
             }
+
+            return@withContext entry
         }
     }
 
