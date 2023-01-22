@@ -44,6 +44,9 @@ interface SetTemplateDao {
 
     @Query("SELECT * from set_template WHERE id = :id")
     fun getRows(id: ItemIdentifier): Cursor
+
+    @Query("SELECT id from set_template ORDER BY id DESC LIMIT 1")
+    suspend fun getMaxId(): ItemIdentifier
 }
 
 

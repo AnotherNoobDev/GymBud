@@ -10,16 +10,23 @@ import com.gymbud.gymbud.utility.getDayOfMonth
 import com.gymbud.gymbud.utility.getMonth
 import com.gymbud.gymbud.utility.getMonthSpan
 import kotlinx.coroutines.flow.first
+import kotlin.math.max
 
 
 //private const val TAG = "SessionsRepo"
 
 
 class SessionsRepository(
-    private val exerciseSessionRecordDao: ExerciseSessionRecordDao,
-    private val workoutSessionRecordDao: WorkoutSessionRecordDao,
+    private var exerciseSessionRecordDao: ExerciseSessionRecordDao,
+    private var workoutSessionRecordDao: WorkoutSessionRecordDao,
     private val workoutTemplateRepository: WorkoutTemplateRepository
 ) {
+    fun setDao(exerciseSessionRecordDao: ExerciseSessionRecordDao, workoutSessionRecordDao: WorkoutSessionRecordDao) {
+        this.exerciseSessionRecordDao = exerciseSessionRecordDao
+        this.workoutSessionRecordDao = workoutSessionRecordDao
+    }
+
+
     suspend fun addExerciseSessionRecord(record: ExerciseSessionRecord) {
         exerciseSessionRecordDao.insert(record)
     }
@@ -165,4 +172,7 @@ class SessionsRepository(
     suspend fun removeSession(id: ItemIdentifier): Boolean {
         return workoutSessionRecordDao.delete(id) > 0
     }
+
+
+    suspend fun getMaxId(): ItemIdentifier = max(exerciseSessionRecordDao.getMaxId(), workoutSessionRecordDao.getMaxId())
 }

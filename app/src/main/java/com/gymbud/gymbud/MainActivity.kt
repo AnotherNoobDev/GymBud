@@ -2,9 +2,11 @@ package com.gymbud.gymbud
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.OpenableColumns
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
@@ -30,16 +32,11 @@ import com.gymbud.gymbud.model.WorkoutSessionItemType
 import com.gymbud.gymbud.model.WorkoutSessionState
 import com.gymbud.gymbud.ui.live_session.LiveSessionOverviewRecyclerViewAdapter
 import com.gymbud.gymbud.ui.viewmodel.*
-import com.gymbud.gymbud.utility.SerializationException
-import com.gymbud.gymbud.utility.TimeFormatter
-import com.gymbud.gymbud.utility.deserializeProgramTemplate
+import com.gymbud.gymbud.utility.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.lang.Exception
 import kotlin.math.max
 
 
@@ -87,8 +84,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        handleIntent()
-
         // note: lock orientation because UI/UX are lacking when in landscape at the moment
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
@@ -123,6 +118,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        handleIntent()
     }
 
 
@@ -138,36 +135,68 @@ class MainActivity : AppCompatActivity() {
         val uri = intent.data ?: return
         //Log.d("Intent", uri.toString())
 
-        val inputStream = contentResolver.openInputStream(uri) ?: return
+        intent.action = "" // hack to mark intent as resolved (otherwise handling will be triggered again on activity relaunch..)
 
-
-        val inputStreamReader = InputStreamReader(inputStream)
-        val bufferedReader = BufferedReader(inputStreamReader)
-
-        val content = mutableListOf<String>()
-        var line: String? = bufferedReader.readLine()
-
-        while (line != null) {
-            content.add(line)
-            line = bufferedReader.readLine()
+        val name = getFileName(uri)
+        if (name == null) {
+            showToast("Failed to interpret file.")
+            return
         }
 
-        bufferedReader.close()
+        if (name.endsWith(GYMBUD_PROGRAM_FILE_EXTENSION)) {
+            openProgramImportIntentDialog(uri, name)
+        } else if (name.endsWith(GYMBUD_BACKUP_FILE_EXTENSION)) {
+            openBackupRestoreIntentDialog(uri, name)
+        } else {
+            if (BuildConfig.DEBUG) {
+                Log.e("Intent", "Don't know how to handle file: $name")
+            }
+        }
+    }
+
+
+    private fun openProgramImportIntentDialog(contentUri: Uri, contentName: String) {
+        val context = (supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment).requireContext()
+
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Confirm Program import...")
+            .setMessage("You are about to import a program from:\n\n$contentName.\n\n\nContinue?")
+            .setPositiveButton("Ok") { _, _ ->
+                handleProgramImportIntent(contentUri)
+            }
+            .setNegativeButton("Cancel"){_,_ ->}
+            .show()
+    }
+
+
+    private fun handleProgramImportIntent(contentUri: Uri) {
+        val inputStream = contentResolver.openInputStream(contentUri)
+        if (inputStream == null) {
+            showToast("Failed to import program due to: Unable to read content.")
+            if (BuildConfig.DEBUG) {
+                Log.e("Serialization", "Failed to import program due to: Unable to read content.")
+            }
+
+            return
+        }
+
+        val content = readFileContent(inputStream)
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 try {
                     val (wasImported, importedProgramName) = deserializeProgramTemplate(content, (application as BaseApplication))
                     if (wasImported) {
-                        showImportProgramToast("Program has been imported as: $importedProgramName")
+                        showToast("Program has been imported as: $importedProgramName")
                     } else {
-                        showImportProgramToast("Program already present on device. Importing is not necessary.")
+                        showToast("Program already present on device. Importing is not necessary.")
                     }
                 } catch (e: SerializationException) {
-                    showImportProgramToast("Failed to import program due to: ${e.message}")
+                    showToast("Failed to import program due to: ${e.message}")
                 }
                 catch (e: Exception) {
-                    showImportProgramToast("Failed to import program due to: File is corrupt.")
+                    showToast("Failed to import program due to: File is corrupt.")
                     if (BuildConfig.DEBUG) {
                         Log.e("Serialization", e.stackTrace.toString())
                     }
@@ -177,7 +206,77 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun showImportProgramToast(message: String) {
+    private fun openBackupRestoreIntentDialog(contentUri: Uri, contentName: String) {
+        val context = (supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment).requireContext()
+
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Confirm Restore...")
+            .setMessage("You are about to restore data from:\n\n$contentName\n\n\nCAUTION: This will overwrite existing data (templates, workout history, etc.) on the device and cannot be undone! \n\n Continue?")
+            .setPositiveButton("Ok") { _, _ ->
+                handleBackupRestoreIntent(contentUri)
+            }
+            .setNegativeButton("Cancel"){_,_ ->}
+            .show()
+    }
+
+
+    private fun handleBackupRestoreIntent(contentUri: Uri) {
+        val inputStream = contentResolver.openInputStream(contentUri)
+        if (inputStream == null) {
+            showToast("Failed to start data restore process: Unable to read file.")
+            if (BuildConfig.DEBUG) {
+                Log.e("Serialization", "Failed to start data restore process: Unable to read file.")
+            }
+
+            return
+        }
+
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    restoreFromBackup(application as BaseApplication, inputStream)
+                    showToast("Data restore was successful!")
+                } catch (e: SerializationException) {
+                    showToast(e.message?: "Restore failed! Local data may have been corrupted!")
+                } catch (e: Exception) {
+                    if (BuildConfig.DEBUG) {
+                        Log.e("DataRestore", e.stackTrace.toString())
+                    }
+                    showToast("Restore failed! Local data may have been corrupted!")
+                }
+            }
+        }
+    }
+
+
+    private fun getFileName(uri: Uri): String? {
+        var result: String? = null
+
+        if (uri.scheme == "content") {
+            val cursor = contentResolver.query(uri, null, null, null, null)?: return ""
+            cursor.use {
+                if (it.moveToFirst()) {
+                    val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    result = it.getString(index)
+                }
+            }
+        }
+
+        if (result == null) {
+            result = uri.path
+
+            val cut = result!!.lastIndexOf('/')
+            if (cut != -1) {
+                result = result!!.substring(cut + 1)
+            }
+        }
+
+        return result
+    }
+
+
+    private fun showToast(message: String) {
         Handler(Looper.getMainLooper()).post {
             Toast.makeText(
                 applicationContext,

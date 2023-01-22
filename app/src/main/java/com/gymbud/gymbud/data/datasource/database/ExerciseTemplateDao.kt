@@ -47,4 +47,7 @@ interface ExerciseTemplateDao {
 
     @Query("SELECT * from exercise_template WHERE id = :id")
     fun getRows(id: ItemIdentifier): Cursor
+
+    @Query("SELECT id from exercise_template ORDER BY id DESC LIMIT 1")
+    suspend fun getMaxId(): ItemIdentifier
 }

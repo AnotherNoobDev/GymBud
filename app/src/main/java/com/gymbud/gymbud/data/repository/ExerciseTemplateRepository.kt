@@ -12,9 +12,14 @@ import kotlinx.coroutines.withContext
 private const val TAG = "ExerciseTemplateRepo"
 
 class ExerciseTemplateRepository(
-    private val exerciseTemplateDao: ExerciseTemplateDao,
+    private var exerciseTemplateDao: ExerciseTemplateDao,
     private val exerciseRepository: ExerciseRepository
 ) {
+    
+    fun setDao(exerciseTemplateDao: ExerciseTemplateDao) {
+        this.exerciseTemplateDao = exerciseTemplateDao
+    }
+
     val exerciseTemplates: Flow<List<ExerciseTemplate>> =
         exerciseTemplateDao.getAll().map { templates ->
             templates.forEach {
@@ -115,4 +120,7 @@ class ExerciseTemplateRepository(
     suspend fun removeExerciseTemplate(id: ItemIdentifier): Boolean {
         return exerciseTemplateDao.delete(id) > 0
     }
+
+
+    suspend fun getMaxId(): ItemIdentifier = exerciseTemplateDao.getMaxId()
 }

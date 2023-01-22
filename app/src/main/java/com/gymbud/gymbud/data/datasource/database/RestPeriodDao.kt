@@ -42,4 +42,7 @@ interface RestPeriodDao {
 
     @Query("SELECT * from rest_period WHERE id = :id")
     fun getRows(id: ItemIdentifier): Cursor
+
+    @Query("SELECT id from rest_period ORDER BY id DESC LIMIT 1")
+    suspend fun getMaxId(): ItemIdentifier
 }

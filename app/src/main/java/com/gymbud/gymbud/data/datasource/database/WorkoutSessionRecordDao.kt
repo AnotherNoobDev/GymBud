@@ -37,4 +37,7 @@ interface WorkoutSessionRecordDao {
 
     @RawQuery
     suspend fun getPreviousSessionsByFilters(query: SupportSQLiteQuery): List<ItemIdentifier>
+
+    @Query("SELECT id from workout_session ORDER BY id DESC LIMIT 1")
+    suspend fun getMaxId(): ItemIdentifier
 }

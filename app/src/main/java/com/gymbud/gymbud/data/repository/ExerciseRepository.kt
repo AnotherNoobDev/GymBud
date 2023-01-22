@@ -14,8 +14,13 @@ private const val TAG = "ExerciseRepo"
 
 
 class ExerciseRepository(
-    private val exerciseDao: ExerciseDao
+    private var exerciseDao: ExerciseDao
 ) {
+    fun setDao(exerciseDao: ExerciseDao) {
+        this.exerciseDao = exerciseDao
+    }
+
+
     val exercises: Flow<List<Exercise>> = exerciseDao.getAll()
 
 
@@ -85,4 +90,7 @@ class ExerciseRepository(
     suspend fun removeExercise(id: ItemIdentifier): Boolean {
        return exerciseDao.delete(id) > 0
     }
+
+
+    suspend fun getMaxId(): ItemIdentifier = exerciseDao.getMaxId()
 }

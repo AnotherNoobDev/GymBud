@@ -16,8 +16,14 @@ private const val TAG = "RestPeriodRepo"
 
 
 class RestPeriodRepository(
-    private val restPeriodDao: RestPeriodDao
+    private var restPeriodDao: RestPeriodDao
 ) {
+
+    fun setDao(restPeriodDao: RestPeriodDao) {
+        this.restPeriodDao = restPeriodDao
+    }
+
+
     // RestDay is a special value, needs to be retrieved explicitly by id
     val restPeriods: Flow<List<RestPeriod>> = restPeriodDao.getAll().map {
         it.mapNotNull { rest ->
@@ -95,4 +101,7 @@ class RestPeriodRepository(
 
         return restPeriodDao.delete(id) > 0
     }
+
+
+    suspend fun getMaxId(): ItemIdentifier = restPeriodDao.getMaxId()
 }

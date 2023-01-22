@@ -206,6 +206,49 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Data"
+                    android:background="?colorSurface"
+                    android:paddingStart="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="20dp"
+                        android:layout_weight="0.5"
+                        android:text="Create a backup of all data on this device (templates, workout sessions, etc.)."
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/create_backup_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:layout_marginEnd="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:text="Create Backup" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:id="@+id/about"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -259,11 +302,35 @@
                     android:text="Dev"
                     android:background="?colorSurface"
                     android:paddingStart="10dp"/>
-                <Button
-                    android:id="@+id/reset_db_button"
-                    android:layout_width="wrap_content"
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Reset DB" />
+                    android:orientation="horizontal"
+                    android:paddingStart="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="20dp"
+                        android:layout_weight="0.5"
+                        android:text="Drop all database tables."
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/reset_db_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.5"
+                        android:layout_marginEnd="20dp"
+                        android:text="Reset DB" />
+                </LinearLayout>
+
+
             </LinearLayout>
 
             <LinearLayout

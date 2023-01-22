@@ -40,6 +40,9 @@ interface ProgramTemplateDao {
 
     @Query("SELECT * from program_template WHERE id = :id")
     fun getRows(id: ItemIdentifier): Cursor
+
+    @Query("SELECT id from program_template ORDER BY id DESC LIMIT 1")
+    suspend fun getMaxId(): ItemIdentifier
 }
 
 

@@ -6,14 +6,12 @@ package com.gymbud.gymbud.ui
 // TEST_DATA_GENERATION
 // import com.gymbud.gymbud.utility.populateWithSessions
 import android.app.ProgressDialog
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -26,6 +24,7 @@ import com.gymbud.gymbud.model.ItemIdentifier
 import com.gymbud.gymbud.model.ItemType
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModel
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModelFactory
+import com.gymbud.gymbud.utility.distributeFile
 import com.gymbud.gymbud.utility.saveProgramToFile
 import com.gymbud.gymbud.utility.serializeProgramTemplate
 import kotlinx.coroutines.Dispatchers
@@ -194,21 +193,7 @@ class TemplatesFragment : Fragment() {
 
 
     private fun distributeProgram(programFile: File) {
-        val context = requireContext()
-        val fileUri = FileProvider.getUriForFile(context, context.packageName + ".provider", programFile)
-
-        context.grantUriPermission("android.content.ContentProvider", fileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-
-        val intentShareFile = Intent(Intent.ACTION_SEND)
-
-        intentShareFile.apply {
-            type = "text/plain"
-            data = fileUri
-            putExtra(Intent.EXTRA_STREAM, fileUri)
-            putExtra(Intent.EXTRA_SUBJECT, "Sharing GymBud Program")
-            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        }
-
-        startActivity(Intent.createChooser(intentShareFile, "Share File"))
+        val intent = distributeFile(programFile, requireContext(), "text/plain", "Sharing GymBud Program", "Share File")
+        startActivity(intent)
     }
 }

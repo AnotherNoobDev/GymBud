@@ -17,11 +17,17 @@ private const val TAG = "ProgramTemplateRepo"
 
 // todo lots of duplication with SetTemplateRepository atm (basically copy-pasta) -> can we do better? (check after adding real data source)
 class ProgramTemplateRepository(
-    private val programTemplateDao: ProgramTemplateDao,
-    private val programTemplateWithItemDao: ProgramTemplateWithItemDao,
+    private var programTemplateDao: ProgramTemplateDao,
+    private var programTemplateWithItemDao: ProgramTemplateWithItemDao,
     private val workoutTemplateRepository: WorkoutTemplateRepository,
     private val restPeriodRepository: RestPeriodRepository
 ) {
+    fun setDao(programTemplateDao: ProgramTemplateDao, programTemplateWithItemDao: ProgramTemplateWithItemDao) {
+        this.programTemplateDao = programTemplateDao
+        this.programTemplateWithItemDao = programTemplateWithItemDao
+    }
+
+
     val programTemplates: Flow<List<ProgramTemplate>> = programTemplateDao.getAll().map { programs ->
         programs.map {
             populateProgramTemplateItems(it)
@@ -164,4 +170,7 @@ class ProgramTemplateRepository(
     suspend fun removeProgramTemplate(id: ItemIdentifier): Boolean {
         return programTemplateDao.delete(id) > 0
     }
+
+
+    suspend fun getMaxId(): ItemIdentifier = programTemplateDao.getMaxId()
 }

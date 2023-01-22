@@ -2,6 +2,7 @@ package com.gymbud.gymbud.data.datasource.database
 
 import android.content.Context
 import androidx.room.*
+import com.gymbud.gymbud.AppConfig
 import com.gymbud.gymbud.model.*
 import com.gymbud.gymbud.utility.convertIntRangeFromString
 import com.gymbud.gymbud.utility.convertIntRangeToString
@@ -95,7 +96,7 @@ abstract class GymBudRoomDatabase: RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     GymBudRoomDatabase::class.java,
-                    "gymbud_database"
+                    AppConfig.DATABASE_NAME
                 )
                     .build()
 
@@ -103,6 +104,10 @@ abstract class GymBudRoomDatabase: RoomDatabase() {
 
                 return instance
             }
+        }
+
+        fun reset() {
+            INSTANCE = null
         }
     }
 }

@@ -16,11 +16,17 @@ import kotlinx.coroutines.withContext
 private const val TAG = "SetTemplateRepo"
 
 class SetTemplateRepository(
-    private val setTemplateDao: SetTemplateDao,
-    private val setTemplateWithItemDao: SetTemplateWithItemDao,
+    private var setTemplateDao: SetTemplateDao,
+    private var setTemplateWithItemDao: SetTemplateWithItemDao,
     private val exerciseTemplateRepository: ExerciseTemplateRepository,
     private val restPeriodRepository: RestPeriodRepository
 ) {
+    fun setDao(setTemplateDao: SetTemplateDao, setTemplateWithItemDao: SetTemplateWithItemDao) {
+        this.setTemplateDao = setTemplateDao
+        this.setTemplateWithItemDao = setTemplateWithItemDao
+    }
+
+
     val setTemplates: Flow<List<SetTemplate>> = setTemplateDao.getAll().map { sets ->
         sets.map {
             populateSetTemplateItems(it)
@@ -172,4 +178,7 @@ class SetTemplateRepository(
     suspend fun removeSetTemplate(id: ItemIdentifier): Boolean {
         return setTemplateDao.delete(id) > 0
     }
+
+
+    suspend fun getMaxId(): ItemIdentifier = setTemplateDao.getMaxId()
 }

@@ -18,11 +18,17 @@ private const val TAG = "WorkoutTemplateRepo"
 
 // todo lots of duplication with SetTemplateRepository atm (basically copy-pasta) -> can we do better? (check after adding real data source)
 class WorkoutTemplateRepository(
-    private val workoutTemplateDao: WorkoutTemplateDao,
-    private val workoutTemplateWithItemDao: WorkoutTemplateWithItemDao,
+    private var workoutTemplateDao: WorkoutTemplateDao,
+    private var workoutTemplateWithItemDao: WorkoutTemplateWithItemDao,
     private val setTemplateRepository: SetTemplateRepository,
     private val restPeriodRepository: RestPeriodRepository
 ) {
+    fun setDao(workoutTemplateDao: WorkoutTemplateDao, workoutTemplateWithItemDao: WorkoutTemplateWithItemDao) {
+        this.workoutTemplateDao = workoutTemplateDao
+        this.workoutTemplateWithItemDao = workoutTemplateWithItemDao
+    }
+
+
     val workoutTemplates: Flow<List<WorkoutTemplate>> = workoutTemplateDao.getAll().map { workouts ->
         workouts.map {
             populateWorkoutTemplateItems(it)
@@ -200,4 +206,7 @@ class WorkoutTemplateRepository(
     suspend fun removeWorkoutTemplate(id: ItemIdentifier): Boolean {
         return workoutTemplateDao.delete(id) > 0
     }
+
+
+    suspend fun getMaxId(): ItemIdentifier = workoutTemplateDao.getMaxId()
 }

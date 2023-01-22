@@ -50,4 +50,7 @@ interface ExerciseDao {
 
     @Query("SELECT * from exercise WHERE id = :id")
     fun getRows(id: ItemIdentifier): Cursor
+
+    @Query("SELECT id from exercise ORDER BY id DESC LIMIT 1")
+    suspend fun getMaxId(): ItemIdentifier
 }

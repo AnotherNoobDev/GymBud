@@ -29,4 +29,7 @@ interface ExerciseSessionRecordDao {
             "WHERE exercise_template_id IN (:exerciseTemplates) " +
             "AND workout_session_id IN (:workoutSessions)")
     suspend fun getExerciseResults(exerciseTemplates: List<ItemIdentifier>, workoutSessions: List<ItemIdentifier> ): List<ExerciseResult>
+
+    @Query("SELECT id from exercise_session ORDER BY id DESC LIMIT 1")
+    suspend fun getMaxId(): ItemIdentifier
 }

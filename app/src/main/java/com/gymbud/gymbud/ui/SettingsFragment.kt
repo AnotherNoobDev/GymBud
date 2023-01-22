@@ -1,10 +1,14 @@
 package com.gymbud.gymbud.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,6 +20,9 @@ import com.gymbud.gymbud.databinding.FragmentSettingsBinding
 import com.gymbud.gymbud.model.WeightUnit
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModel
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModelFactory
+import com.gymbud.gymbud.utility.BackupException
+import com.gymbud.gymbud.utility.createBackup
+import com.gymbud.gymbud.utility.distributeFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -44,9 +51,7 @@ class SettingsFragment : Fragment() {
 
         binding.apply {
             // Disable dev options in production
-            // todo How do distinguish between dev and production environments?
-            val isProduction = true
-            if (isProduction) {
+            if (!BuildConfig.DEBUG) {
                 devOptions.visibility = View.GONE
             }
         }
@@ -64,6 +69,7 @@ class SettingsFragment : Fragment() {
         setupKeepScreenOnDuringWorkout(appRepository)
         setupAppThemeDisplay(appRepository)
         setupGuides()
+        setupData()
         setupAbout()
         setupDevDisplay(appRepository)
     }
@@ -172,6 +178,42 @@ class SettingsFragment : Fragment() {
                 val action = SettingsFragmentDirections.actionSettingsFragmentToMonitoringProgressGuideFragment()
                 findNavController().navigate(action)
             }
+        }
+    }
+
+
+    private fun setupData() {
+        binding.createBackupButton.setOnClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    try {
+                        // create backup
+                        val bakFile = createBackup(activity?.application as BaseApplication)
+
+                        // distribute backup
+                        val intent = distributeFile(bakFile, requireContext(), "application/x-sqlite3", "GymBud backup", "Share File")
+                        startActivity(intent)
+                    } catch (e: BackupException) {
+                        showDataBackupToast(e.message?: "Failed to create backup")
+                    } catch (e: Exception) {
+                        showDataBackupToast("Failed to create backup")
+                        if (BuildConfig.DEBUG) {
+                            Log.e("Backup", e.stackTrace.toString())
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun showDataBackupToast(message: String) {
+        Handler(Looper.getMainLooper()).post {
+            Toast.makeText(
+                requireContext(),
+                message,
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

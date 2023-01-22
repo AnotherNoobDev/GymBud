@@ -351,4 +351,14 @@ class ItemRepository(
         programTemplateRepository.removeProgramTemplate(id) ||
         restPeriodRepository.removeRestPeriod(id)
     }
+
+
+    suspend fun getMaxId(): ItemIdentifier = maxOf(
+        exerciseRepository.getMaxId(),
+        restPeriodRepository.getMaxId(),
+        exerciseTemplateRepository.getMaxId(),
+        setTemplateRepository.getMaxId(),
+        workoutTemplateRepository.getMaxId(),
+        programTemplateRepository.getMaxId()
+    )
 }
