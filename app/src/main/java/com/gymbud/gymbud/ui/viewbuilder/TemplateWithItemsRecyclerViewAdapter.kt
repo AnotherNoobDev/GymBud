@@ -34,6 +34,8 @@ class TemplateWithItemsRecyclerViewAdapter(
     private val colorWorking: Int
     private val colorDefault: Int
 
+    private var selectedViewHolderPos: Int = RecyclerView.NO_POSITION
+
 
     init {
         val theme = context.theme
@@ -82,6 +84,14 @@ class TemplateWithItemsRecyclerViewAdapter(
                 is SetTemplate -> populateForSetTemplate(item, mapOf())
                 is WorkoutTemplate -> populateForWorkoutTemplate(item)
                 is RestPeriod -> populateForRestPeriod(item)
+            }
+
+            if (functionality == Functionality.Edit) {
+                if (selectedViewHolderPos == absoluteAdapterPosition) {
+                    itemBinding.bottomBorder.visibility = View.VISIBLE
+                } else {
+                    itemBinding.bottomBorder.visibility = View.GONE
+                }
             }
         }
 
@@ -185,6 +195,9 @@ class TemplateWithItemsRecyclerViewAdapter(
             itemBinding.apply {
                 icon.setImageResource(R.drawable.ic_equipment_24)
                 text.text = "${exerciseTemplate.exercise.name} (${exerciseTemplate.targetRepRange} reps)"
+                container.setOnClickListener {
+                    onViewHolderClicked?.let { it1 -> it1(absoluteAdapterPosition) }
+                }
             }
 
             populateWithRemoveButton()
@@ -200,6 +213,9 @@ class TemplateWithItemsRecyclerViewAdapter(
                 text.text = "${setTemplate.name} ($intensity)"
                 text.setTextColor(getColorForSetIntensity(intensity))
                 icon.setImageResource(R.drawable.ic_equipment_24)
+                container.setOnClickListener {
+                    onViewHolderClicked?.let { it1 -> it1(absoluteAdapterPosition) }
+                }
             }
 
             populateWithRemoveButton()
@@ -212,6 +228,9 @@ class TemplateWithItemsRecyclerViewAdapter(
             itemBinding.apply {
                 icon.setImageResource(R.drawable.ic_equipment_24)
                 text.text = workoutTemplate.name
+                container.setOnClickListener {
+                    onViewHolderClicked?.let { it1 -> it1(absoluteAdapterPosition) }
+                }
             }
 
             populateWithRemoveButton()
@@ -225,6 +244,9 @@ class TemplateWithItemsRecyclerViewAdapter(
                 text.text = restPeriod.name
                 text.setTextColor(getColorForSetIntensity(""))
                 icon.setImageResource(R.drawable.ic_timer_24)
+                container.setOnClickListener {
+                    onViewHolderClicked?.let { it1 -> it1(absoluteAdapterPosition) }
+                }
             }
 
             populateWithRemoveButton()
@@ -242,6 +264,11 @@ class TemplateWithItemsRecyclerViewAdapter(
             }
 
             removeItemButton.button.setOnClickListener {
+                if (selectedViewHolderPos == absoluteAdapterPosition) {
+                    selectedViewHolderPos = RecyclerView.NO_POSITION
+
+                }
+
                 currentList.removeAt(this.absoluteAdapterPosition)
                 notifyItemRemoved(this.absoluteAdapterPosition)
             }
@@ -270,8 +297,20 @@ class TemplateWithItemsRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = currentList[position]
         holder.populate(item)
+
         holder.setOnViewHolderClickedCallback { absPosition ->
             onItemClicked?.let { it(item, absPosition) }
+
+            if (functionality == Functionality.Edit) {
+                val oldSelection = selectedViewHolderPos
+
+                selectedViewHolderPos = absPosition
+                notifyItemChanged(selectedViewHolderPos)
+
+                if (oldSelection != RecyclerView.NO_POSITION) {
+                    notifyItemChanged(oldSelection)
+                }
+            }
         }
     }
 
@@ -324,13 +363,20 @@ class TemplateWithItemsRecyclerViewAdapter(
     }
 
 
-    fun submitList(updatedList: List<Item>) {
+    fun submitList(updatedList: List<Item>, selectedPos: Int = RecyclerView.NO_POSITION) {
+        val oldSelection = selectedViewHolderPos
+        selectedViewHolderPos = selectedPos
+
         diffCallback.newList = updatedList
         val diffResult = DiffUtil.calculateDiff(diffCallback)
 
         currentList.clear()
         currentList.addAll(updatedList)
         diffResult.dispatchUpdatesTo(this)
+
+        if (oldSelection != RecyclerView.NO_POSITION) {
+            notifyItemChanged(oldSelection)
+        }
     }
 
 
@@ -342,5 +388,10 @@ class TemplateWithItemsRecyclerViewAdapter(
     override fun moveItem(from: Int, to: Int) {
         Collections.swap(currentList, from, to)
         notifyItemMoved(from, to)
+    }
+
+
+    fun getCurrentSelectionPos(): Int {
+        return selectedViewHolderPos
     }
 }

@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gymbud.gymbud.R
@@ -17,6 +18,7 @@ import com.gymbud.gymbud.model.*
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlin.math.min
 
 
 private const val TAG = "TemplateWithItemsEV"
@@ -216,10 +218,20 @@ class TemplateWithItemsEditView(
 
     private fun updateItemListAdapter(item: Item) {
         val newList = itemListAdapter.currentList.toMutableList()
-        newList.add(item)
-        itemListAdapter.submitList(newList)
+
+        var insertAt = itemListAdapter.getCurrentSelectionPos()
+        if (insertAt == RecyclerView.NO_POSITION) {
+            insertAt = itemListAdapter.itemCount - 1
+        }
+
+        insertAt += 1
+
+        newList.add(insertAt, item)
+
+        itemListAdapter.submitList(newList, insertAt)
+
         // make sure last item added is in view
-        itemListBinding.recyclerView.scrollToPosition(itemListAdapter.itemCount - 1)
+        itemListBinding.recyclerView.scrollToPosition(min(insertAt + 2, itemListAdapter.itemCount - 1))
     }
 
 
@@ -256,6 +268,7 @@ class TemplateWithItemsEditView(
             ItemType.SET_TEMPLATE, ItemType.WORKOUT_TEMPLATE ->  {
                 addItemBinding.detailsBtn.apply {
                     visibility = View.VISIBLE
+                    isEnabled = true
                     setOnClickListener {
                         openDetailsDialog()
                     }
@@ -264,7 +277,9 @@ class TemplateWithItemsEditView(
             else -> {
                 addItemBinding.detailsBtn.apply {
                     visibility = View.VISIBLE
+                    isEnabled = false
                     setOnClickListener {
+                        // no-op
                     }
                 }
             }
@@ -300,6 +315,8 @@ class TemplateWithItemsEditView(
         }
 
         addingItemOfType = ItemType.REST_PERIOD
+
+        presentInfoButton(addingItemOfType)
 
         setAddItemSectionVisibility(true)
 
