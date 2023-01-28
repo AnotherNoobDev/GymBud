@@ -1,6 +1,7 @@
 package com.gymbud.gymbud.ui.viewbuilder
 
 import android.content.Context
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
@@ -22,6 +23,9 @@ import kotlin.math.min
 
 
 private const val TAG = "TemplateWithItemsEV"
+
+private const val MAX_ITEMS_TO_ADD = 5
+
 
 class TemplateWithItemsEditView(
     private val context: Context,
@@ -49,6 +53,13 @@ class TemplateWithItemsEditView(
 
     private var _itemSelectionBinding: LayoutEditDropdownFieldBinding? = null
     private val itemSelectionBinding get() = _itemSelectionBinding!!
+
+    private var _itemCounterBinding: LayoutCounterInputBinding? = null
+    private val itemCounterBinding get() = _itemCounterBinding!!
+
+    private var nItemsToAdd = 1
+
+    private val itemSelectionAndCounterLayout = LinearLayout(context)
 
     private var _intensityBinding: LayoutEditDropdownFieldBinding? = null
     private val intensityBinding get() = _intensityBinding!!
@@ -145,14 +156,49 @@ class TemplateWithItemsEditView(
 
     private fun inflateAddItem(inflater: LayoutInflater): View {
         _itemSelectionBinding = LayoutEditDropdownFieldBinding.inflate(inflater)
+        _itemCounterBinding = LayoutCounterInputBinding.inflate(inflater)
         _intensityBinding = LayoutEditDropdownFieldBinding.inflate(inflater)
 
         _addItemBinding = FragmentItemEditBinding.inflate(inflater)
 
+        itemCounterBinding.plusButton.setOnClickListener {
+            nItemsToAdd++
+
+            if (nItemsToAdd > MAX_ITEMS_TO_ADD) {
+                nItemsToAdd = MAX_ITEMS_TO_ADD
+            }
+
+            itemCounterBinding.counterLabel.text = nItemsToAdd.toString()
+        }
+
+        itemCounterBinding.minusButton.setOnClickListener {
+            nItemsToAdd--
+
+            if (nItemsToAdd < 1) {
+                nItemsToAdd = 1
+            }
+
+            itemCounterBinding.counterLabel.text = nItemsToAdd.toString()
+        }
+
         addItemBinding.apply {
             layout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
-            editFieldsLayout.addView(itemSelectionBinding.root)
+            val itemSelectionLayoutParams =
+                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT,0.80f)
+            val itemCounterLayoutParams =
+                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT,0.20f)
+            itemCounterLayoutParams.setMargins(16,0,0,26) // kinda hack-ish to align with itemSelection
+            itemCounterLayoutParams.gravity = Gravity.CENTER
+
+            itemSelectionBinding.root.layoutParams = itemSelectionLayoutParams
+            itemCounterBinding.root.layoutParams = itemCounterLayoutParams
+
+            itemSelectionAndCounterLayout.addView(itemSelectionBinding.root)
+            itemSelectionAndCounterLayout.addView(itemCounterBinding.root)
+            itemSelectionAndCounterLayout.orientation = LinearLayout.HORIZONTAL
+
+            editFieldsLayout.addView(itemSelectionAndCounterLayout.rootView)
             editFieldsLayout.addView(intensityBinding.root)
 
             editFieldsLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.0f)
@@ -224,9 +270,10 @@ class TemplateWithItemsEditView(
             insertAt = itemListAdapter.itemCount - 1
         }
 
-        insertAt += 1
-
-        newList.add(insertAt, item)
+        for (i in 1..nItemsToAdd) {
+            insertAt += 1
+            newList.add(insertAt, item)
+        }
 
         itemListAdapter.submitList(newList, insertAt)
 
@@ -253,6 +300,8 @@ class TemplateWithItemsEditView(
             itemSelectionBinding.input.setText(availableTemplates!![0].name, false)
         }
 
+        nItemsToAdd = 1
+        itemCounterBinding.counterLabel.text = nItemsToAdd.toString()
 
         intensityBinding.label.setStartIconDrawable(R.drawable.ic_intensity_24)
         intensityBinding.label.hint = "Intensity"
@@ -330,6 +379,9 @@ class TemplateWithItemsEditView(
             itemSelectionBinding.input.setAdapter(restPeriodsSelectionAdapter)
             itemSelectionBinding.input.setText(restPeriods!![0].name, false)
         }
+
+        nItemsToAdd = 1
+        itemCounterBinding.counterLabel.text = nItemsToAdd.toString()
     }
 
 

@@ -40,8 +40,8 @@
 
         <item name="plotStyle">@style/APDefacto.Dark</item>
 
-        <item name="editRangeSliderBackgroundColor">@color/davys_grey</item>
-        <item name="editRangeSliderLabelTextColor">@color/quick_silver</item>
+        <item name="editElementBackgroundColor">@color/davys_grey</item>
+        <item name="editElementLabelTextColor">@color/quick_silver</item>
 
         <item name="negativeButtonBackgroundColor">@color/red_ryb</item>
         <item name="negativeButtonTextColor">@color/white</item>
