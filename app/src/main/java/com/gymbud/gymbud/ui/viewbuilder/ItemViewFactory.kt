@@ -27,13 +27,17 @@ class ItemViewFactory {
 
 class EditItemViewFactory {
     companion object {
-        fun create(type: ItemType, context: Context): EditItemView {
+        fun create(
+            type: ItemType,
+            context: Context,
+            onFullscreenCallback: (Boolean) -> Unit
+        ): EditItemView {
             return when (type) {
                 ItemType.EXERCISE -> ExerciseEditView(context)
                 ItemType.EXERCISE_TEMPLATE -> ExerciseTemplateEditView(context)
-                ItemType.SET_TEMPLATE -> TemplateWithItemsEditView(context, type)
-                ItemType.WORKOUT_TEMPLATE -> TemplateWithItemsEditView(context, type)
-                ItemType.PROGRAM_TEMPLATE -> TemplateWithItemsEditView(context, type)
+                ItemType.SET_TEMPLATE -> TemplateWithItemsEditView(context, type, onFullscreenCallback)
+                ItemType.WORKOUT_TEMPLATE -> TemplateWithItemsEditView(context, type, onFullscreenCallback)
+                ItemType.PROGRAM_TEMPLATE -> TemplateWithItemsEditView(context, type, onFullscreenCallback)
                 ItemType.REST_PERIOD -> RestPeriodEditView(context)
                 else -> throw Exception("Can't create EditItemView for type:$type")
             }

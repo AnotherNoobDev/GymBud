@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.gymbud.gymbud.R
-import com.gymbud.gymbud.databinding.LayoutDetailNameBinding
 import com.gymbud.gymbud.databinding.LayoutEditDropdownFieldBinding
 import com.gymbud.gymbud.databinding.LayoutEditTextFieldBinding
 import com.gymbud.gymbud.model.*
@@ -24,9 +23,6 @@ private const val TAG = "ExerciseEV"
 class ExerciseEditView(
     private val context: Context
 ): EditItemView {
-    private var _titleBinding: LayoutDetailNameBinding? = null
-    private val titleBinding get() = _titleBinding!!
-
     private var _nameBinding: LayoutEditTextFieldBinding? = null
     private val nameBinding get() = _nameBinding!!
 
@@ -41,8 +37,6 @@ class ExerciseEditView(
 
 
     override fun inflate(inflater: LayoutInflater): List<View> {
-        _titleBinding = LayoutDetailNameBinding.inflate(inflater)
-
         _nameBinding = LayoutEditTextFieldBinding.inflate(inflater)
         nameBinding.label.hint = context.getString(R.string.item_name)
         nameBinding.input.setOnClickListener {
@@ -70,7 +64,6 @@ class ExerciseEditView(
         }
 
         return listOf(
-            titleBinding.root,
             nameBinding.root,
             targetMuscleBinding.root,
             notesBinding.root,
@@ -93,7 +86,7 @@ class ExerciseEditView(
             return
         }
 
-        titleBinding.name.text="Modify Exercise"
+        nameBinding.label.hint ="Modify Exercise ..."
         nameBinding.input.setText(item.name,  TextView.BufferType.SPANNABLE)
         targetMuscleBinding.input.setText(item.targetMuscle.toString(), false)
         notesBinding.input.setText(item.notes, TextView.BufferType.SPANNABLE)
@@ -102,7 +95,7 @@ class ExerciseEditView(
 
 
     override fun populateForNewItem(lifecycle: LifecycleCoroutineScope, viewModel: ItemViewModel) {
-        titleBinding.name.text="Add Exercise"
+        nameBinding.label.hint = "New Exercise ..."
         targetMuscleBinding.input.setText(MuscleGroup.QUADS.toString(), false)
     }
 

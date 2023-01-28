@@ -25,4 +25,7 @@
 
     <attr name="negativeButtonBackgroundColor" format="reference|color"/>
     <attr name="negativeButtonTextColor" format="reference|color"/>
+
+    <attr name="positiveButtonBackgroundColor" format="reference|color"/>
+    <attr name="positiveButtonTextColor" format="reference|color"/>
 </resources>

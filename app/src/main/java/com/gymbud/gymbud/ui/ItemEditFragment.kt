@@ -49,7 +49,9 @@ class ItemEditFragment : Fragment() {
             cancelBtn.text = requireContext().getString(R.string.delete)
         }
 
-        _itemView = EditItemViewFactory.create(navigationArgs.type, requireContext())
+        _itemView = EditItemViewFactory.create(navigationArgs.type, requireContext()) { fullscreen ->
+            binding.buttonsLayout.visibility = if (fullscreen) View.GONE else View.VISIBLE
+        }
 
         itemView.inflate(inflater).forEach {
             binding.editFieldsLayout.addView(it)

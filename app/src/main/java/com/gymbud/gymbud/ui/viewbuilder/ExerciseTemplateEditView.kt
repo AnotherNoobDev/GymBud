@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.gymbud.gymbud.R
-import com.gymbud.gymbud.databinding.LayoutDetailNameBinding
 import com.gymbud.gymbud.databinding.LayoutEditDropdownFieldBinding
 import com.gymbud.gymbud.databinding.LayoutEditRangeSliderBinding
 import com.gymbud.gymbud.databinding.LayoutEditTextFieldBinding
@@ -23,10 +22,6 @@ private const val TAG = "ExerciseTemplateEV"
 class ExerciseTemplateEditView(
     private val context: Context
 ): EditItemView {
-
-    private var _titleBinding: LayoutDetailNameBinding? = null
-    private val titleBinding get() = _titleBinding!!
-
     private var _nameBinding: LayoutEditTextFieldBinding? = null
     private val nameBinding get() = _nameBinding!!
 
@@ -39,8 +34,6 @@ class ExerciseTemplateEditView(
     private var exercises: List<Item>? = null
 
     override fun inflate(inflater: LayoutInflater): List<View> {
-        _titleBinding = LayoutDetailNameBinding.inflate(inflater)
-
         _nameBinding = LayoutEditTextFieldBinding.inflate(inflater)
         nameBinding.label.hint = context.getString(R.string.item_name)
         nameBinding.input.setOnClickListener {
@@ -54,7 +47,6 @@ class ExerciseTemplateEditView(
         _repRangeBinding = LayoutEditRangeSliderBinding.inflate(inflater)
 
         return listOf(
-            titleBinding.root,
             nameBinding.root,
             exerciseBinding.root,
             repRangeBinding.root
@@ -76,7 +68,7 @@ class ExerciseTemplateEditView(
             return
         }
 
-        titleBinding.name.text="Modify Exercise Template"
+        nameBinding.label.hint = "Modify Exercise Template ..."
         nameBinding.input.setText(item.name,  TextView.BufferType.SPANNABLE)
         exerciseBinding.input.setText(item.exercise.name, false)
         exerciseBinding.input.isEnabled = false
@@ -88,7 +80,7 @@ class ExerciseTemplateEditView(
 
 
     override fun populateForNewItem(lifecycle: LifecycleCoroutineScope, viewModel: ItemViewModel) {
-        titleBinding.name.text="Add Exercise Template"
+        nameBinding.label.hint = "New Exercise Template ..."
 
         lifecycle.launch {
             viewModel.getItemsByType(ItemType.EXERCISE).collect {

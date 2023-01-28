@@ -1,7 +1,6 @@
 package com.gymbud.gymbud.ui.viewbuilder
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
@@ -10,12 +9,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gymbud.gymbud.R
 import com.gymbud.gymbud.databinding.*
 import com.gymbud.gymbud.model.*
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModel
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -24,19 +23,22 @@ private const val TAG = "TemplateWithItemsEV"
 
 class TemplateWithItemsEditView(
     private val context: Context,
-    private val templateType: ItemType
+    private val templateType: ItemType,
+    private val onFullscreenCallback: (Boolean) -> Unit
 ): EditItemView {
-    private var _titleBinding: LayoutDetailNameBinding? = null
-    private val titleBinding get() = _titleBinding!!
-
     private var _nameBinding: LayoutEditTextFieldBinding? = null
     private val nameBinding get() = _nameBinding!!
 
     private var _itemListBinding: FragmentBasicItemListBinding? = null
     private val itemListBinding get() = _itemListBinding!!
 
-    private var addTemplateItemButton = MaterialButton(context)
-    private var addRestPeriodButton = MaterialButton(context)
+    private val addButtonsLayout = LinearLayout(context)
+
+    private val addTemplateItemButton = MaterialButton(context)
+    private val addRestPeriodButton = MaterialButton(context)
+
+    private var _endDelimiterBinding: LayoutDetailDividerBinding? = null
+    private val endDelimiterBinding get() = _endDelimiterBinding!!
 
     private var _addItemBinding: FragmentItemEditBinding? = null
     private val addItemBinding get() = _addItemBinding!!
@@ -79,6 +81,10 @@ class TemplateWithItemsEditView(
         addRestPeriodButton.setOnClickListener{
             onAddNewRestPeriod()
         }
+
+        addButtonsLayout.addView(addTemplateItemButton)
+        addButtonsLayout.addView(addRestPeriodButton)
+        addButtonsLayout.orientation = LinearLayout.HORIZONTAL
     }
 
 
@@ -94,27 +100,20 @@ class TemplateWithItemsEditView(
 
 
     override fun inflate(inflater: LayoutInflater): List<View> {
+        _endDelimiterBinding = LayoutDetailDividerBinding.inflate(inflater)
+
         val views = listOf(
-            inflateTitle(inflater),
             inflateName(inflater),
             inflateItemList(inflater),
             LayoutDetailDividerBinding.inflate(inflater).root,
             inflateAddItem(inflater),
-            addTemplateItemButton,
-            addRestPeriodButton,
-            LayoutDetailDividerBinding.inflate(inflater).root
+            addButtonsLayout.rootView,
+            endDelimiterBinding.root
         )
 
         setupLayoutParams(views)
 
         return views
-    }
-
-
-    private fun inflateTitle(inflater: LayoutInflater): View {
-        _titleBinding = LayoutDetailNameBinding.inflate(inflater)
-
-        return titleBinding.root
     }
 
 
@@ -196,6 +195,17 @@ class TemplateWithItemsEditView(
             cancelBtn.setOnClickListener {
                 setAddItemSectionVisibility(false)
             }
+
+            // smaller margin between buttons so that they all fit
+            val individualButtonLayoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+
+            individualButtonLayoutParams.setMargins(0, 0, 8, 0)
+
+            cancelBtn.layoutParams = individualButtonLayoutParams
+            detailsBtn.layoutParams = individualButtonLayoutParams
         }
 
         addItemBinding.root.isVisible = false
@@ -310,12 +320,16 @@ class TemplateWithItemsEditView(
         addItemBinding.root.visibility = if (visible) View.VISIBLE else View.GONE
         addTemplateItemButton.visibility = if (visible) View.GONE else View.VISIBLE
         addRestPeriodButton.visibility = if (visible) View.GONE else View.VISIBLE
+        endDelimiterBinding.root.visibility = if (visible) View.GONE else View.VISIBLE
 
         if (addingItemOfType != ItemType.SET_TEMPLATE) {
             intensityBinding.root.visibility = View.GONE
         } else {
             intensityBinding.root.visibility = View.VISIBLE
         }
+
+        // take up as much screen space as possible when adding item
+        onFullscreenCallback(visible)
     }
 
 
@@ -331,22 +345,23 @@ class TemplateWithItemsEditView(
 
         }
 
-        //  dirty hardcoded values to get section sizes to match...
         addTemplateItemButton.layoutParams = run {
             val layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                0.5f
             )
-            layoutParams.setMargins(0, 55, 0, 55)
+            layoutParams.setMargins(0, 16, 16, 16)
             layoutParams
         }
 
         addRestPeriodButton.layoutParams = run {
             val layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                0.5f
             )
-            layoutParams.setMargins(0, 0, 0, 55)
+            layoutParams.setMargins(16, 16, 0, 16)
             layoutParams
         }
 
@@ -360,7 +375,7 @@ class TemplateWithItemsEditView(
 
 
     override fun populateForNewItem(lifecycle: LifecycleCoroutineScope, viewModel: ItemViewModel) {
-        titleBinding.name.text = "Add ${templateTypeToDisplayStr(templateType)} Template"
+        nameBinding.label.hint = "New ${templateTypeToDisplayStr(templateType)} Template ..."
         itemListAdapter.submitList(mutableListOf())
 
         populateItemsThatCanBeAdded(lifecycle, viewModel)
@@ -377,7 +392,7 @@ class TemplateWithItemsEditView(
             return
         }
 
-        titleBinding.name.text = "Modify ${templateTypeToDisplayStr(templateType)} Template"
+        nameBinding.label.hint = "Modify ${templateTypeToDisplayStr(templateType)} Template ..."
         nameBinding.input.setText(item.name)
         itemListAdapter.submitList(item.items.toMutableList())
 

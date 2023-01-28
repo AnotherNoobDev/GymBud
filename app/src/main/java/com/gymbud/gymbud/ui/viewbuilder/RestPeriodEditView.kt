@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.gymbud.gymbud.R
-import com.gymbud.gymbud.databinding.LayoutDetailNameBinding
 import com.gymbud.gymbud.databinding.LayoutEditRangeSliderBinding
 import com.gymbud.gymbud.databinding.LayoutEditTextFieldBinding
 import com.gymbud.gymbud.model.*
@@ -23,9 +22,6 @@ private const val TAG = "RestPeriodEV"
 class RestPeriodEditView(
     private val context: Context
 ): EditItemView {
-    private var _titleBinding: LayoutDetailNameBinding? = null
-    private val titleBinding get() = _titleBinding!!
-
     private var _nameBinding: LayoutEditTextFieldBinding? = null
     private val nameBinding get() = _nameBinding!!
 
@@ -34,8 +30,6 @@ class RestPeriodEditView(
 
 
     override fun inflate(inflater: LayoutInflater): List<View> {
-        _titleBinding = LayoutDetailNameBinding.inflate(inflater)
-
         _nameBinding = LayoutEditTextFieldBinding.inflate(inflater)
         nameBinding.label.hint = context.getString(R.string.item_name)
         nameBinding.input.setOnClickListener {
@@ -54,7 +48,6 @@ class RestPeriodEditView(
         restRangeBinding.input.setLabelFormatter { TimeFormatter.getFormattedTimeMMSS(it.roundToLong()) }
 
         return listOf(
-            titleBinding.root,
             nameBinding.root,
             restRangeBinding.root
         )
@@ -75,7 +68,7 @@ class RestPeriodEditView(
             return
         }
 
-        titleBinding.name.text="Modify Rest Period"
+        nameBinding.label.hint = "Modify Rest Period ..."
         nameBinding.input.setText(item.name,  TextView.BufferType.SPANNABLE)
         restRangeBinding.input.values = mutableListOf(
             item.targetRestPeriodSec.first.toFloat(),
@@ -85,7 +78,7 @@ class RestPeriodEditView(
 
 
     override fun populateForNewItem(lifecycle: LifecycleCoroutineScope, viewModel: ItemViewModel) {
-        titleBinding.name.text="Add Rest Period"
+        nameBinding.label.hint = "New Rest Period ..."
         restRangeBinding.input.values = mutableListOf(60.0f, 120.0f)
     }
 

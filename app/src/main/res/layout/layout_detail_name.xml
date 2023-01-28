@@ -15,7 +15,10 @@
         android:textAppearance="?attr/textAppearanceHeadline6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:paddingTop="10dp"
         android:paddingBottom="40dp"
+        android:paddingLeft="60dp"
+        android:paddingRight="60dp"
         tools:text="Name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
