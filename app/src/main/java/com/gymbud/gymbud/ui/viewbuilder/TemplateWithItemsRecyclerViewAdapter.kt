@@ -387,6 +387,11 @@ class TemplateWithItemsRecyclerViewAdapter(
 
     override fun moveItem(from: Int, to: Int) {
         Collections.swap(currentList, from, to)
+
+        if (selectedViewHolderPos == from) {
+            selectedViewHolderPos = to
+        }
+
         notifyItemMoved(from, to)
     }
 
