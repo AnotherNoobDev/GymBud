@@ -12,6 +12,10 @@
     </queries>
     <!-- YOUTUBE PLAYER -->
 
+    <!-- notifications -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- notifications -->
+
     <application
         android:name = "com.gymbud.gymbud.BaseApplication"
         android:allowBackup="true"
@@ -52,6 +56,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <receiver
+            android:name="com.gymbud.gymbud.features.notifications.AlarmReceiver"
+            android:enabled="true"/>
 
     </application>
 

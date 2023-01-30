@@ -42,4 +42,11 @@
     <string name="templatesGuideLabel">Creating a Program</string>
     <string name="liveSessionGuideLabel">Tracking your Workouts</string>
     <string name="statsGuideLabel">Monitoring your progress</string>
+
+    <!-- notifications -->
+    <string name="notificationsChannelId">GymBudNotifications1</string>
+    <string name="notificationsChannelName">GymBudNotifications</string>
+    <string name="notificationsChannelDescription">Notifications sent by GymBud: daily workout reminder.</string>
+    <string name="dailyWorkoutReminderNotificationTile">Daily Workout Reminder</string>
+    <string name="dailyWorkoutReminderHint">Send reminder at...</string>
 </resources>

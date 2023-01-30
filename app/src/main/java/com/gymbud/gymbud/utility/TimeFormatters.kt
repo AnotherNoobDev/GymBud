@@ -39,6 +39,37 @@ object TimeFormatter {
     }
 
 
+    fun getFormattedWallClockHHMM(timeInMinutes: Long, use24hHourFormat: Boolean): String {
+        var h = timeInMinutes / 60
+        val m = timeInMinutes % 60
+
+        return if (use24hHourFormat) {
+            String.format("%02d:%02d", h, m)
+        } else {
+            val specifier: String
+
+            when {
+                h == 0L -> {
+                    h = 12
+                    specifier = "AM"
+                }
+                h <= 11L -> {
+                    specifier = "AM"
+                }
+                h == 12L -> {
+                    specifier = "PM"
+                }
+                else -> {
+                    h -= 12
+                    specifier = "PM"
+                }
+            }
+
+            String.format("%02d:%02d %s", h, m, specifier)
+        }
+    }
+
+
     fun getFormattedDateDDMMYYYY(date: Date): String {
         return dateFormat.format(date)
     }

@@ -3,6 +3,7 @@ package com.gymbud.gymbud.ui
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.format.DateFormat
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,19 +13,25 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.gymbud.gymbud.BaseApplication
 import com.gymbud.gymbud.BuildConfig
 import com.gymbud.gymbud.R
 import com.gymbud.gymbud.data.repository.AppRepository
 import com.gymbud.gymbud.databinding.FragmentSettingsBinding
+import com.gymbud.gymbud.features.notifications.DAILY_WORKOUT_REMINDER_ID
+import com.gymbud.gymbud.features.notifications.RemindersManager
 import com.gymbud.gymbud.model.WeightUnit
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModel
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModelFactory
 import com.gymbud.gymbud.utility.BackupException
+import com.gymbud.gymbud.utility.TimeFormatter
 import com.gymbud.gymbud.utility.createBackup
 import com.gymbud.gymbud.utility.distributeFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -40,6 +47,9 @@ class SettingsFragment : Fragment() {
     }
 
     private lateinit var appRepository: AppRepository
+
+
+    private lateinit var dailyWorkoutReminderTimePicker: MaterialTimePicker
 
 
     override fun onCreateView(
@@ -68,6 +78,7 @@ class SettingsFragment : Fragment() {
         setupWeightUnitDisplay(appRepository)
         setupKeepScreenOnDuringWorkout(appRepository)
         setupAppThemeDisplay(appRepository)
+        setupDailyWorkoutReminder(appRepository)
         setupGuides()
         setupData()
         setupAbout()
@@ -148,6 +159,82 @@ class SettingsFragment : Fragment() {
                     withContext(Dispatchers.IO) {
                         appRepository.updateUseDarkTheme(false)
                     }
+                }
+            }
+        }
+    }
+
+
+    private fun setupDailyWorkoutReminder(appRepository: AppRepository) {
+        binding.apply {
+            viewLifecycleOwner.lifecycleScope.launch {
+                appRepository.dailyWorkoutReminder.collect { enabled ->
+                    dailyWorkoutReminderSwitch.isChecked = enabled
+                    dailyWorkoutReminderTimeLabel.isEnabled = enabled
+
+                    if (enabled) {
+                        RemindersManager.startReminder(
+                            requireContext(),
+                            DAILY_WORKOUT_REMINDER_ID,
+                            appRepository.dailyWorkoutReminderTime.first()
+                        )
+                    } else {
+                        RemindersManager.stopReminder(requireContext(), DAILY_WORKOUT_REMINDER_ID)
+                    }
+                }
+            }
+
+            dailyWorkoutReminderSwitch.setOnClickListener {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        appRepository.updateDailyWorkoutReminder(dailyWorkoutReminderSwitch.isChecked)
+                    }
+                }
+            }
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                appRepository.dailyWorkoutReminderTime.collect { timeInMin ->
+                    dailyWorkoutReminderTimeInput.setText(
+                        TimeFormatter.getFormattedWallClockHHMM(timeInMin, DateFormat.is24HourFormat(context))
+                    )
+
+                    createDailyWorkoutReminderTimePicker(timeInMin)
+
+                    val enabled = appRepository.dailyWorkoutReminder.first()
+                    if (enabled) {
+                        RemindersManager.startReminder(requireContext(), DAILY_WORKOUT_REMINDER_ID, timeInMin)
+                    }
+                }
+            }
+
+            dailyWorkoutReminderTimeInput.isFocusable = false
+            dailyWorkoutReminderTimeInput.setOnClickListener {
+                dailyWorkoutReminderTimePicker.show(parentFragmentManager, "DAILY_WORKOUT_REMINDER_TIME_PICKER")
+            }
+        }
+    }
+
+
+    private fun createDailyWorkoutReminderTimePicker(timeInMinutes: Long) {
+        val timeFormat = if(DateFormat.is24HourFormat(context)) {
+            TimeFormat.CLOCK_24H
+        } else {
+            TimeFormat.CLOCK_12H
+        }
+
+        dailyWorkoutReminderTimePicker = MaterialTimePicker.Builder()
+            .setTitleText(R.string.dailyWorkoutReminderHint)
+            .setHour((timeInMinutes / 60).toInt())
+            .setMinute((timeInMinutes % 60).toInt())
+            .setTimeFormat(timeFormat)
+            .build()
+
+        dailyWorkoutReminderTimePicker.addOnPositiveButtonClickListener {
+            val newTime = dailyWorkoutReminderTimePicker.hour * 60L + dailyWorkoutReminderTimePicker.minute
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    appRepository.updateDailyWorkoutReminderTime(newTime)
                 }
             }
         }

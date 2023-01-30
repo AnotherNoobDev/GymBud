@@ -1,6 +1,10 @@
 package com.gymbud.gymbud
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import com.gymbud.gymbud.data.ItemIdentifierGenerator
 import com.gymbud.gymbud.data.datasource.database.GymBudRoomDatabase
 import com.gymbud.gymbud.data.repository.*
@@ -92,6 +96,8 @@ class BaseApplication: Application() {
             database.workoutSessionRecordDao(),
             workoutTemplateRepository
         )
+
+        createNotificationChannel()
     }
 
 
@@ -108,5 +114,26 @@ class BaseApplication: Application() {
         this.workoutTemplateRepository.setDao(database.workoutTemplateDao(), database.workoutTemplateWithItemDao())
         this.programRepository.setDao(database.programTemplateDao(), database.programTemplateWithItemDao())
         this.sessionRepository.setDao(database.exerciseSessionRecordDao(), database.workoutSessionRecordDao())
+    }
+
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                getString(R.string.notificationsChannelId),
+                getString(R.string.notificationsChannelName),
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = getString(R.string.notificationsChannelDescription)
+            }
+
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }

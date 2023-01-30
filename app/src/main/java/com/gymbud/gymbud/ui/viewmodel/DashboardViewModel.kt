@@ -92,7 +92,7 @@ class DashboardViewModel(
 
     private fun determineProgramBoundedProgramDayFromStorage(program: ProgramTemplate, pos: Int, programDayTimestamp: Long): Pair<Int, Item> {
         val today = getDayOfMonth(System.currentTimeMillis())
-        // don't move more than one day.. we don't want to automatically skip workouts.. let user needs to manually do that for now
+        // don't move more than one day.. we don't want to automatically skip workouts.. let user manually do that for now
         val daysPast = if (today != getDayOfMonth(programDayTimestamp)) {
             1
         } else {

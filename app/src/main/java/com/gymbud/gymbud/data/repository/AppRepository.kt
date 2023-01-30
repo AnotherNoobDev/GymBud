@@ -16,6 +16,8 @@ import java.io.IOException
 //private const val TAG = "AppRepository"
 private const val APP_STATE_NAME = "app_state"
 
+private const val DEFAULT_DAILY_WORKOUT_REMINDER_TIME = 60L * 10 // 10:00AM
+
 // Create a DataStore instance using the preferencesDataStore delegate, with the Context as receiver.
 private val Context.dataStore : DataStore<Preferences> by preferencesDataStore(name = APP_STATE_NAME)
 
@@ -45,6 +47,9 @@ class AppRepository(private val context: Context) {
     private val partialWorkoutSessionRestTimerStart = longPreferencesKey("partial_workout_session_rest_timer_start")
 
     private val useDarkThemeKey = booleanPreferencesKey("use_dark_theme")
+
+    private val dailyWorkoutReminderKey = booleanPreferencesKey("daily_workout_reminder")
+    private val dailyWorkoutReminderTimeKey = longPreferencesKey("daily_workout_reminder_time") // as minutes from 00:00
 
 
     suspend fun reset() {
@@ -198,6 +203,33 @@ class AppRepository(private val context: Context) {
         }
 
 
+    val dailyWorkoutReminder: Flow<Boolean> = context.dataStore.data
+        .catch {
+            if (it is IOException) {
+                it.printStackTrace()
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[dailyWorkoutReminderKey]?: true
+        }
+
+
+    val dailyWorkoutReminderTime: Flow<Long> = context.dataStore.data
+        .catch {
+            if (it is IOException) {
+                it.printStackTrace()
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[dailyWorkoutReminderTimeKey]?: DEFAULT_DAILY_WORKOUT_REMINDER_TIME
+        }
+
 
     suspend fun updateLastUsedItemIdentifier(id: ItemIdentifier) {
         context.dataStore.edit { preferences ->
@@ -276,6 +308,20 @@ class AppRepository(private val context: Context) {
     suspend fun updateUseDarkTheme(use: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[useDarkThemeKey] = use
+        }
+    }
+
+
+    suspend fun updateDailyWorkoutReminder(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[dailyWorkoutReminderKey] = enabled
+        }
+    }
+
+
+    suspend fun updateDailyWorkoutReminderTime(timeInMinutes: Long) {
+        context.dataStore.edit { preferences ->
+            preferences[dailyWorkoutReminderTimeKey] = timeInMinutes
         }
     }
 }
