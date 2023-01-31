@@ -227,6 +227,7 @@ class SettingsFragment : Fragment() {
             .setHour((timeInMinutes / 60).toInt())
             .setMinute((timeInMinutes % 60).toInt())
             .setTimeFormat(timeFormat)
+            .setInputMode(MaterialTimePicker.INPUT_MODE_KEYBOARD)
             .build()
 
         dailyWorkoutReminderTimePicker.addOnPositiveButtonClickListener {
