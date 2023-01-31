@@ -10,6 +10,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.gymbud.gymbud.MainActivity
 import com.gymbud.gymbud.R
+import com.gymbud.gymbud.data.ItemIdentifierGenerator
+import com.gymbud.gymbud.data.datasource.database.GymBudRoomDatabase
 import com.gymbud.gymbud.data.repository.AppRepository
 import com.gymbud.gymbud.data.repository.QuotesRepository
 import kotlinx.coroutines.CoroutineScope
@@ -37,11 +39,44 @@ class AlarmReceiver : BroadcastReceiver() {
             val appRepository = AppRepository(context.applicationContext)
             val quotesRepository = QuotesRepository(context.applicationContext)
 
+            var notificationContent: String = quotesRepository.getQuoteOfTheDay()
+
+            val (programId, programDayIdOrPos, _) = appRepository.activeProgramAndProgramDay.first()
+
+            // if we have an active program, we can additional say what today's activity will be
+            if (programId != ItemIdentifierGenerator.NO_ID && programDayIdOrPos != ItemIdentifierGenerator.NO_ID) {
+                val db = GymBudRoomDatabase.getDatabase(context.applicationContext)
+                val programsDao = db.programTemplateDao()
+
+                val program = programsDao.get(programId).first()
+                if (program != null) {
+                    val programDayPos = programDayIdOrPos.toInt()
+
+                    val programItemsDao = db.programTemplateWithItemDao()
+                    programItemsDao.getAll(programId).find { it.programItemPosition == programDayPos }.let {
+                        if (it != null) {
+                            val today = if (it.isWithRestPeriod()) {
+                                "Rest Day"
+                            } else {
+                                val workoutsDao = db.workoutTemplateDao()
+                                val workout = workoutsDao.get(it.workoutTemplateId!!).first()
+
+                                workout?.name ?: ""
+                            }
+
+                            if (today.isNotEmpty()) {
+                                notificationContent += "\n\nToday: $today"
+                            }
+                        }
+                    }
+                }
+            }
+
             // send notification
             notificationManager.sendReminderNotification(
                 context,
                 context.getString(R.string.notificationsChannelId),
-                quotesRepository.getQuoteOfTheDay()
+                notificationContent
             )
 
             // reschedule
