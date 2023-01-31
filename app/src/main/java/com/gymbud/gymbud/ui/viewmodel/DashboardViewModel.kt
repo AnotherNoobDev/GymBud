@@ -5,11 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.gymbud.gymbud.data.ItemIdentifierGenerator
 import com.gymbud.gymbud.data.repository.AppRepository
 import com.gymbud.gymbud.data.repository.ItemRepository
-import com.gymbud.gymbud.model.Item
-import com.gymbud.gymbud.model.ItemIdentifier
-import com.gymbud.gymbud.model.ItemType
-import com.gymbud.gymbud.model.ProgramTemplate
-import com.gymbud.gymbud.utility.getDayOfMonth
+import com.gymbud.gymbud.model.*
+import com.gymbud.gymbud.utility.getDaysPast
 import kotlinx.coroutines.flow.*
 
 
@@ -91,22 +88,35 @@ class DashboardViewModel(
 
 
     private fun determineProgramBoundedProgramDayFromStorage(program: ProgramTemplate, pos: Int, programDayTimestamp: Long): Pair<Int, Item> {
-        val today = getDayOfMonth(System.currentTimeMillis())
-        // don't move more than one day.. we don't want to automatically skip workouts.. let user manually do that for now
-        val daysPast = if (today != getDayOfMonth(programDayTimestamp)) {
-            1
-        } else {
-            0
+        var daysPast = getDaysPast(System.currentTimeMillis(), programDayTimestamp)
+        var upToDatePos = pos
+
+        if (daysPast > 0) {
+            upToDatePos++
+            daysPast--
         }
 
-        val upToDatePos = pos + daysPast
+        while (daysPast > 0) {
+            if (upToDatePos >= program.items.size) {
+                upToDatePos = 0
+            }
 
-        return if (upToDatePos >= program.items.size) {
-            Pair(0, program.get(0))
-        } else {
-            Pair(upToDatePos, program.get(pos))
+            // we can move past Rest Days without user opening the app, but don't auto skip workouts
+            if (program.get(upToDatePos) is WorkoutTemplate) {
+                break
+            }
+
+            upToDatePos++
+            daysPast--
         }
+
+        if (upToDatePos >= program.items.size) {
+            upToDatePos = 0
+        }
+
+        return Pair(upToDatePos, program.get(upToDatePos))
     }
+
 
     // pairs of displayable names and IDs associated with each name (to be fed into setActiveProgram)
     fun getActiveProgramOptions(): Flow<List<Pair<ItemIdentifier, String>>> =

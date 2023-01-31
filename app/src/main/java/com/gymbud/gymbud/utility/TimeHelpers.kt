@@ -1,7 +1,7 @@
 package com.gymbud.gymbud.utility
 
 import java.util.*
-
+import kotlin.math.max
 
 const val ONE_DAY_MS = 24 * 3600 * 1000
 
@@ -62,4 +62,24 @@ fun addDays(nowMs: Long, nDays: Int): Long {
     c.add(Calendar.DATE, nDays)
 
     return c.time.time
+}
+
+
+fun getDaysPast(nowMs: Long, dayInThePastMs: Long): Int {
+    val cNow = Calendar.getInstance()
+    cNow.time = Date(nowMs)
+    cNow[Calendar.HOUR_OF_DAY] = 0
+    cNow[Calendar.MINUTE] = 0
+    cNow[Calendar.SECOND] = 0
+    cNow[Calendar.MILLISECOND] = 0
+
+
+    val cPast = Calendar.getInstance()
+    cPast.time = Date(dayInThePastMs)
+    cPast[Calendar.HOUR_OF_DAY] = 0
+    cPast[Calendar.MINUTE] = 0
+    cPast[Calendar.SECOND] = 0
+    cPast[Calendar.MILLISECOND] = 0
+
+    return max((cNow.timeInMillis - cPast.timeInMillis) / ONE_DAY_MS, 0L).toInt()
 }
