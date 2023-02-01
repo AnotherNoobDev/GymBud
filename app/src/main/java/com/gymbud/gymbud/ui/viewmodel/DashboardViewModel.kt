@@ -147,6 +147,12 @@ class DashboardViewModel(
     suspend fun setActiveProgramDay(programDayIdOrPos: Long) {
         appRepository.updateActiveProgramDay(programDayIdOrPos)
     }
+
+
+    suspend fun getSessionWorkoutName(ses: WorkoutSessionRecord): String {
+        return itemRepository.getItem(ses.workoutTemplateId, ItemType.WORKOUT_TEMPLATE).first()?.name
+            ?: ""
+    }
 }
 
 

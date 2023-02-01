@@ -152,5 +152,18 @@
         app:layout_constraintTop_toBottomOf="@+id/active_program_day_divider"
         tools:text="Strength does not come from physical capacity. It comes from an indomitable will." />
 
+    <TextView
+        android:id="@+id/session_completed_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/workoutSessionCompletedDashboardMsg"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/active_program_day_divider"
+        android:visibility="gone"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

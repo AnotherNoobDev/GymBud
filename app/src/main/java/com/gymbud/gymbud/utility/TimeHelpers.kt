@@ -66,20 +66,17 @@ fun addDays(nowMs: Long, nDays: Int): Long {
 
 
 fun getDaysPast(nowMs: Long, dayInThePastMs: Long): Int {
-    val cNow = Calendar.getInstance()
-    cNow.time = Date(nowMs)
-    cNow[Calendar.HOUR_OF_DAY] = 0
-    cNow[Calendar.MINUTE] = 0
-    cNow[Calendar.SECOND] = 0
-    cNow[Calendar.MILLISECOND] = 0
+    return max((getStartOfDay(nowMs) - getStartOfDay(dayInThePastMs)) / ONE_DAY_MS, 0L).toInt()
+}
 
 
-    val cPast = Calendar.getInstance()
-    cPast.time = Date(dayInThePastMs)
-    cPast[Calendar.HOUR_OF_DAY] = 0
-    cPast[Calendar.MINUTE] = 0
-    cPast[Calendar.SECOND] = 0
-    cPast[Calendar.MILLISECOND] = 0
+fun getStartOfDay(timestamp: Long): Long {
+    val c = Calendar.getInstance()
+    c.time = Date(timestamp)
+    c[Calendar.HOUR_OF_DAY] = 0
+    c[Calendar.MINUTE] = 0
+    c[Calendar.SECOND] = 0
+    c[Calendar.MILLISECOND] = 0
 
-    return max((cNow.timeInMillis - cPast.timeInMillis) / ONE_DAY_MS, 0L).toInt()
+    return c.timeInMillis
 }

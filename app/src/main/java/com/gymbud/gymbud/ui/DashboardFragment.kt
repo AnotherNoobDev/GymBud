@@ -15,6 +15,7 @@ import com.gymbud.gymbud.databinding.FragmentDashboardBinding
 import com.gymbud.gymbud.model.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gymbud.gymbud.R
+import com.gymbud.gymbud.data.repository.SessionsRepository
 import com.gymbud.gymbud.ui.viewmodel.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -42,6 +43,7 @@ class DashboardFragment : Fragment() {
     }
 
     private lateinit var quotesRepository: QuotesRepository
+    private lateinit var sessionRepository: SessionsRepository
 
     private var activeProgram: String = ""
     private var activeProgramId: ItemIdentifier = ItemIdentifierGenerator.NO_ID
@@ -127,6 +129,7 @@ class DashboardFragment : Fragment() {
 
         val app = activity?.application as BaseApplication
         quotesRepository = app.quotesRepository
+        sessionRepository = app.sessionRepository
 
         viewLifecycleOwner.lifecycleScope.launch {
             dashboardViewModel.getActiveProgramAndProgramDay().collect {
@@ -173,6 +176,8 @@ class DashboardFragment : Fragment() {
     private suspend fun updateProgramDay(programDay: Item?) {
         activeProgramDay = programDay
 
+        clearProgramDayContentArea()
+
         if (activeProgramDay == null) {
             presentForNoSelectionOrRestDay(NO_PROGRAM_DAY_NAME)
             return
@@ -187,6 +192,15 @@ class DashboardFragment : Fragment() {
     }
 
 
+    private fun clearProgramDayContentArea() {
+        binding.apply {
+            motivationalQuote.visibility = View.GONE
+            workoutButtons.visibility = View.GONE
+            sessionCompletedLabel.visibility = View.GONE
+        }
+    }
+
+
     private suspend fun presentForNoSelectionOrRestDay(programDayText: String) {
         binding.apply {
             activeProgramDayValue.text = programDayText
@@ -194,7 +208,6 @@ class DashboardFragment : Fragment() {
             activeProgramDayEditBtn.isEnabled = true
             activeProgramEditBtn.isEnabled = true
 
-            workoutButtons.visibility = View.GONE
             motivationalQuote.text = quotesRepository.getQuoteOfTheDay()
             motivationalQuote.visibility = View.VISIBLE
         }
@@ -204,47 +217,82 @@ class DashboardFragment : Fragment() {
     private suspend fun presentForWorkoutDay(workout: WorkoutTemplate) {
         binding.apply {
             activeProgramDayValue.text = workout.name
-            workoutButtons.visibility = View.VISIBLE
-            motivationalQuote.visibility = View.GONE
 
             if (liveSessionViewModel.canContinueWorkout(workout)) {
-                // can't change workout
-                activeProgramDayEditBtn.isEnabled = false
-                activeProgramEditBtn.isEnabled = false
-
-                startWorkoutBtn.text = "Resume  Workout"
-                startWorkoutBtn.setOnClickListener {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        liveSessionViewModel.restorePartialSession()
-                        navigateToCurrentLiveSessionItem()
-                    }
-
-                }
-
-                discardWorkoutBtn.visibility = View.VISIBLE
-                discardWorkoutBtn.setOnClickListener {
-                    openDiscardWorkoutDialog()
-                }
+                presentForResumingWorkoutSession()
             } else {
-               presentForNewWorkoutSession()
+                val ses = sessionRepository.getTodaySession()
+                if (ses == null) {
+                    presentForNewWorkoutSession()
+                } else {
+                    if (ses.workoutTemplateId == activeProgramDay?.id) {
+                        presentForCompletedWorkoutSession()
+                    } else {
+                        val sesName = dashboardViewModel.getSessionWorkoutName(ses)
+                        presentForNewWorkoutSession(ses.id, sesName)
+                    }
+                }
             }
         }
     }
 
 
-    private fun presentForNewWorkoutSession() {
+    private fun presentForResumingWorkoutSession() {
+        binding.apply {
+            // can't change workout
+            activeProgramDayEditBtn.isEnabled = false
+            activeProgramEditBtn.isEnabled = false
+
+            workoutButtons.visibility = View.VISIBLE
+
+            startWorkoutBtn.text = "Resume  Workout"
+            startWorkoutBtn.setOnClickListener {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    liveSessionViewModel.restorePartialSession()
+                    navigateToCurrentLiveSessionItem()
+                }
+
+            }
+
+            discardWorkoutBtn.visibility = View.VISIBLE
+            discardWorkoutBtn.setOnClickListener {
+                openDiscardWorkoutDialog()
+            }
+        }
+    }
+
+
+    private fun presentForNewWorkoutSession(todaySesId: ItemIdentifier = ItemIdentifierGenerator.NO_ID, todaySesName:String = "") {
         binding.apply {
             activeProgramDayEditBtn.isEnabled = true
             activeProgramEditBtn.isEnabled = true
 
+            workoutButtons.visibility = View.VISIBLE
+
             startWorkoutBtn.text = "  Start Workout  "
             startWorkoutBtn.setOnClickListener {
-                val action = DashboardFragmentDirections.actionDashboardFragmentToLiveSessionStartFragment(activeProgramId, activeProgramDay!!.id)
-                findNavController().navigate(action)
+                if(todaySesId != ItemIdentifierGenerator.NO_ID) {
+                    // if a session already exists for day, warn user that today's session will be deleted if a new workout is started
+                    // delete today's session on workout start
+                    openNewWorkoutSessionWarningDialog(todaySesId, todaySesName)
+                } else {
+                    val action = DashboardFragmentDirections.actionDashboardFragmentToLiveSessionStartFragment(activeProgramId, activeProgramDay!!.id)
+                    findNavController().navigate(action)
+                }
             }
 
             discardWorkoutBtn.visibility = View.GONE
             discardWorkoutBtn.setOnClickListener {}
+        }
+    }
+
+
+    private fun presentForCompletedWorkoutSession() {
+        binding.apply {
+            activeProgramDayEditBtn.isEnabled = true
+            activeProgramEditBtn.isEnabled = true
+
+            sessionCompletedLabel.visibility = View.VISIBLE
         }
     }
 
@@ -267,6 +315,24 @@ class DashboardFragment : Fragment() {
                 viewLifecycleOwner.lifecycleScope.launch {
                     liveSessionViewModel.discardPartialSession()
                     presentForNewWorkoutSession()
+                }
+            }
+            .setNegativeButton("Cancel") {_,_ ->
+            }
+            .show()
+    }
+
+
+    private fun openNewWorkoutSessionWarningDialog(sesId: ItemIdentifier, sesName: String) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Remove previously recorded Workout Session?")
+            .setMessage("Previously recorded workout session $sesName will be removed if a new workout is started!\n\nContinue?")
+            .setPositiveButton("Ok") { _, _ ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    sessionRepository.removeSession(sesId)
+
+                    val action = DashboardFragmentDirections.actionDashboardFragmentToLiveSessionStartFragment(activeProgramId, activeProgramDay!!.id)
+                    findNavController().navigate(action)
                 }
             }
             .setNegativeButton("Cancel") {_,_ ->

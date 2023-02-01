@@ -49,4 +49,10 @@
     <string name="notificationsChannelDescription">Notifications sent by GymBud: daily workout reminder.</string>
     <string name="dailyWorkoutReminderNotificationTile">Daily Workout Reminder</string>
     <string name="dailyWorkoutReminderHint">Send reminder at...</string>
+
+    <!-- workout session -->
+    <string name="workoutSessionCompletedDashboardMsg">
+        Workout Session Completed!\n\n
+        ᕙ(  •̀ ᗜ •́  )ᕗ
+    </string>
 </resources>

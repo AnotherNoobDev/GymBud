@@ -6,9 +6,7 @@ import com.gymbud.gymbud.data.datasource.database.ExerciseSessionRecordDao
 import com.gymbud.gymbud.data.datasource.database.WorkoutSessionRecordDao
 import com.gymbud.gymbud.model.*
 import com.gymbud.gymbud.ui.viewmodel.ExerciseFilters
-import com.gymbud.gymbud.utility.getDayOfMonth
-import com.gymbud.gymbud.utility.getMonth
-import com.gymbud.gymbud.utility.getMonthSpan
+import com.gymbud.gymbud.utility.*
 import kotlinx.coroutines.flow.first
 import kotlin.math.max
 
@@ -166,6 +164,21 @@ class SessionsRepository(
 
         val query = SimpleSQLiteQuery(queryString, queryArgs.toTypedArray())
         return workoutSessionRecordDao.getPreviousSessionsByFilters(query)
+    }
+
+
+    suspend fun getTodaySession(): WorkoutSessionRecord? {
+        // query for all sessions within that time period (sessions are in order)
+        val today = getStartOfDay(System.currentTimeMillis())
+        val tomorrow = addDays(today, 1)
+
+        val sessions = workoutSessionRecordDao.getPreviousSessions(today, tomorrow)
+
+        return if (sessions.isEmpty()) {
+            null
+        } else {
+            sessions[0]
+        }
     }
 
 
