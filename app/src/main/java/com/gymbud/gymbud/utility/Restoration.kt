@@ -120,7 +120,10 @@ suspend fun restoreFromBackup(app: BaseApplication, restore: InputStream) {
     // remove db tmp files
     val tmpFiles = dbFile.parentFile?.listFiles(DatabaseTmpFilesFilter())
     tmpFiles?.forEach {
-        Log.d(TAG, "Deleting db tmp file ${it.absolutePath}")
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Deleting db tmp file ${it.absolutePath}")
+        }
+
         it.delete()
     }
 
