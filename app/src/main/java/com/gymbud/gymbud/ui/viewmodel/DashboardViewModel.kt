@@ -6,7 +6,7 @@ import com.gymbud.gymbud.data.ItemIdentifierGenerator
 import com.gymbud.gymbud.data.repository.AppRepository
 import com.gymbud.gymbud.data.repository.ItemRepository
 import com.gymbud.gymbud.model.*
-import com.gymbud.gymbud.utility.getDaysPast
+import com.gymbud.gymbud.utility.determineActiveProgramDay
 import kotlinx.coroutines.flow.*
 
 
@@ -88,31 +88,8 @@ class DashboardViewModel(
 
 
     private fun determineProgramBoundedProgramDayFromStorage(program: ProgramTemplate, pos: Int, programDayTimestamp: Long): Pair<Int, Item> {
-        var daysPast = getDaysPast(System.currentTimeMillis(), programDayTimestamp)
-        var upToDatePos = pos
-
-        if (daysPast > 0) {
-            upToDatePos++
-            daysPast--
-        }
-
-        while (daysPast > 0) {
-            if (upToDatePos >= program.items.size) {
-                upToDatePos = 0
-            }
-
-            // we can move past Rest Days without user opening the app, but don't auto skip workouts
-            if (program.get(upToDatePos) is WorkoutTemplate) {
-                break
-            }
-
-            upToDatePos++
-            daysPast--
-        }
-
-        if (upToDatePos >= program.items.size) {
-            upToDatePos = 0
-        }
+        val items = program.items.map { it.id }
+        val upToDatePos = determineActiveProgramDay(items, pos, programDayTimestamp)
 
         return Pair(upToDatePos, program.get(upToDatePos))
     }

@@ -14,6 +14,7 @@ import com.gymbud.gymbud.data.ItemIdentifierGenerator
 import com.gymbud.gymbud.data.datasource.database.GymBudRoomDatabase
 import com.gymbud.gymbud.data.repository.AppRepository
 import com.gymbud.gymbud.data.repository.QuotesRepository
+import com.gymbud.gymbud.utility.determineActiveProgramDay
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -41,7 +42,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
             var notificationContent: String = quotesRepository.getQuoteOfTheDay()
 
-            val (programId, programDayIdOrPos, _) = appRepository.activeProgramAndProgramDay.first()
+            val (programId, programDayIdOrPos, programDayTimestamp) = appRepository.activeProgramAndProgramDay.first()
 
             // if we have an active program, we can additional say what today's activity will be
             if (programId != ItemIdentifierGenerator.NO_ID && programDayIdOrPos != ItemIdentifierGenerator.NO_ID) {
@@ -53,20 +54,28 @@ class AlarmReceiver : BroadcastReceiver() {
                     val programDayPos = programDayIdOrPos.toInt()
 
                     val programItemsDao = db.programTemplateWithItemDao()
-                    programItemsDao.getAll(programId).find { it.programItemPosition == programDayPos }.let {
-                        if (it != null) {
-                            val today = if (it.isWithRestPeriod()) {
-                                "Rest Day"
-                            } else {
-                                val workoutsDao = db.workoutTemplateDao()
-                                val workout = workoutsDao.get(it.workoutTemplateId!!).first()
+                    val items = programItemsDao.getAll(programId).sortedBy { it.programItemPosition }
 
-                                workout?.name ?: ""
-                            }
+                    assert(items[0].programItemPosition == 0)
+                    assert(items.last().programItemPosition == items.size - 1)
 
-                            if (today.isNotEmpty()) {
-                                notificationContent += "\n\nToday: $today"
-                            }
+                    val upToDatePos = determineActiveProgramDay(
+                        items.map { if (it.isWithWorkoutTemplate()) it.workoutTemplateId!! else it.restPeriodId!! },
+                        programDayPos, programDayTimestamp
+                    )
+
+                    items[upToDatePos].let {
+                        val today = if (it.isWithRestPeriod()) {
+                            "Rest Day"
+                        } else {
+                            val workoutsDao = db.workoutTemplateDao()
+                            val workout = workoutsDao.get(it.workoutTemplateId!!).first()
+
+                            workout?.name ?: ""
+                        }
+
+                        if (today.isNotEmpty()) {
+                            notificationContent += "\n\nToday: $today"
                         }
                     }
                 }
