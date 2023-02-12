@@ -508,9 +508,8 @@ class MainActivity : AppCompatActivity() {
 
         if (workoutSessionState == WorkoutSessionState.Started) {
             navController.navigate(R.id.dashboardFragment)
+            liveSessionViewModel.finish()
         }
-
-        liveSessionViewModel.finish()
     }
 
 
