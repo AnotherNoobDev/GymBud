@@ -81,10 +81,12 @@ class LiveSessionStartFragment : Fragment() {
             }
 
             if (action != null) {
-                liveSessionViewModel.start()
-                sessionStarted = true
+                viewLifecycleOwner.lifecycleScope.launch {
+                    liveSessionViewModel.start()
+                    sessionStarted = true
 
-                findNavController().navigate(action)
+                    findNavController().navigate(action)
+                }
             }
         }
 

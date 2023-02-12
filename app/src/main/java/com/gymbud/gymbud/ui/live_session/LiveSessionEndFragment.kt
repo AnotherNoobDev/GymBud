@@ -130,9 +130,11 @@ class LiveSessionEndFragment : Fragment() {
 
 
     private fun discardSession() {
-        liveSessionViewModel.discardSession()
-        val action = LiveSessionEndFragmentDirections.actionLiveSessionEndFragmentToDashboardFragment()
-        findNavController().navigate(action)
+        viewLifecycleOwner.lifecycleScope.launch{
+            liveSessionViewModel.discardSession()
+            val action = LiveSessionEndFragmentDirections.actionLiveSessionEndFragmentToDashboardFragment()
+            findNavController().navigate(action)
+        }
     }
 
 

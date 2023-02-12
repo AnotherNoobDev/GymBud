@@ -209,12 +209,16 @@ class LiveSessionExerciseFragment : Fragment() {
             if (liveSessionViewModel.hasNextItem()) {
                 nextItemHint.text = liveSessionViewModel.getNextItemHint()
                 continueBtn.setOnClickListener {
-                    proceedWithSession()
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        proceedWithSession()
+                    }
                 }
             } else {
                 continueBtn.text = "Finish"
                 continueBtn.setOnClickListener {
-                    finishSession()
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        finishSession()
+                    }
                 }
             }
         }
@@ -279,9 +283,9 @@ class LiveSessionExerciseFragment : Fragment() {
     }
 
 
-    private fun recordValues(): Boolean {
+    private suspend fun recordValues(): Boolean {
         val inputReps =  binding.repsValue.text.toString().toIntOrNull()
-        if (inputReps == null) {
+        if (inputReps == null || inputReps == 0) {
             binding.repsLabel.error = "Please enter reps"
             return false
         }
@@ -299,8 +303,7 @@ class LiveSessionExerciseFragment : Fragment() {
 
         val inputNotes = binding.notesInput.text.toString()
 
-        exerciseSession.complete(inputReps, inputResistanceKG, inputNotes)
-
+        liveSessionViewModel.completeExerciseSession(inputReps, inputResistanceKG, inputNotes)
 
         return true
     }
@@ -317,13 +320,15 @@ class LiveSessionExerciseFragment : Fragment() {
         }
 
         if (action != null) {
-            liveSessionViewModel.goBack()
-            findNavController().navigate(action)
+            viewLifecycleOwner.lifecycleScope.launch {
+                liveSessionViewModel.goBack()
+                findNavController().navigate(action)
+            }
         }
     }
 
 
-    private fun proceedWithSession() {
+    private suspend fun proceedWithSession() {
         if (!recordValues()) {
             return
         }
@@ -338,13 +343,15 @@ class LiveSessionExerciseFragment : Fragment() {
         }
 
         if (action != null) {
-            liveSessionViewModel.proceed()
-            findNavController().navigate(action)
+            viewLifecycleOwner.lifecycleScope.launch {
+                liveSessionViewModel.proceed()
+                findNavController().navigate(action)
+            }
         }
     }
 
 
-    private fun finishSession() {
+    private suspend fun finishSession() {
         if (!recordValues()) {
             return
         }

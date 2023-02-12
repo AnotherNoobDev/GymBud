@@ -361,8 +361,11 @@ class MainActivity : AppCompatActivity() {
                 icon = AppCompatResources.getDrawable(applicationContext, R.drawable.ic_live_session_current_item_24)
                 title = getString(R.string.live_session_current_item)
                 setOnMenuItemClickListener {
-                    liveSessionViewModel.resume()
-                    navigateToCurrentLiveSessionItem()
+                    lifecycleScope.launch {
+                        liveSessionViewModel.resume()
+                        navigateToCurrentLiveSessionItem()
+                    }
+
                     true
                 }
             }
@@ -507,8 +510,7 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.dashboardFragment)
         }
 
-        // ensure LiveSession survives app close
-        liveSessionViewModel.onInterrupt()
+        liveSessionViewModel.finish()
     }
 
 
@@ -535,9 +537,11 @@ class MainActivity : AppCompatActivity() {
             .create()
 
         val adapter = LiveSessionOverviewRecyclerViewAdapter(context) {
-            liveSessionViewModel.goToItem(it)
-            dialog.dismiss()
-            navigateToCurrentLiveSessionItem()
+            lifecycleScope.launch {
+                liveSessionViewModel.goToItem(it)
+                dialog.dismiss()
+                navigateToCurrentLiveSessionItem()
+            }
         }
 
         val currentItem = liveSessionViewModel.getCurrentItemIndex()

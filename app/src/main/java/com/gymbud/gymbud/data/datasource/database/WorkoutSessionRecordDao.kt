@@ -11,6 +11,17 @@ interface WorkoutSessionRecordDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(workoutSession: WorkoutSessionRecord)
 
+    @Query( "" +
+        "UPDATE workout_session " +
+        "SET durationMs = :durationMs, notes = :notes " +
+        "WHERE id = :id"
+    )
+    suspend fun update(
+        id: ItemIdentifier,
+        durationMs: Long,
+        notes: String
+    )
+
     @Query("SELECT * from workout_session WHERE id = :id")
     suspend fun get(id: ItemIdentifier): WorkoutSessionRecord?
 
@@ -23,9 +34,10 @@ interface WorkoutSessionRecordDao {
     @Query("" +
             "SELECT * from workout_session " +
             "WHERE workout_template_id = :workoutTemplateId " +
+            "AND NOT id = :activeSessionId " +
             "ORDER BY date DESC " +
             "LIMIT 1")
-    suspend fun getPreviousSession(workoutTemplateId: ItemIdentifier): WorkoutSessionRecord?
+    suspend fun getPreviousSession(workoutTemplateId: ItemIdentifier, activeSessionId: ItemIdentifier): WorkoutSessionRecord?
 
 
     @Query("" +

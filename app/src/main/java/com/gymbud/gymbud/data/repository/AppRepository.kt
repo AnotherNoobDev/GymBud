@@ -40,6 +40,7 @@ class AppRepository(private val context: Context) {
 
     private val liveSessionKeepScreenOnKey = booleanPreferencesKey("live_session_keep_screen_on")
 
+    // If id is different from NO_ID, then we are in an active (partially saved) workout session
     private val partialWorkoutSessionIdKey = longPreferencesKey("partial_workout_session_id")
     private val partialWorkoutSessionAtItemKey = intPreferencesKey("partial_workout_session_at_item")
     private val partialWorkoutSessionProgressedToItemKey = intPreferencesKey("partial_workout_session_progressed_to_item")
@@ -283,6 +284,27 @@ class AppRepository(private val context: Context) {
             preferences[partialWorkoutSessionProgressedToItemKey] = session.progressedToItem
             preferences[partialWorkoutSessionStartTime] = session.startTimeMs
             preferences[partialWorkoutSessionRestTimerStart] = session.restTimerStartMs
+        }
+    }
+
+
+    suspend fun updatePartialWorkoutSessionAtItem(atItem: Int) {
+        context.dataStore.edit { preferences ->
+            preferences[partialWorkoutSessionAtItemKey]= atItem
+        }
+    }
+
+
+    suspend fun updatePartialWorkoutSessionProgressedToItem(progressedToItem: Int) {
+        context.dataStore.edit { preferences ->
+            preferences[partialWorkoutSessionProgressedToItemKey]= progressedToItem
+        }
+    }
+
+
+    suspend fun updatePartialWorkoutSessionRestTimerStart(restTimerStartMs: Long) {
+        context.dataStore.edit { preferences ->
+            preferences[partialWorkoutSessionRestTimerStart] = restTimerStartMs
         }
     }
 

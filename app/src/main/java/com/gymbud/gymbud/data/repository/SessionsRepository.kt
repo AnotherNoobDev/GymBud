@@ -30,8 +30,23 @@ class SessionsRepository(
     }
 
 
+    suspend fun updateExerciseSessionRecord(record: ExerciseSessionRecord) {
+        exerciseSessionRecordDao.update(record.id, record.resistance, record.reps, record.notes)
+    }
+
+
+    suspend fun hasExerciseSessionRecord(record: ExerciseSessionRecord): Boolean {
+        return exerciseSessionRecordDao.exists(record.id)
+    }
+
+
     suspend fun addWorkoutSessionRecord(record: WorkoutSessionRecord) {
         workoutSessionRecordDao.insert(record)
+    }
+
+
+    suspend fun updateWorkoutSessionRecord(record: WorkoutSessionRecord) {
+        workoutSessionRecordDao.update(record.id, record.durationMs, record.notes)
     }
 
 
@@ -53,8 +68,8 @@ class SessionsRepository(
     }
 
 
-    suspend fun getPreviousWorkoutSession(workoutTemplateId: ItemIdentifier): WorkoutSession? {
-        val prevSesRecord = workoutSessionRecordDao.getPreviousSession(workoutTemplateId)
+    suspend fun getPreviousWorkoutSession(workoutTemplateId: ItemIdentifier, activeSessionId: ItemIdentifier): WorkoutSession? {
+        val prevSesRecord = workoutSessionRecordDao.getPreviousSession(workoutTemplateId, activeSessionId)
             ?: return null
 
         val template = workoutTemplateRepository.retrieveWorkoutTemplate(prevSesRecord.workoutTemplateId).first()

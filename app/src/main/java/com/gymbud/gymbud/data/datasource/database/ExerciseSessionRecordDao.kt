@@ -13,6 +13,18 @@ interface ExerciseSessionRecordDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(exerciseSession: ExerciseSessionRecord)
 
+    @Query( "" +
+            "UPDATE exercise_session " +
+            "SET resistance = :resistance, reps = :reps, notes = :notes " +
+            "WHERE id = :id"
+    )
+    suspend fun update(id: ItemIdentifier, resistance: Double, reps: Int, notes: String)
+
+
+    @Query("SELECT EXISTS(SELECT * FROM exercise_session WHERE id = :id)")
+    suspend fun exists(id : ItemIdentifier) : Boolean
+
+
     @Query("SELECT * from exercise_session WHERE workout_session_id = :workoutSessionId")
     suspend fun getFromSession(workoutSessionId: ItemIdentifier): List<ExerciseSessionRecord>
 

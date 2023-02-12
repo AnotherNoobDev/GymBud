@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -218,7 +219,7 @@ class DashboardFragment : Fragment() {
         binding.apply {
             activeProgramDayValue.text = workout.name
 
-            if (liveSessionViewModel.canContinueWorkout(workout)) {
+            if (liveSessionViewModel.canContinueWorkout()) {
                 presentForResumingWorkoutSession()
             } else {
                 val ses = sessionRepository.getTodaySession()
@@ -248,10 +249,17 @@ class DashboardFragment : Fragment() {
             startWorkoutBtn.text = "Resume  Workout"
             startWorkoutBtn.setOnClickListener {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    liveSessionViewModel.restorePartialSession()
-                    navigateToCurrentLiveSessionItem()
+                    val restored = liveSessionViewModel.restorePartialSession(activeProgramDay as WorkoutTemplate)
+                    if (restored) {
+                        navigateToCurrentLiveSessionItem()
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to resume workout.. \nSomething went very wrong   x_x",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
-
             }
 
             discardWorkoutBtn.visibility = View.VISIBLE

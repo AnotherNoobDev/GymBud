@@ -122,7 +122,9 @@ class LiveSessionRestFragment : Fragment() {
             startTime = liveSessionViewModel.getRestTimerStartTime()
         } else {
             startTime = System.currentTimeMillis()
-            liveSessionViewModel.updateRestTimerStartTime(startTime)
+            viewLifecycleOwner.lifecycleScope.launch {
+                liveSessionViewModel.updateRestTimerStartTime(startTime)
+            }
         }
 
         timerHandler = Handler(Looper.getMainLooper())
@@ -161,8 +163,10 @@ class LiveSessionRestFragment : Fragment() {
         }
 
         if (action != null) {
-            liveSessionViewModel.goBack()
-            findNavController().navigate(action)
+            viewLifecycleOwner.lifecycleScope.launch {
+                liveSessionViewModel.goBack()
+                findNavController().navigate(action)
+            }
         }
     }
 
@@ -178,8 +182,10 @@ class LiveSessionRestFragment : Fragment() {
         }
 
         if (action != null) {
-            liveSessionViewModel.proceed()
-            findNavController().navigate(action)
+            viewLifecycleOwner.lifecycleScope.launch {
+                liveSessionViewModel.proceed()
+                findNavController().navigate(action)
+            }
         }
     }
 

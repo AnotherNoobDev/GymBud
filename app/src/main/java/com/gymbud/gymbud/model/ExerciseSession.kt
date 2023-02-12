@@ -11,6 +11,7 @@ enum class WorkoutSessionItemType {
 
 open class WorkoutSessionItem private constructor(val type: WorkoutSessionItemType, val hint: String) {
     class ExerciseSession(
+        private var id: ItemIdentifier,
         private val name: String,
         val exerciseTemplate: ExerciseTemplate,
         val tags: Tags?,
@@ -30,6 +31,11 @@ open class WorkoutSessionItem private constructor(val type: WorkoutSessionItemTy
 
         private var _isCompleted: Boolean = false
         val isCompleted get() = _isCompleted
+
+
+        fun getId(): ItemIdentifier {
+            return id
+        }
 
 
         fun setPreviousSession(session: ExerciseSession) {
@@ -61,12 +67,57 @@ open class WorkoutSessionItem private constructor(val type: WorkoutSessionItemTy
         }
 
 
-        fun complete(reps: Int, resistance: Double, notes: String) {
+        fun restore(exerciseSessionId: ItemIdentifier, reps: Int, resistance: Double, notes: String) {
+            id = exerciseSessionId
             _actualReps = reps
             _actualResistance = resistance
             _notes = notes
 
             _isCompleted = true
+        }
+
+
+        // returns true if the ExerciseSession changed
+        fun complete(workoutSessionId: ItemIdentifier, reps: Int, resistance: Double, notes: String): ExerciseSessionRecord? {
+            if (id == ItemIdentifierGenerator.NO_ID) {
+                id = ItemIdentifierGenerator.generateId()
+            }
+
+            var updated = false
+
+            if (_actualReps != reps) {
+                _actualReps = reps
+                updated = true
+            }
+
+            if (_actualResistance != resistance) {
+                _actualResistance = resistance
+                updated = true
+            }
+
+            if (_notes != notes) {
+                _notes = notes
+                updated = true
+            }
+
+            _isCompleted = true
+
+            return if (!updated) {
+                null
+            } else {
+                assert(isValid().first)
+
+                ExerciseSessionRecord(
+                    id,
+                    name,
+                    exerciseTemplate.id,
+                    workoutSessionId,
+                    _actualResistance,
+                    _actualReps,
+                    _notes,
+                    tags
+                )
+            }
         }
 
 
@@ -80,30 +131,16 @@ open class WorkoutSessionItem private constructor(val type: WorkoutSessionItemTy
         }
 
 
-        fun finalize(workoutSessionId: ItemIdentifier): ExerciseSessionRecord {
-            assert(isValid().first)
-
-            return ExerciseSessionRecord(
-                ItemIdentifierGenerator.generateId(),
-                name,
-                exerciseTemplate.id,
-                workoutSessionId,
-                _actualResistance,
-                _actualReps,
-                _notes,
-                tags
-            )
-        }
-
-
         companion object {
             fun fromRecord(record: ExerciseSessionRecord, template: ExerciseTemplate): ExerciseSession {
-                val session = ExerciseSession(record.name, template, record.tags, null)
-                session._actualResistance =  record.resistance
-                session._actualReps =  record.reps
-                session._notes = record.notes
+                val session = ExerciseSession(record.id, record.name, template, record.tags, null)
 
-                session._isCompleted = true
+                session.restore(
+                    record.id,
+                    record.reps,
+                    record.resistance,
+                    record.notes
+                )
 
                 return session
             }

@@ -20,6 +20,7 @@ enum class WorkoutSessionState {
 
 
 class WorkoutSession(
+    private var id: ItemIdentifier,
     val workoutTemplate: WorkoutTemplate,
     val programTemplateId: ItemIdentifier,
     previousSession: WorkoutSession?
@@ -79,6 +80,7 @@ class WorkoutSession(
     private fun addExerciseTemplateToSession(sessionItemsBuilder: MutableList<WorkoutSessionItem>, exerciseTemplate: ExerciseTemplate, tags: Tags?) {
         sessionItemsBuilder.add(
             WorkoutSessionItem.ExerciseSession(
+                ItemIdentifierGenerator.NO_ID,
                 exerciseTemplate.exercise.name,
                 exerciseTemplate,
                 tags,
@@ -122,6 +124,11 @@ class WorkoutSession(
     }
 
 
+    fun getId(): ItemIdentifier {
+        return id
+    }
+
+
     fun getShortName(): String {
         return workoutTemplate.name
     }
@@ -132,14 +139,28 @@ class WorkoutSession(
     }
 
 
-    fun start() {
+    fun start(): WorkoutSessionRecord {
         assert(state == WorkoutSessionState.Ready)
+
+        if (id == ItemIdentifierGenerator.NO_ID) {
+            id = ItemIdentifierGenerator.generateId()
+        }
 
         startTime = Date()
         atItem = 0
         atItemProgressionIndex = atItem
 
         state = WorkoutSessionState.Started
+
+        return WorkoutSessionRecord(
+            id,
+            workoutTemplate.name,
+            workoutTemplate.id,
+            programTemplateId,
+            startTime.time,
+            0,
+            notes
+        )
     }
 
 
@@ -168,7 +189,7 @@ class WorkoutSession(
                 assert(other.items[at] is WorkoutSessionItem.ExerciseSession)
                 val otherItem = other.items[at] as WorkoutSessionItem.ExerciseSession
 
-                item.complete(otherItem.actualReps, otherItem.actualResistance, otherItem.notes)
+                item.restore(otherItem.getId(), otherItem.actualReps, otherItem.actualResistance, otherItem.notes)
             }
         }
 
@@ -329,28 +350,17 @@ class WorkoutSession(
     }
 
 
-    fun finalize(): Pair<WorkoutSessionRecord, List<ExerciseSessionRecord>> {
+    fun finalize(): WorkoutSessionRecord {
         assert(state == WorkoutSessionState.Finished)
 
-        val workoutSessionId = ItemIdentifierGenerator.generateId()
-
-        return Pair(
-            WorkoutSessionRecord(
-                workoutSessionId,
-                workoutTemplate.name,
-                workoutTemplate.id,
-                programTemplateId,
-                startTime.time,
-                durationMs,
-                notes
-            ),
-            items.mapNotNull {
-                if (it is WorkoutSessionItem.ExerciseSession && it.isCompleted) {
-                    it.finalize(workoutSessionId)
-                } else {
-                    null
-                }
-            }
+        return WorkoutSessionRecord(
+            id,
+            workoutTemplate.name,
+            workoutTemplate.id,
+            programTemplateId,
+            startTime.time,
+            durationMs,
+            notes
         )
     }
 
@@ -373,7 +383,7 @@ class WorkoutSession(
     companion object {
         fun fromRecord(record: WorkoutSessionRecord, template: WorkoutTemplate, exerciseRecords: List<ExerciseSessionRecord>): WorkoutSession {
             // workout session
-            val session = WorkoutSession(template, record.programTemplateId, null)
+            val session = WorkoutSession(record.id, template, record.programTemplateId, null)
             session.state = WorkoutSessionState.Finished
             session.startTime = Date(record.date)
             session.durationMs = record.durationMs

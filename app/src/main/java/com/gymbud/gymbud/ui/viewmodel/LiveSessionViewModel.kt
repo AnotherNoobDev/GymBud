@@ -8,11 +8,10 @@ import com.gymbud.gymbud.data.ItemIdentifierGenerator
 import com.gymbud.gymbud.data.repository.AppRepository
 import com.gymbud.gymbud.data.repository.SessionsRepository
 import com.gymbud.gymbud.model.*
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+
 
 //private const val TAG = "LiveSessionViewModel"
 private const val PARTIAL_WORKOUT_SESSION_TAG = "partial_workout_session"
@@ -35,9 +34,9 @@ class LiveSessionViewModel(
     private var restTimerStartTime: Long = -1
 
 
-    suspend fun prepare(workoutTemplate: WorkoutTemplate, programTemplateId: ItemIdentifier)  {
-        val prev = sessionRepository.getPreviousWorkoutSession(workoutTemplate.id)
-        _workoutSession = WorkoutSession(workoutTemplate, programTemplateId, prev)
+    suspend fun prepare(workoutTemplate: WorkoutTemplate, programTemplateId: ItemIdentifier, activeSessionId: ItemIdentifier = ItemIdentifierGenerator.NO_ID)  {
+        val prev = sessionRepository.getPreviousWorkoutSession(workoutTemplate.id, activeSessionId)
+        _workoutSession = WorkoutSession(activeSessionId, workoutTemplate, programTemplateId, prev)
 
         _previousSession.value = prev
         _state.value = WorkoutSessionState.Ready
@@ -51,8 +50,20 @@ class LiveSessionViewModel(
     }
 
 
-    fun start() {
-        workoutSession.start()
+    // only call once per workout session!
+    suspend fun start() {
+        val record = workoutSession.start()
+
+        sessionRepository.addWorkoutSessionRecord(record)
+
+        appRepository.savePartialWorkoutSessionInfo(PartialWorkoutSessionRecord(
+            workoutSession.getId(),
+            getCurrentItemIndex(),
+            getProgressedToItemIndex(),
+            getStartTime(),
+            getRestTimerStartTime()
+        ))
+
         _state.value = WorkoutSessionState.Started
     }
 
@@ -107,8 +118,10 @@ class LiveSessionViewModel(
     }
 
 
-    fun updateRestTimerStartTime(startTime: Long) {
+    suspend fun updateRestTimerStartTime(startTime: Long) {
         restTimerStartTime = startTime
+
+        appRepository.updatePartialWorkoutSessionRestTimerStart(getRestTimerStartTime())
     }
 
 
@@ -117,27 +130,36 @@ class LiveSessionViewModel(
     }
 
 
-    fun goBack() {
+    suspend fun goBack() {
         updateRestTimerStartTime(-1)
         workoutSession.goBack()
+
+        appRepository.updatePartialWorkoutSessionAtItem(getCurrentItemIndex())
     }
 
 
-    fun proceed() {
+    suspend fun proceed() {
         updateRestTimerStartTime(-1)
         workoutSession.proceed()
+
+        appRepository.updatePartialWorkoutSessionAtItem(getCurrentItemIndex())
+        appRepository.updatePartialWorkoutSessionProgressedToItem(getProgressedToItemIndex())
     }
 
 
-    fun resume() {
+    suspend fun resume() {
         updateRestTimerStartTime(-1)
         workoutSession.resume()
+
+        appRepository.updatePartialWorkoutSessionAtItem(getCurrentItemIndex())
     }
 
 
-    fun goToItem(itemIndex: Int) {
+    suspend fun goToItem(itemIndex: Int) {
         updateRestTimerStartTime(-1)
         workoutSession.goToItem(itemIndex)
+
+        appRepository.updatePartialWorkoutSessionAtItem(getCurrentItemIndex())
     }
 
 
@@ -162,120 +184,67 @@ class LiveSessionViewModel(
     }
 
 
-    /**
-     * returns the id of the WorkoutSession if it was saved to persistent storage, otherwise returns ItemIdentifier.NO_ID
-     */
-    suspend fun saveSession(notes: String?): ItemIdentifier {
+    suspend fun completeExerciseSession(reps: Int, resistance: Double, notes: String) {
+        val exerciseSession = getCurrentItem() as WorkoutSessionItem.ExerciseSession
+
+        val record = exerciseSession.complete(workoutSession.getId(), reps, resistance, notes)
+
+        if (record != null) {
+            if (sessionRepository.hasExerciseSessionRecord(record)) {
+                sessionRepository.updateExerciseSessionRecord(record)
+            } else {
+                sessionRepository.addExerciseSessionRecord(record)
+            }
+        }
+    }
+
+
+    suspend fun saveSession(notes: String?) {
         workoutSession.notes = notes?: ""
-        val (workoutSessionRecord, exerciseSessionRecords) = workoutSession.finalize()
+        val workoutSessionRecord = workoutSession.finalize()
 
-        val workoutSessionRecordId = workoutSessionRecord.id
+        sessionRepository.updateWorkoutSessionRecord(workoutSessionRecord)
 
-        sessionRepository.addWorkoutSessionRecord(workoutSessionRecord)
-
-        exerciseSessionRecords.forEach {
-            sessionRepository.addExerciseSessionRecord(it)
-        }
+        // flag that we are done with session
+        appRepository.clearPartialWorkoutSessionInfo()
 
         _workoutSession = null
         _state.value = WorkoutSessionState.NotReady
-
-        return workoutSessionRecordId
     }
 
 
-    fun discardSession() {
+    suspend fun discardSession() {
+        discardPartialSession()
+
         _workoutSession = null
         _state.value = WorkoutSessionState.NotReady
     }
 
 
-    fun onInterrupt() {
-        if (_state.value != WorkoutSessionState.Started) {
-            return
-        }
-
-        GlobalScope.launch {
-            if (BuildConfig.DEBUG) {
-                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: started")
-            }
-
-            // persist partial workout session
-            val atItem = getCurrentItemIndex()
-            val progressedToItem = getProgressedToItemIndex()
-            val startTime = getStartTime()
-            val restTimerStartTime = getRestTimerStartTime()
-
-            if (BuildConfig.DEBUG) {
-                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: collected partial session info")
-            }
-
-            finish()
-
-            if (BuildConfig.DEBUG) {
-                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: finish() completed")
-            }
-
-            val workoutSessionId = saveSession("")
-
-            if (BuildConfig.DEBUG) {
-                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: saveSession() completed")
-            }
-
-            // update app repository with partial workout session id
-            appRepository.savePartialWorkoutSessionInfo(
-                PartialWorkoutSessionRecord(workoutSessionId, atItem, progressedToItem, startTime, restTimerStartTime)
-            )
-
-            if (BuildConfig.DEBUG) {
-                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Saving session: completed")
-            }
-        }
-    }
-
-
-    suspend fun canContinueWorkout(workout: WorkoutTemplate): Boolean {
+    suspend fun canContinueWorkout(): Boolean {
         val partialWorkoutSessionRecord = appRepository.partialWorkoutSessionRecord.first()
 
         if (BuildConfig.DEBUG) {
             Log.d(PARTIAL_WORKOUT_SESSION_TAG, "canContinueWorkout: $partialWorkoutSessionRecord")
         }
 
-
-        if (partialWorkoutSessionRecord.workoutSessionId == ItemIdentifierGenerator.NO_ID) {
+        return if (partialWorkoutSessionRecord.workoutSessionId == ItemIdentifierGenerator.NO_ID) {
             if (BuildConfig.DEBUG) {
-                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"No session to restore")
+                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"No active workout session session")
             }
 
-            return false
-        }
-
-        val partialSession = sessionRepository.getWorkoutSession(partialWorkoutSessionRecord.workoutSessionId)
-
-        if (partialSession == null) {
+            false
+        } else {
             if (BuildConfig.DEBUG) {
-                Log.e(PARTIAL_WORKOUT_SESSION_TAG, "No partial session with id ${partialWorkoutSessionRecord.workoutSessionId} found on record")
+                Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Found active workout session with id: ${partialWorkoutSessionRecord.workoutSessionId}")
             }
 
-            appRepository.clearPartialWorkoutSessionInfo()
-            return false
+            true
         }
-
-        if (partialSession.workoutTemplate.id != workout.id) {
-            if (BuildConfig.DEBUG) {
-                Log.e(PARTIAL_WORKOUT_SESSION_TAG, "Partial session is stale.. Found partial session for workout ${partialSession.workoutTemplate.id} but active workout is ${workout.id}")
-            }
-
-            sessionRepository.removeSession(partialWorkoutSessionRecord.workoutSessionId)
-            appRepository.clearPartialWorkoutSessionInfo()
-            return false
-        }
-
-        return true
     }
 
 
-    suspend fun restorePartialSession(): Boolean {
+    suspend fun restorePartialSession(workout: WorkoutTemplate): Boolean {
         if (BuildConfig.DEBUG) {
             Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Restoring session started")
         }
@@ -295,8 +264,7 @@ class LiveSessionViewModel(
             return false
         }
 
-        val restored = restore(partialWorkoutSession)
-        appRepository.clearPartialWorkoutSessionInfo()
+        val restored = restore(partialWorkoutSession, workout)
 
         if (BuildConfig.DEBUG) {
             Log.d(PARTIAL_WORKOUT_SESSION_TAG,"Restoring session completed")
@@ -306,7 +274,7 @@ class LiveSessionViewModel(
     }
 
 
-    private suspend fun restore(partialRecord: PartialWorkoutSessionRecord): Boolean {
+    private suspend fun restore(partialRecord: PartialWorkoutSessionRecord, workout: WorkoutTemplate): Boolean {
         // retrieve partial session
         val partialSession = sessionRepository.getWorkoutSession(partialRecord.workoutSessionId)
 
@@ -318,11 +286,16 @@ class LiveSessionViewModel(
             return false
         }
 
-        // remove partial session from (must do this before we retrieve previous session history)
-        sessionRepository.removeSession(partialRecord.workoutSessionId)
+        if (partialSession.workoutTemplate.id != workout.id) {
+            if (BuildConfig.DEBUG) {
+                Log.e(PARTIAL_WORKOUT_SESSION_TAG, "Partial session is stale.. Found partial session for workout ${partialSession.workoutTemplate.id} but active workout is ${workout.id}")
+            }
+
+            return false
+        }
 
         // prepare
-        prepare(partialSession.workoutTemplate, partialSession.programTemplateId)
+        prepare(partialSession.workoutTemplate, partialSession.programTemplateId, partialRecord.workoutSessionId)
 
         // bring workout session to current item from partial session
         workoutSession.restart(partialSession, partialRecord.atItem, partialRecord.progressedToItem, partialRecord.startTimeMs)
