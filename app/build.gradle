@@ -7,13 +7,13 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.gymbud.gymbud"
         minSdk 21
-        targetSdk 32
-        versionCode 10
+        targetSdk 34
+        versionCode 12
         versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

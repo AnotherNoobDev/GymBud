@@ -18,8 +18,8 @@ open class OnSwipeTouchListener(
     private var gestureDetector =  GestureDetector(ctx, GestureListener())
 
 
-    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        v?.performClick()
+    override fun onTouch(v: View, event: MotionEvent): Boolean {
+        v.performClick()
         return gestureDetector.onTouchEvent(event)
     }
 
@@ -50,11 +50,13 @@ open class OnSwipeTouchListener(
             super.onLongPress(e)
         }
         override fun onFling(
-            e1: MotionEvent,
+            e1: MotionEvent?,
             e2: MotionEvent,
             velocityX: Float,
             velocityY: Float
         ): Boolean {
+            if (e1 == null) return false
+
             try {
                 val diffY = e2.y - e1.y
                 val diffX = e2.x - e1.x
@@ -87,6 +89,7 @@ open class OnSwipeTouchListener(
             } catch (exception: Exception) {
                 exception.printStackTrace()
             }
+
             return false
         }
     }
