@@ -1,8 +1,10 @@
 package com.gymbud.gymbud.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.text.format.DateFormat
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -165,14 +167,18 @@ class SettingsFragment : Fragment() {
     }
 
 
+
     private fun setupDailyWorkoutReminder(appRepository: AppRepository) {
         binding.apply {
             viewLifecycleOwner.lifecycleScope.launch {
                 appRepository.dailyWorkoutReminder.collect { enabled ->
-                    dailyWorkoutReminderSwitch.isChecked = enabled
-                    dailyWorkoutReminderTimeLabel.isEnabled = enabled
+                    val allowed = RemindersManager.isExactAlarmPermissionGranted(requireContext())
+                    val active = allowed && enabled
 
-                    if (enabled) {
+                    dailyWorkoutReminderSwitch.isChecked = active
+                    dailyWorkoutReminderTimeLabel.isEnabled = active
+
+                    if (active) {
                         RemindersManager.startReminder(
                             requireContext(),
                             DAILY_WORKOUT_REMINDER_ID,
@@ -185,9 +191,15 @@ class SettingsFragment : Fragment() {
             }
 
             dailyWorkoutReminderSwitch.setOnClickListener {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    withContext(Dispatchers.IO) {
-                        appRepository.updateDailyWorkoutReminder(dailyWorkoutReminderSwitch.isChecked)
+                if (!RemindersManager.isExactAlarmPermissionGranted(requireContext())) {
+                    dailyWorkoutReminderSwitch.isChecked = false
+                    val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                    startActivity(intent)
+                } else {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            appRepository.updateDailyWorkoutReminder(dailyWorkoutReminderSwitch.isChecked)
+                        }
                     }
                 }
             }
@@ -201,7 +213,10 @@ class SettingsFragment : Fragment() {
                     createDailyWorkoutReminderTimePicker(timeInMin)
 
                     val enabled = appRepository.dailyWorkoutReminder.first()
-                    if (enabled) {
+                    val allowed = RemindersManager.isExactAlarmPermissionGranted(requireContext())
+                    val active = allowed && enabled
+
+                    if (active) {
                         RemindersManager.startReminder(requireContext(), DAILY_WORKOUT_REMINDER_ID, timeInMin)
                     }
                 }

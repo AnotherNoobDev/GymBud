@@ -13,6 +13,15 @@ const val DAILY_WORKOUT_REMINDER_ID = 100
 
 object RemindersManager {
 
+    fun isExactAlarmPermissionGranted(context: Context): Boolean {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            alarmManager.canScheduleExactAlarms()
+        } else {
+            return true
+        }
+    }
+
     // if reminder already exists, new reminderTimeInMinutes will be used
     fun startReminder(context: Context, reminderId: Int, reminderTimeInMinutes: Long) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
