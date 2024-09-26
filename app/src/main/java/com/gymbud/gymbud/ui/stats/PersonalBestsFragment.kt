@@ -1,14 +1,15 @@
 package com.gymbud.gymbud.ui.stats
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.gymbud.gymbud.BaseApplication
 import com.gymbud.gymbud.R
 import com.gymbud.gymbud.data.repository.AppRepository
@@ -18,8 +19,6 @@ import com.gymbud.gymbud.ui.viewmodel.ExerciseFiltersViewModel
 import com.gymbud.gymbud.ui.viewmodel.ExerciseFiltersViewModelFactory
 import com.gymbud.gymbud.ui.viewmodel.StatsViewModel
 import com.gymbud.gymbud.ui.viewmodel.StatsViewModelFactory
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 

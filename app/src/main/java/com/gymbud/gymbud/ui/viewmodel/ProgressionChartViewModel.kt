@@ -119,7 +119,7 @@ class ProgressionChartViewModel(
 
 
 class ProgressionChartViewModelFactory(private val exerciseRepository: ExerciseRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProgressionChartViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ProgressionChartViewModel(exerciseRepository) as T

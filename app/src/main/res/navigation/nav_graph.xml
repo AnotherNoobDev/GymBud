@@ -78,11 +78,11 @@
             android:name="type"
             app:argType="com.gymbud.gymbud.model.ItemType" />
         <action
-            android:id="@+id/action_itemDetailFragment_to_itemEditFragment"
-            app:destination="@id/itemEditFragment" />
-        <action
             android:id="@+id/action_itemDetailFragment_self"
             app:destination="@id/itemDetailFragment" />
+        <action
+            android:id="@+id/action_itemDetailFragment_to_itemEditFragment"
+            app:destination="@id/itemEditFragment" />
     </fragment>
     <fragment
         android:id="@+id/itemEditFragment"

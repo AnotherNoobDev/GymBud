@@ -5,11 +5,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -22,7 +22,6 @@ import com.gymbud.gymbud.model.WorkoutSessionItemType
 import com.gymbud.gymbud.ui.viewmodel.LiveSessionViewModel
 import com.gymbud.gymbud.ui.viewmodel.LiveSessionViewModelFactory
 import com.gymbud.gymbud.utility.TimeFormatter
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 

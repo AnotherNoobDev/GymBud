@@ -1,13 +1,22 @@
 package com.gymbud.gymbud.utility
 
-import android.util.Log
 import com.gymbud.gymbud.data.ItemIdentifierGenerator
 import com.gymbud.gymbud.data.datasource.defaults.DEFAULT_HYPERTROPHY_PROGRAM
 import com.gymbud.gymbud.data.repository.ProgramTemplateRepository
 import com.gymbud.gymbud.data.repository.SessionsRepository
-import com.gymbud.gymbud.model.*
+import com.gymbud.gymbud.model.ExerciseSessionRecord
+import com.gymbud.gymbud.model.ExerciseTemplate
+import com.gymbud.gymbud.model.Item
+import com.gymbud.gymbud.model.ItemIdentifier
+import com.gymbud.gymbud.model.ProgramTemplate
+import com.gymbud.gymbud.model.SetTemplate
+import com.gymbud.gymbud.model.TagCategory
+import com.gymbud.gymbud.model.TaggedItem
+import com.gymbud.gymbud.model.Tags
+import com.gymbud.gymbud.model.WorkoutSessionRecord
+import com.gymbud.gymbud.model.WorkoutTemplate
 import kotlinx.coroutines.flow.first
-import java.util.*
+import java.util.Calendar
 
 
 // only used for testing --> todo remove this? (some of this stuff might be useful, like suggesting resistance increments, etc?)

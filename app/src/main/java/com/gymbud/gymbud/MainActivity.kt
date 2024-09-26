@@ -12,7 +12,11 @@ import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.util.TypedValue
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -31,10 +35,19 @@ import com.gymbud.gymbud.databinding.LayoutLiveSessionOverviewBinding
 import com.gymbud.gymbud.model.WorkoutSessionItemType
 import com.gymbud.gymbud.model.WorkoutSessionState
 import com.gymbud.gymbud.ui.live_session.LiveSessionOverviewRecyclerViewAdapter
-import com.gymbud.gymbud.ui.viewmodel.*
-import com.gymbud.gymbud.utility.*
+import com.gymbud.gymbud.ui.viewmodel.AppViewModel
+import com.gymbud.gymbud.ui.viewmodel.AppViewModelFactory
+import com.gymbud.gymbud.ui.viewmodel.AppWorkflowState
+import com.gymbud.gymbud.ui.viewmodel.LiveSessionViewModel
+import com.gymbud.gymbud.ui.viewmodel.LiveSessionViewModelFactory
+import com.gymbud.gymbud.utility.GYMBUD_BACKUP_FILE_EXTENSION
+import com.gymbud.gymbud.utility.GYMBUD_PROGRAM_FILE_EXTENSION
+import com.gymbud.gymbud.utility.SerializationException
+import com.gymbud.gymbud.utility.TimeFormatter
+import com.gymbud.gymbud.utility.deserializeProgramTemplate
+import com.gymbud.gymbud.utility.readFileContent
+import com.gymbud.gymbud.utility.restoreFromBackup
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.max
@@ -472,7 +485,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.app_bar_menu, menu)
         setupActionBarVisibility(appBarMenuVisible)
 

@@ -1,15 +1,15 @@
 package com.gymbud.gymbud.ui.viewbuilder
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.gymbud.gymbud.R
 import com.gymbud.gymbud.databinding.LayoutDetailDividerBinding
 import com.gymbud.gymbud.databinding.LayoutDetailNameBinding
 import com.gymbud.gymbud.databinding.LayoutDetailTextFieldBinding
-import com.gymbud.gymbud.model.*
+import com.gymbud.gymbud.model.ExerciseTemplate
+import com.gymbud.gymbud.model.Item
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModel
 
 private const val TAG = "ExerciseTemplateDVB"
@@ -49,12 +49,9 @@ class ExerciseTemplateDetailView(
     }
 
 
-    override fun performTransactions(fragmentManager: FragmentManager) {
-    }
-
-
     override fun populate(
-        lifecycle: LifecycleCoroutineScope,
+        lifecycle: Lifecycle,
+        lifecycleScope: LifecycleCoroutineScope,
         viewModel: ItemViewModel,
         item: Item
     ) {

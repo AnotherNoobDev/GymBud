@@ -1,21 +1,20 @@
 package com.gymbud.gymbud.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.gymbud.gymbud.BaseApplication
 import com.gymbud.gymbud.databinding.FragmentItemListBinding
 import com.gymbud.gymbud.model.ItemType
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModel
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModelFactory
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**

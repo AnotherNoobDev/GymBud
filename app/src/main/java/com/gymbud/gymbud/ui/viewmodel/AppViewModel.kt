@@ -30,7 +30,7 @@ class AppViewModel: ViewModel() {
 
 
 class AppViewModelFactory: ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AppViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return AppViewModel() as T

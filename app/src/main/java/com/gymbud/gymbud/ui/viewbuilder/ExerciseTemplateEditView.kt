@@ -1,20 +1,24 @@
 package com.gymbud.gymbud.ui.viewbuilder
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.gymbud.gymbud.R
 import com.gymbud.gymbud.databinding.LayoutEditDropdownFieldBinding
 import com.gymbud.gymbud.databinding.LayoutEditRangeSliderBinding
 import com.gymbud.gymbud.databinding.LayoutEditTextFieldBinding
-import com.gymbud.gymbud.model.*
+import com.gymbud.gymbud.model.Exercise
+import com.gymbud.gymbud.model.ExerciseTemplate
+import com.gymbud.gymbud.model.ExerciseTemplateEditContent
+import com.gymbud.gymbud.model.ExerciseTemplateNewContent
+import com.gymbud.gymbud.model.Item
+import com.gymbud.gymbud.model.ItemContent
+import com.gymbud.gymbud.model.ItemType
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 private const val TAG = "ExerciseTemplateEV"
@@ -54,12 +58,9 @@ class ExerciseTemplateEditView(
     }
 
 
-    override fun performTransactions(fragmentManager: FragmentManager) {
-    }
-
-
     override fun populate(
-        lifecycle: LifecycleCoroutineScope,
+        lifecycle: Lifecycle,
+        lifecycleScope: LifecycleCoroutineScope,
         viewModel: ItemViewModel,
         item: Item
     ) {

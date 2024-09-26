@@ -2,17 +2,20 @@ package com.gymbud.gymbud.ui.viewbuilder
 
 import android.content.Context
 import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.gymbud.gymbud.R
 import com.gymbud.gymbud.databinding.LayoutEditDropdownFieldBinding
 import com.gymbud.gymbud.databinding.LayoutEditTextFieldBinding
-import com.gymbud.gymbud.model.*
+import com.gymbud.gymbud.model.Exercise
+import com.gymbud.gymbud.model.ExerciseContent
+import com.gymbud.gymbud.model.Item
+import com.gymbud.gymbud.model.ItemContent
+import com.gymbud.gymbud.model.MuscleGroup
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModel
 import com.gymbud.gymbud.utility.YoutubeHelper
 
@@ -72,12 +75,9 @@ class ExerciseEditView(
     }
 
 
-    override fun performTransactions(fragmentManager: FragmentManager) {
-    }
-
-
     override fun populate(
-        lifecycle: LifecycleCoroutineScope,
+        lifecycle: Lifecycle,
+        lifecycleScope: LifecycleCoroutineScope,
         viewModel: ItemViewModel,
         item: Item
     ) {

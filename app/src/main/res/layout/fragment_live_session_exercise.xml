@@ -93,11 +93,10 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/instructions_divider"
                     android:visibility="gone">
-                    <FrameLayout
-                        android:id="@+id/youtubePlayerPlaceholder"
+                    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                        android:id="@+id/youtubePlayerView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                    </FrameLayout>
+                        android:layout_height="wrap_content"/>
                     <TextView
                         android:id="@+id/exercise_notes"
                         android:layout_width="match_parent"

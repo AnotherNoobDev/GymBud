@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gymbud.gymbud">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- YOUTUBE PLAYER -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -13,6 +12,7 @@
     <!-- YOUTUBE PLAYER -->
 
     <!-- notifications -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <!-- notifications -->
 
@@ -41,11 +41,6 @@
                 <!-- <data android:host="*"/> -->
             </intent-filter>
         </activity>
-
-        <meta-data
-            android:name = "YoutubeApiKey"
-            android:value = "${YOUTUBE_API_KEY}"
-        />
 
         <provider
             android:name="androidx.core.content.FileProvider"

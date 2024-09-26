@@ -1,11 +1,12 @@
 package com.gymbud.gymbud.model
 
-import android.util.Log
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.gymbud.gymbud.data.ItemIdentifierGenerator
-import java.lang.Exception
-
-import java.util.*
+import java.util.Date
 import kotlin.math.max
 
 

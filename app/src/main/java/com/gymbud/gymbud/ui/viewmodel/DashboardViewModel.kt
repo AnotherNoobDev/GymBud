@@ -134,7 +134,7 @@ class DashboardViewModel(
 
 
 class DashboardViewModelFactory(private val itemRepository: ItemRepository, private val appRepository: AppRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DashboardViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return DashboardViewModel(itemRepository, appRepository) as T

@@ -7,17 +7,31 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gymbud.gymbud.R
-import com.gymbud.gymbud.databinding.*
-import com.gymbud.gymbud.model.*
+import com.gymbud.gymbud.databinding.FragmentBasicItemListBinding
+import com.gymbud.gymbud.databinding.FragmentItemEditBinding
+import com.gymbud.gymbud.databinding.LayoutCounterInputBinding
+import com.gymbud.gymbud.databinding.LayoutDetailDividerBinding
+import com.gymbud.gymbud.databinding.LayoutEditDropdownFieldBinding
+import com.gymbud.gymbud.databinding.LayoutEditTextFieldBinding
+import com.gymbud.gymbud.model.Item
+import com.gymbud.gymbud.model.ItemContainer
+import com.gymbud.gymbud.model.ItemContent
+import com.gymbud.gymbud.model.ItemType
+import com.gymbud.gymbud.model.ProgramTemplateContent
+import com.gymbud.gymbud.model.RestPeriod
+import com.gymbud.gymbud.model.SetIntensity
+import com.gymbud.gymbud.model.SetTemplateContent
+import com.gymbud.gymbud.model.TagCategory
+import com.gymbud.gymbud.model.TaggedItem
+import com.gymbud.gymbud.model.WorkoutTemplateContent
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlin.math.min
 
@@ -439,10 +453,6 @@ class TemplateWithItemsEditView(
     }
 
 
-    override fun performTransactions(fragmentManager: FragmentManager) {
-    }
-
-
     override fun populateForNewItem(lifecycle: LifecycleCoroutineScope, viewModel: ItemViewModel) {
         nameBinding.label.hint = "New ${templateTypeToDisplayStr(templateType)} Template ..."
         itemListAdapter.submitList(mutableListOf())
@@ -452,7 +462,8 @@ class TemplateWithItemsEditView(
 
 
     override fun populate(
-        lifecycle: LifecycleCoroutineScope,
+        lifecycle: Lifecycle,
+        lifecycleScope: LifecycleCoroutineScope,
         viewModel: ItemViewModel,
         item: Item
     ) {
@@ -465,7 +476,7 @@ class TemplateWithItemsEditView(
         nameBinding.input.setText(item.name)
         itemListAdapter.submitList(item.items.toMutableList())
 
-        populateItemsThatCanBeAdded(lifecycle, viewModel)
+        populateItemsThatCanBeAdded(lifecycleScope, viewModel)
     }
 
 

@@ -9,16 +9,23 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gymbud.gymbud.BaseApplication
+import com.gymbud.gymbud.R
 import com.gymbud.gymbud.data.ItemIdentifierGenerator
 import com.gymbud.gymbud.data.repository.QuotesRepository
-import com.gymbud.gymbud.databinding.FragmentDashboardBinding
-import com.gymbud.gymbud.model.*
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.gymbud.gymbud.R
 import com.gymbud.gymbud.data.repository.SessionsRepository
-import com.gymbud.gymbud.ui.viewmodel.*
-import kotlinx.coroutines.flow.collect
+import com.gymbud.gymbud.databinding.FragmentDashboardBinding
+import com.gymbud.gymbud.model.Item
+import com.gymbud.gymbud.model.ItemIdentifier
+import com.gymbud.gymbud.model.RestPeriod
+import com.gymbud.gymbud.model.WorkoutSessionItemType
+import com.gymbud.gymbud.model.WorkoutTemplate
+import com.gymbud.gymbud.ui.viewmodel.ActiveProgramAndProgramDay
+import com.gymbud.gymbud.ui.viewmodel.DashboardViewModel
+import com.gymbud.gymbud.ui.viewmodel.DashboardViewModelFactory
+import com.gymbud.gymbud.ui.viewmodel.LiveSessionViewModel
+import com.gymbud.gymbud.ui.viewmodel.LiveSessionViewModelFactory
 import kotlinx.coroutines.launch
 
 

@@ -1,14 +1,15 @@
 package com.gymbud.gymbud.ui.stats
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gymbud.gymbud.BaseApplication
 import com.gymbud.gymbud.data.repository.AppRepository
 import com.gymbud.gymbud.databinding.FragmentSessionDetailBinding
@@ -17,10 +18,7 @@ import com.gymbud.gymbud.ui.SessionExerciseListRecyclerViewAdapter
 import com.gymbud.gymbud.ui.viewmodel.StatsViewModel
 import com.gymbud.gymbud.ui.viewmodel.StatsViewModelFactory
 import com.gymbud.gymbud.utility.TimeFormatter
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-
 
 
 class SessionDetailFragment : Fragment() {

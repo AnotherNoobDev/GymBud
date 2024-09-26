@@ -1,14 +1,18 @@
 package com.gymbud.gymbud.ui.stats
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.gymbud.gymbud.BaseApplication
 import com.gymbud.gymbud.R
 import com.gymbud.gymbud.databinding.FragmentExerciseFiltersBinding
@@ -17,10 +21,8 @@ import com.gymbud.gymbud.ui.viewmodel.ExerciseFiltersViewModel
 import com.gymbud.gymbud.ui.viewmodel.ExerciseFiltersViewModelFactory
 import com.gymbud.gymbud.utility.TimeFormatter
 import com.gymbud.gymbud.utility.addDays
-import com.google.android.material.datepicker.*
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
 
 
 class ExerciseFiltersFragment : Fragment() {

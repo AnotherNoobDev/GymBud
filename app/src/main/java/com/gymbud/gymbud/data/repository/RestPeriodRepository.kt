@@ -1,10 +1,11 @@
 package com.gymbud.gymbud.data.repository
 
 import android.database.sqlite.SQLiteConstraintException
-import android.util.Log
 import com.gymbud.gymbud.data.datasource.database.RestPeriodDao
 import com.gymbud.gymbud.data.datasource.defaults.RestPeriodDefaultDatasource
-import com.gymbud.gymbud.model.*
+import com.gymbud.gymbud.model.ItemIdentifier
+import com.gymbud.gymbud.model.RestPeriod
+import com.gymbud.gymbud.model.getValidName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

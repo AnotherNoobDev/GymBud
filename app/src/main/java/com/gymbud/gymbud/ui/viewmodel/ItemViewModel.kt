@@ -58,7 +58,7 @@ class ItemViewModel(
 
 
 class ItemViewModelFactory(private val itemRepository: ItemRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ItemViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ItemViewModel(itemRepository) as T

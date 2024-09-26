@@ -323,7 +323,7 @@ class LiveSessionViewModelFactory(
     private val sessionRepository: SessionsRepository,
     private val appRepository: AppRepository
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LiveSessionViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return LiveSessionViewModel(sessionRepository, appRepository) as T

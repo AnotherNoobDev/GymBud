@@ -1,14 +1,15 @@
 package com.gymbud.gymbud.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gymbud.gymbud.BaseApplication
 import com.gymbud.gymbud.R
 import com.gymbud.gymbud.data.ItemIdentifierGenerator
@@ -17,8 +18,6 @@ import com.gymbud.gymbud.ui.viewbuilder.EditItemView
 import com.gymbud.gymbud.ui.viewbuilder.EditItemViewFactory
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModel
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModelFactory
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
@@ -57,8 +56,6 @@ class ItemEditFragment : Fragment() {
             binding.editFieldsLayout.addView(it)
         }
 
-        itemView.performTransactions(childFragmentManager)
-
         return binding.root
     }
 
@@ -79,7 +76,7 @@ class ItemEditFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getItem(navigationArgs.id, navigationArgs.type).collect { item ->
                 if (item != null) {
-                    itemView.populate(viewLifecycleOwner.lifecycleScope, viewModel, item)
+                    itemView.populate(lifecycle, viewLifecycleOwner.lifecycleScope, viewModel, item)
                 }
             }
         }

@@ -29,7 +29,7 @@
             android:id="@+id/workout_session_timer"
             android:visibility="gone"/>
 
-    </androidx.appcompat.widget.Toolbar>.
+    </androidx.appcompat.widget.Toolbar>
 
 
     <androidx.fragment.app.FragmentContainerView

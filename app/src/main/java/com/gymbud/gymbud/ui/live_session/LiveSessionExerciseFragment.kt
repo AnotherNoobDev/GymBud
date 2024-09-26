@@ -3,7 +3,6 @@ package com.gymbud.gymbud.ui.live_session
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,19 +12,21 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.gymbud.gymbud.AppConfig
 import com.gymbud.gymbud.BaseApplication
 import com.gymbud.gymbud.R
 import com.gymbud.gymbud.data.repository.AppRepository
 import com.gymbud.gymbud.databinding.FragmentLiveSessionExerciseBinding
-import com.gymbud.gymbud.model.*
+import com.gymbud.gymbud.model.TagCategory
+import com.gymbud.gymbud.model.WeightUnit
+import com.gymbud.gymbud.model.WorkoutSessionItem
+import com.gymbud.gymbud.model.WorkoutSessionItemType
+import com.gymbud.gymbud.model.convertKGtoLB
+import com.gymbud.gymbud.model.convertLBtoKG
 import com.gymbud.gymbud.ui.viewmodel.LiveSessionViewModel
 import com.gymbud.gymbud.ui.viewmodel.LiveSessionViewModelFactory
 import com.gymbud.gymbud.utility.SoftKeyboardVisibilityListener
-import com.google.android.youtube.player.YouTubeInitializationResult
-import com.google.android.youtube.player.YouTubePlayer
-import com.google.android.youtube.player.YouTubePlayerSupportFragmentX
-import kotlinx.coroutines.flow.collect
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import kotlinx.coroutines.launch
 
 
@@ -98,34 +99,14 @@ class LiveSessionExerciseFragment : Fragment() {
 
 
     private fun setupYoutubePlayer() {
-        val youTubePlayerFragment = YouTubePlayerSupportFragmentX.newInstance()
+        lifecycle.addObserver(binding.youtubePlayerView)
 
-        youTubePlayerFragment.initialize(
-            AppConfig.getYoutubeApiKey(requireContext()),
-            object : YouTubePlayer.OnInitializedListener {
-
-                override fun onInitializationSuccess(
-                    provider: YouTubePlayer.Provider,
-                    player: YouTubePlayer, b: Boolean
-                ) {
-                    youtubePlayer = player
-
-                    youtubePlayer!!.setShowFullscreenButton(false)
-
-                    cueYoutubePlayerVideo()
-                }
-
-                override fun onInitializationFailure(
-                    provider: YouTubePlayer.Provider,
-                    err: YouTubeInitializationResult
-                ) {
-                    //Log.e(TAG, "Failed to initialize YoutubePlayer: $err")
-                }
+        binding.youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+            override fun onReady(youTubePlayer: YouTubePlayer) {
+                youtubePlayer = youTubePlayer
+                cueYoutubePlayerVideo()
             }
-        )
-
-        val transaction = childFragmentManager.beginTransaction()
-        transaction.add(R.id.youtubePlayerPlaceholder, youTubePlayerFragment).commit()
+        })
     }
 
 
@@ -134,7 +115,7 @@ class LiveSessionExerciseFragment : Fragment() {
             return
         }
 
-        youtubePlayer!!.cueVideo(videoId!!)
+        youtubePlayer!!.cueVideo(videoId!!, 0f)
     }
 
 
@@ -171,11 +152,11 @@ class LiveSessionExerciseFragment : Fragment() {
             // instructions
             exerciseNotes.text = exerciseSession.exerciseTemplate.exercise.notes
             if (exerciseSession.exerciseTemplate.exercise.videoTutorial != "") {
-                youtubePlayerPlaceholder.visibility = View.VISIBLE
+                youtubePlayerView.visibility = View.VISIBLE
                 videoId = exerciseSession.exerciseTemplate.exercise.videoTutorial
                 cueYoutubePlayerVideo()
             } else {
-                youtubePlayerPlaceholder.visibility = View.GONE
+                youtubePlayerView.visibility = View.GONE
                 videoId = null
             }
 

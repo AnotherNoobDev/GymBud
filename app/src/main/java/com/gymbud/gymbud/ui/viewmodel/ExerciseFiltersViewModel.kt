@@ -98,7 +98,7 @@ class ExerciseFiltersViewModel(programTemplateRepository: ProgramTemplateReposit
 
 
 class ExerciseFiltersViewModelFactory(private val programTemplateRepository: ProgramTemplateRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ExerciseFiltersViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ExerciseFiltersViewModel(programTemplateRepository) as T

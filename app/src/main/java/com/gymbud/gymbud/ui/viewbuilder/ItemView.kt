@@ -2,7 +2,7 @@ package com.gymbud.gymbud.ui.viewbuilder
 
 import android.view.LayoutInflater
 import android.view.View
-import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.gymbud.gymbud.model.Item
 import com.gymbud.gymbud.model.ItemContent
@@ -15,9 +15,9 @@ enum class Functionality {
 
 interface ItemView {
     fun inflate(inflater: LayoutInflater): List<View>
-    fun performTransactions(fragmentManager: FragmentManager)
     fun populate(
-        lifecycle: LifecycleCoroutineScope,
+        lifecycle: Lifecycle,
+        lifecycleScope: LifecycleCoroutineScope,
         viewModel: ItemViewModel,
         item: Item
     )

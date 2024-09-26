@@ -1,10 +1,12 @@
 package com.gymbud.gymbud.data.repository
 
 import android.database.sqlite.SQLiteConstraintException
-import android.util.Log
 import com.gymbud.gymbud.data.datasource.database.ExerciseDao
 import com.gymbud.gymbud.data.datasource.defaults.ExerciseDefaultDatasource
-import com.gymbud.gymbud.model.*
+import com.gymbud.gymbud.model.Exercise
+import com.gymbud.gymbud.model.ItemIdentifier
+import com.gymbud.gymbud.model.MuscleGroup
+import com.gymbud.gymbud.model.getValidName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

@@ -28,7 +28,6 @@ import com.gymbud.gymbud.utility.distributeFile
 import com.gymbud.gymbud.utility.saveProgramToFile
 import com.gymbud.gymbud.utility.serializeProgramTemplate
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

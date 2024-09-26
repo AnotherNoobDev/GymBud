@@ -61,7 +61,7 @@ class StatsViewModel (
 
 class StatsViewModelFactory(private val sessionRepository: SessionsRepository,
                             private val exerciseTemplateRepository: ExerciseTemplateRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StatsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return StatsViewModel(sessionRepository, exerciseTemplateRepository) as T

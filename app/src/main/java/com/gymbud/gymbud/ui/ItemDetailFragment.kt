@@ -1,10 +1,10 @@
 package com.gymbud.gymbud.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,9 +16,7 @@ import com.gymbud.gymbud.ui.viewbuilder.ItemView
 import com.gymbud.gymbud.ui.viewbuilder.ItemViewFactory
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModel
 import com.gymbud.gymbud.ui.viewmodel.ItemViewModelFactory
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-
 
 
 class ItemDetailFragment : Fragment() {
@@ -56,8 +54,6 @@ class ItemDetailFragment : Fragment() {
             binding.detailLayout.addView(it)
         }
 
-        itemView.performTransactions(childFragmentManager)
-
         return binding.root
     }
 
@@ -68,13 +64,13 @@ class ItemDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getItem(navigationArgs.id, navigationArgs.type).collect { item ->
                 if (item != null) {
-                    itemView.populate(viewLifecycleOwner.lifecycleScope, viewModel, item)
+                    itemView.populate(lifecycle, viewLifecycleOwner.lifecycleScope, viewModel, item)
                 }
             }
         }
 
         binding.editFab.setOnClickListener {
-            val action = ItemDetailFragmentDirections.actionItemDetailFragmentToItemEditFragment(navigationArgs.id, navigationArgs.type)
+            val action = ItemDetailFragmentDirections.actionItemDetailFragmentToItemEditFragment(navigationArgs.type, navigationArgs.id)
             findNavController().navigate(action)
         }
     }
